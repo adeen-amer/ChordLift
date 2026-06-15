@@ -1,0 +1,51 @@
+{
+  "description": "Anchor tracks for the chord-engine benchmark → analyze → improve loop. Each track should have complete reference stamps in chord_stamp_refs.json (or hand-verified entries in chord_gold_labels.json).",
+  "workflow": [
+    "1. Ensure reference stamps exist (build_chord_stamp_eval.py or add gold labels)",
+    "2. Run scripts/analyze_chord_engine.py on this set",
+    "3. Read per-track mismatches (root vs quality vs timing)",
+    "4. Patch analyzer.py / chord_engine_ml.py and re-run"
+  ],
+  "tracks": [
+    {
+      "id": "let-it-be",
+      "focus": "Symbol + boundary — canonical I-V-vi-IV loop"
+    },
+    {
+      "id": "get-lucky",
+      "focus": "High boundary baseline — dorian shuttle"
+    },
+    {
+      "id": "never-gonna-give-you-up",
+      "focus": "Pop progression — maj/min disambiguation"
+    },
+    {
+      "id": "creep",
+      "focus": "Borrowed chords (B, Cm) — quality bias"
+    },
+    {
+      "id": "baba-oriley",
+      "focus": "Power chords — fast changes (1 beat)"
+    },
+    {
+      "id": "imagine",
+      "focus": "maj7 vs triad — sparse piano"
+    },
+    {
+      "id": "hey-jude",
+      "focus": "Long form — intro skip window"
+    },
+    {
+      "id": "shape-of-you",
+      "focus": "Minor pop loop — segment flicker"
+    },
+    {
+      "id": "wonderwall",
+      "focus": "Hard track — modal/minor confusion"
+    },
+    {
+      "id": "dont-stop-believin",
+      "focus": "Strong boundary — rock arrangement"
+    }
+  ]
+}

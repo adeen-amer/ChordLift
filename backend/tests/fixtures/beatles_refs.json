@@ -1,0 +1,40 @@
+{
+  "tracks": [
+    {
+      "id": "let-it-be",
+      "file": "downloads/spotify-5V1AHQugSTASVez5ffJtFo.mp3",
+      "title": "Let It Be — The Beatles",
+      "source": "https://www.hooktheory.com/theorytab/view/the-beatles/let-it-be",
+      "expected_key": "C Major",
+      "expected_roots": ["C", "G", "A", "F"],
+      "min_root_recall": 0.70,
+      "min_unique_roots": 4,
+      "transpose_invariant": true,
+      "notes": "Hooktheory: C G Am F — I V vi IV in C major"
+    },
+    {
+      "id": "hey-jude",
+      "file": "downloads/spotify-1eT2CjXwFXNx6oY5ydvzKU.mp3",
+      "title": "Hey Jude — The Beatles",
+      "source": "https://www.hooktheory.com/theorytab/view/the-beatles/hey-jude",
+      "expected_key": "F Major",
+      "expected_roots": ["F", "C", "Bb", "Eb", "G"],
+      "min_root_recall": 0.65,
+      "min_unique_roots": 3,
+      "transpose_invariant": true,
+      "notes": "Hooktheory: F major; verse F-C-Bb; outro F-Eb-Bb (Mixolydian borrow)"
+    },
+    {
+      "id": "yellow-submarine",
+      "file": "downloads/spotify-0Dk6z7iOJzFYywJvxjNltW.mp3",
+      "title": "Yellow Submarine — The Beatles",
+      "source": "https://www.hooktheory.com/theorytab/view/the-beatles/yellow-submarine",
+      "expected_key": "F# Major",
+      "expected_roots": ["Gb", "B", "Db", "Ab", "Eb"],
+      "min_root_recall": 0.60,
+      "min_unique_roots": 3,
+      "transpose_invariant": true,
+      "notes": "Hooktheory: F# major (Gb B Db Ab). Also in tests/fixtures/chord_refs.json."
+    }
+  ]
+}

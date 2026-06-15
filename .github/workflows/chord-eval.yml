@@ -1,0 +1,65 @@
+name: Chord eval
+
+on:
+  push:
+    branches: [main, master]
+  pull_request:
+
+jobs:
+  eval:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    defaults:
+      run:
+        working-directory: backend
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install system dependencies
+        run: sudo apt-get update && sudo apt-get install -y --no-install-recommends ffmpeg libvamp-sdk2v5
+
+      - name: Install Python dependencies
+        run: |
+          pip install --upgrade pip
+          pip install -r requirements.txt
+          pip install soundfile "tensorflow<2.16" gdown lazycats vamp
+          pip install autochord --no-deps
+
+      - name: Download eval audio
+        run: python scripts/download_eval_tracks.py
+        env:
+          CHORD_ENGINE: ml
+
+      - name: Verify chord stamp eval fixtures
+        run: python scripts/build_chord_stamp_eval.py --check
+
+      - name: Chord eval — root recall + key labels (both gate CI)
+        run: |
+          set +e
+          python eval_chords.py --require-all --write-results eval-results.json
+          ROOT_EXIT=$?
+          python eval_key_labels.py eval-results.json --min-rate 0.50
+          KEY_EXIT=$?
+          python eval_symbol_recall.py eval-results.json --min-rate 0.42
+          SYMBOL_EXIT=$?
+          python eval_boundary.py eval-results.json --min-rate 0.20
+          BOUNDARY_EXIT=$?
+          python eval_timeline.py eval-results.json --min-rate 0.12
+          TIMELINE_EXIT=$?
+          if [ $ROOT_EXIT -ne 0 ]; then exit $ROOT_EXIT; fi
+          if [ $KEY_EXIT -ne 0 ]; then exit $KEY_EXIT; fi
+          if [ $SYMBOL_EXIT -ne 0 ]; then exit $SYMBOL_EXIT; fi
+          if [ $BOUNDARY_EXIT -ne 0 ]; then exit $BOUNDARY_EXIT; fi
+          exit $TIMELINE_EXIT
+        env:
+          CHORD_ENGINE: ml
+
+      - name: Run Beatles subset eval
+        run: python eval_beatles.py
+        env:
+          CHORD_ENGINE: ml

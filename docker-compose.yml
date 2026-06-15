@@ -1,0 +1,30 @@
+services:
+  backend:
+    build: ./backend
+    ports:
+      - "8000:8000"
+    environment:
+      ALLOWED_ORIGINS: ${ALLOWED_ORIGINS:-http://localhost:5173,http://localhost:3000,http://localhost}
+      CHORD_ENGINE: ${CHORD_ENGINE:-ml}
+      PORT: 8000
+    volumes:
+      - backend-cache:/app/cache
+      - backend-downloads:/app/downloads
+      - backend-uploads:/app/uploads
+    restart: unless-stopped
+
+  frontend:
+    build:
+      context: ./frontend
+      args:
+        VITE_API_BASE: ""
+    ports:
+      - "3000:80"
+    depends_on:
+      - backend
+    restart: unless-stopped
+
+volumes:
+  backend-cache:
+  backend-downloads:
+  backend-uploads:

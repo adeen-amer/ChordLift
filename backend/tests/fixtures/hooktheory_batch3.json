@@ -1,0 +1,175 @@
+{
+  "description": "Hooktheory batch 3 \u2014 10 curated songs (sharp notation)",
+  "tracks": [
+    {
+      "id": "smells-like-teen-spirit",
+      "file": "downloads/spotify-5ghIIDpPgdJcK7B5X6JDlF.mp3",
+      "title": "Smells Like Teen Spirit \u2014 Nirvana",
+      "source": "https://www.hooktheory.com/theorytab/view/nirvana/smells-like-teen-spirit",
+      "expected_key": "F Minor",
+      "expected_roots": [
+        "F",
+        "A#",
+        "G#",
+        "C#"
+      ],
+      "min_root_recall": 0.45,
+      "min_unique_roots": 3,
+      "transpose_invariant": true,
+      "notes": "Hooktheory: F5 Bb5 Ab5 Db5 \u2014 i iv III VI (power chords)"
+    },
+    {
+      "id": "imagine",
+      "file": "downloads/spotify-3EJS5LyBJHfyR7lFls1e38.mp3",
+      "title": "Imagine \u2014 John Lennon",
+      "source": "https://www.hooktheory.com/theorytab/view/john-lennon/imagine",
+      "expected_key": "C Major",
+      "expected_roots": [
+        "C",
+        "F",
+        "G",
+        "E"
+      ],
+      "min_root_recall": 0.55,
+      "min_unique_roots": 3,
+      "transpose_invariant": true,
+      "notes": "Hooktheory: C Cmaj7 F \u2014 I I7 IV"
+    },
+    {
+      "id": "rolling-in-the-deep",
+      "file": "downloads/spotify-1c8gkexLLshvpDHY6npDE7.mp3",
+      "title": "Rolling in the Deep \u2014 Adele",
+      "source": "https://www.hooktheory.com/theorytab/view/adele/rolling-in-the-deep",
+      "expected_key": "C Minor",
+      "expected_roots": [
+        "C",
+        "G",
+        "A#",
+        "G#"
+      ],
+      "min_root_recall": 0.5,
+      "min_unique_roots": 3,
+      "transpose_invariant": true,
+      "notes": "Hooktheory: Cm G Bb G \u2014 i v VI v"
+    },
+    {
+      "id": "love-story",
+      "file": "downloads/spotify-3CeCwYWvdfXbZLl4KB3Cnr.mp3",
+      "title": "Love Story \u2014 Taylor Swift",
+      "source": "https://www.hooktheory.com/theorytab/view/taylor-swift/love-story",
+      "expected_key": "D Major",
+      "expected_roots": [
+        "D",
+        "G",
+        "A",
+        "B"
+      ],
+      "min_root_recall": 0.55,
+      "min_unique_roots": 3,
+      "transpose_invariant": true,
+      "notes": "Hooktheory: D G A Bm \u2014 I IV V vi"
+    },
+    {
+      "id": "dont-stop-believin",
+      "file": "downloads/spotify-77NNZQSxLN5jjLw2G2eh69.mp3",
+      "title": "Don't Stop Believin' \u2014 Journey",
+      "source": "https://www.hooktheory.com/theorytab/view/journey/dont-stop-believin",
+      "expected_key": "E Major",
+      "expected_roots": [
+        "E",
+        "B",
+        "C#",
+        "A"
+      ],
+      "min_root_recall": 0.55,
+      "min_unique_roots": 3,
+      "transpose_invariant": true,
+      "notes": "Hooktheory: E B C#m A \u2014 I V vi IV"
+    },
+    {
+      "id": "africa",
+      "file": "downloads/spotify-7FRW07ElWFdbC5nTr2U8iO.mp3",
+      "title": "Africa \u2014 Toto",
+      "source": "https://www.hooktheory.com/theorytab/view/toto/africa",
+      "expected_key": "F# Minor",
+      "expected_roots": [
+        "F#",
+        "D",
+        "A",
+        "C#"
+      ],
+      "min_root_recall": 0.5,
+      "min_unique_roots": 3,
+      "transpose_invariant": true,
+      "notes": "Hooktheory: F#m D A C#m \u2014 i VI III v"
+    },
+    {
+      "id": "seven-nation-army",
+      "file": "downloads/spotify-2IH8tNQAz0QZDAe2U8Q0Hf.mp3",
+      "title": "Seven Nation Army \u2014 The White Stripes",
+      "source": "https://www.hooktheory.com/theorytab/view/the-white-stripes/seven-nation-army",
+      "expected_key": "E Minor",
+      "expected_roots": [
+        "E",
+        "G",
+        "A",
+        "B"
+      ],
+      "min_root_recall": 0.38,
+      "min_unique_roots": 3,
+      "transpose_invariant": true,
+      "notes": "Hooktheory: Em G A \u2014 i III IV (mostly E5/G5 riff)"
+    },
+    {
+      "id": "demons",
+      "file": "downloads/spotify-0sW7NKeUXGuXBluxZmSJVW.mp3",
+      "title": "Demons \u2014 Imagine Dragons",
+      "source": "https://www.hooktheory.com/theorytab/view/imagine-dragons/demons",
+      "expected_key": "B Minor",
+      "expected_roots": [
+        "B",
+        "D",
+        "G",
+        "A"
+      ],
+      "min_root_recall": 0.5,
+      "min_unique_roots": 3,
+      "transpose_invariant": true,
+      "notes": "Hooktheory: Bm D G A \u2014 i III VI VII"
+    },
+    {
+      "id": "iris",
+      "file": "downloads/spotify-5oA6Ta6bZEVmeacEp8DnbS.mp3",
+      "title": "Iris \u2014 Goo Goo Dolls",
+      "source": "https://www.hooktheory.com/theorytab/view/goo-goo-dolls/iris",
+      "expected_key": "D Major",
+      "expected_roots": [
+        "D",
+        "G",
+        "B",
+        "A"
+      ],
+      "min_root_recall": 0.5,
+      "min_unique_roots": 3,
+      "transpose_invariant": true,
+      "notes": "Hooktheory: D G Bm A \u2014 I IV vi V"
+    },
+    {
+      "id": "zombie",
+      "file": "downloads/spotify-6Qyc6fS7Ds6B4k4h1sH9Le.mp3",
+      "title": "Zombie \u2014 The Cranberries",
+      "source": "https://www.hooktheory.com/theorytab/view/the-cranberries/zombie",
+      "expected_key": "E Minor",
+      "expected_roots": [
+        "E",
+        "C",
+        "G",
+        "D"
+      ],
+      "min_root_recall": 0.55,
+      "min_unique_roots": 3,
+      "transpose_invariant": true,
+      "notes": "Hooktheory: Em C G D \u2014 i VI III VII"
+    }
+  ]
+}

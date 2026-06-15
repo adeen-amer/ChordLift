@@ -1,0 +1,213 @@
+{
+  "description": "Eval overlays merged into chord_refs tracks at runtime (symbols, progressions, boundary params)",
+  "overlays": {
+    "baba-oriley": {
+      "expected_symbols": ["F", "F5", "C", "C5", "A#", "A#5"],
+      "progression": ["F", "F", "C", "C", "A#", "A#", "A#", "A#"],
+      "beats_per_chord": 1,
+      "boundary_cycles": 6,
+      "expected_symbols_power_ok": true
+    },
+    "hey-jude": {
+      "expected_symbols": ["F", "C", "A#", "D#", "G"],
+      "progression": ["F", "C", "A#", "F"],
+      "beats_per_chord": 4,
+      "boundary_cycles": 6,
+      "boundary_skip_beats": 8,
+      "boundary_eval_start": 20.0,
+      "boundary_eval_end": 180.0
+    },
+    "let-it-be": {
+      "expected_symbols": ["C", "G", "Am", "F"],
+      "progression": ["C", "G", "Am", "F"],
+      "beats_per_chord": 4,
+      "boundary_cycles": 10,
+      "boundary_skip_beats": 4,
+      "boundary_eval_start": 12.0,
+      "boundary_eval_end": 150.0
+    },
+    "never-gonna-give-you-up": {
+      "expected_symbols": ["C#", "G#", "A#m", "F#"],
+      "progression": ["C#", "G#", "A#m", "F#"],
+      "beats_per_chord": 4,
+      "boundary_cycles": 8,
+      "boundary_eval_start": 8.0,
+      "boundary_eval_end": 120.0
+    },
+    "yellow-submarine": {
+      "expected_symbols": ["F#", "B", "C#", "G#", "D#"]
+    },
+    "wonderwall": {
+      "expected_symbols": ["Em7", "Em", "G", "D", "A"],
+      "progression": ["Em", "G", "D", "A"],
+      "beats_per_chord": 4,
+      "boundary_cycles": 6,
+      "boundary_eval_start": 10.0,
+      "boundary_eval_end": 150.0
+    },
+    "someone-like-you": {
+      "expected_symbols": ["A", "E", "F#m", "D"],
+      "progression": ["A", "E", "F#m", "D"],
+      "beats_per_chord": 4,
+      "boundary_cycles": 6
+    },
+    "counting-stars": {
+      "expected_symbols": ["A", "F#m", "D", "E"],
+      "progression": ["A", "F#m", "D", "E"],
+      "beats_per_chord": 4,
+      "boundary_cycles": 6
+    },
+    "riptide": {
+      "expected_symbols": ["Am", "G", "C", "F"],
+      "progression": ["Am", "G", "C", "F"],
+      "beats_per_chord": 4,
+      "boundary_cycles": 6
+    },
+    "viva-la-vida": {
+      "expected_symbols": ["Am", "C", "G", "F"],
+      "progression": ["Am", "C", "G", "F"],
+      "beats_per_chord": 4,
+      "boundary_cycles": 6
+    },
+    "hey-soul-sister": {
+      "expected_symbols": ["C", "F", "Am", "G"],
+      "progression": ["C", "F", "Am", "G"],
+      "beats_per_chord": 4,
+      "boundary_cycles": 6
+    },
+    "im-yours": {
+      "expected_symbols": ["C", "D", "G", "Em"],
+      "progression": ["C", "D", "G", "Em"],
+      "beats_per_chord": 4,
+      "boundary_cycles": 6
+    },
+    "boulevard-of-broken-dreams": {
+      "expected_symbols": ["Fm", "A#", "D#", "A#"],
+      "progression": ["Fm", "A#", "D#", "A#"],
+      "beats_per_chord": 4,
+      "boundary_cycles": 6
+    },
+    "shape-of-you": {
+      "expected_symbols": ["C#m", "F#m", "A", "B"],
+      "progression": ["C#m", "F#m", "A", "B"],
+      "beats_per_chord": 4,
+      "boundary_cycles": 6,
+      "boundary_eval_start": 8.0,
+      "boundary_eval_end": 120.0
+    },
+    "bad-guy": {
+      "expected_symbols": ["Gm", "G", "C", "D"],
+      "progression": ["G", "C", "D", "G"],
+      "beats_per_chord": 4,
+      "boundary_cycles": 6
+    },
+    "sweet-child-o-mine": {
+      "expected_symbols": ["D", "C", "G"],
+      "progression": ["D", "C", "G"],
+      "beats_per_chord": 4,
+      "boundary_cycles": 6
+    },
+    "thinking-out-loud": {
+      "expected_symbols": ["D", "G", "A", "Bm"],
+      "progression": ["D", "G", "A", "Bm"],
+      "beats_per_chord": 4,
+      "boundary_cycles": 6
+    },
+    "radioactive": {
+      "expected_symbols": ["Bm", "Bm7", "D", "A", "E", "G"],
+      "progression": ["Bm", "D", "A", "E"],
+      "beats_per_chord": 4,
+      "boundary_cycles": 6
+    },
+    "hallelujah": {
+      "expected_symbols": ["C", "Am", "F", "G"],
+      "progression": ["C", "Am", "F", "G"],
+      "beats_per_chord": 4,
+      "boundary_cycles": 6
+    },
+    "smells-like-teen-spirit": {
+      "expected_symbols": ["F", "F5", "A#", "G#", "C#"],
+      "progression": ["F", "A#", "G#", "C#"],
+      "beats_per_chord": 4,
+      "boundary_cycles": 6
+    },
+    "imagine": {
+      "expected_symbols": ["C", "Cmaj7", "F"],
+      "progression": ["C", "C", "F", "F"],
+      "beats_per_chord": 4,
+      "boundary_cycles": 6
+    },
+    "rolling-in-the-deep": {
+      "expected_symbols": ["Cm", "G", "A#", "G"],
+      "progression": ["Cm", "G", "A#", "G"],
+      "beats_per_chord": 4,
+      "boundary_cycles": 6
+    },
+    "love-story": {
+      "expected_symbols": ["D", "G", "A", "Bm"],
+      "progression": ["D", "G", "A", "Bm"],
+      "beats_per_chord": 4,
+      "boundary_cycles": 6
+    },
+    "dont-stop-believin": {
+      "expected_symbols": ["E", "B", "C#m", "A"],
+      "progression": ["E", "B", "C#m", "A"],
+      "beats_per_chord": 4,
+      "boundary_cycles": 6
+    },
+    "africa": {
+      "expected_symbols": ["F#m", "D", "A", "C#m"],
+      "progression": ["F#m", "D", "A", "C#m"],
+      "beats_per_chord": 4,
+      "boundary_cycles": 6
+    },
+    "seven-nation-army": {
+      "expected_symbols": ["Em", "E5", "G", "G5", "A"],
+      "progression": ["Em", "G", "A"],
+      "beats_per_chord": 4,
+      "boundary_cycles": 6
+    },
+    "demons": {
+      "expected_symbols": ["Bm", "D", "G", "A"],
+      "progression": ["Bm", "D", "G", "A"],
+      "beats_per_chord": 4,
+      "boundary_cycles": 6
+    },
+    "iris": {
+      "expected_symbols": ["D", "G", "Bm", "A"],
+      "progression": ["D", "G", "Bm", "A"],
+      "beats_per_chord": 4,
+      "boundary_cycles": 6
+    },
+    "zombie": {
+      "expected_symbols": ["Em", "C", "G", "D"],
+      "progression": ["Em", "C", "G", "D"],
+      "beats_per_chord": 4,
+      "boundary_cycles": 6
+    },
+    "stairway-to-heaven": {
+      "expected_symbols": ["Am", "C", "G", "F", "D", "F#m"]
+    },
+    "hotel-california": {
+      "expected_symbols": ["Bm", "F#", "A", "E", "G", "D"]
+    },
+    "ho-hey": {
+      "expected_symbols": ["C", "Am", "F", "G"],
+      "progression": ["C", "C", "Am", "Am", "F", "F", "C", "C"],
+      "beats_per_chord": 2,
+      "boundary_cycles": 8
+    },
+    "stand-by-me": {
+      "expected_symbols": ["A", "F#m", "D", "E"],
+      "progression": ["A", "F#m", "D", "E"],
+      "beats_per_chord": 4,
+      "boundary_cycles": 8
+    },
+    "with-or-without-you": {
+      "expected_symbols": ["D", "A", "Bm", "G"],
+      "progression": ["D", "A", "Bm", "G"],
+      "beats_per_chord": 4,
+      "boundary_cycles": 8
+    }
+  }
+}

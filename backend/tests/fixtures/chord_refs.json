@@ -1,0 +1,668 @@
+{
+  "tracks": [
+    {
+      "id": "baba-oriley",
+      "file": "downloads/spotify-3qiyyUfYe7CRYLucrPmulD.mp3",
+      "title": "Baba O'Riley \u2014 The Who",
+      "source": "https://www.chordie.com/chord.pere/www.guitaretab.com/w/who/279253.html",
+      "expected_key": "F Major",
+      "expected_roots": [
+        "F",
+        "C",
+        "A#"
+      ],
+      "min_root_recall": 0.85,
+      "min_unique_roots": 3,
+      "expected_symbols": ["F", "C", "A#"],
+      "progression": ["F", "F", "C", "C", "A#", "A#", "A#", "A#"],
+      "beats_per_chord": 1,
+      "boundary_cycles": 6,
+      "notes": "F C Bb power-chord loop (I-V-IV in F major)"
+    },
+    {
+      "id": "farda",
+      "file": "downloads/spotify-6z9YgNd6u3k7eSLAR7Nsom.mp3",
+      "title": "Farda \u2014 Bayaan",
+      "source": "https://chordu.com/chords-tabs-bayaan-hum-nadaan-official-video--id_fvr-6caRXjY",
+      "expected_key": "F Major",
+      "expected_roots": [
+        "F",
+        "C",
+        "D",
+        "A#",
+        "A"
+      ],
+      "min_root_recall": 0.55,
+      "min_unique_roots": 4,
+      "max_sus_fraction": 0.15,
+      "notes": "Urdu pop \u2014 F/C/Dm/Bb/Am family"
+    },
+    {
+      "id": "never-gonna-give-you-up",
+      "file": "downloads/dQw4w9WgXcQ.mp3",
+      "title": "Never Gonna Give You Up \u2014 Rick Astley",
+      "source": "https://www.hooktheory.com/theorytab/view/rick-astley/never-gonna-give-you-up",
+      "expected_key": "C# Major",
+      "expected_roots": [
+        "C#",
+        "G#",
+        "A#",
+        "F#",
+        "F"
+      ],
+      "expected_symbols": [
+        "C#",
+        "G#",
+        "A#m",
+        "F#"
+      ],
+      "progression": ["C#", "G#", "A#m", "F#"],
+      "beats_per_chord": 4,
+      "boundary_cycles": 8,
+      "min_root_recall": 0.65,
+      "min_unique_roots": 3,
+      "transpose_invariant": true,
+      "notes": "Db Ab Bbm Gb progression (concert pitch)"
+    },
+    {
+      "id": "aisay-kaisay",
+      "file": "downloads/spotify-0mAswKg3RCbmXAV4KYTUxM.mp3",
+      "title": "Aisay Kaisay",
+      "expected_roots": [
+        "C",
+        "G",
+        "F",
+        "A",
+        "D"
+      ],
+      "min_root_recall": 0.45,
+      "min_unique_roots": 3,
+      "notes": "C/G/F family with passing chords"
+    },
+    {
+      "id": "khwaab",
+      "file": "downloads/spotify-3VRLwQsyl3Uh3Bumoy273r.mp3",
+      "title": "Khwaab",
+      "expected_roots": [
+        "C#",
+        "G#",
+        "F#",
+        "A#",
+        "D#",
+        "F"
+      ],
+      "min_root_recall": 0.45,
+      "min_unique_roots": 3,
+      "notes": "Gb/Ab area \u2014 Db/Ab/Gb/Bb progression"
+    },
+    {
+      "id": "hum-nadaan",
+      "file": "downloads/spotify-3mwlJH9PGv3I2e5PuagKWf.mp3",
+      "title": "Hum Nadaan \u2014 Bayaan",
+      "source": "https://chordu.com/chords-tabs-bayaan-hum-nadaan-official-video--id_fvr-6caRXjY",
+      "expected_key": "A Major",
+      "expected_roots": [
+        "A",
+        "C#",
+        "G#",
+        "B",
+        "E"
+      ],
+      "min_root_recall": 0.45,
+      "min_unique_roots": 3,
+      "max_sus_fraction": 0.2,
+      "notes": "ChordU: A, C#m, G#m, B, E, G#"
+    },
+    {
+      "id": "let-it-be",
+      "file": "downloads/spotify-5V1AHQugSTASVez5ffJtFo.mp3",
+      "title": "Let It Be \u2014 The Beatles",
+      "source": "https://www.hooktheory.com/theorytab/view/the-beatles/let-it-be",
+      "expected_key": "C Major",
+      "expected_roots": [
+        "C",
+        "G",
+        "A",
+        "F"
+      ],
+      "expected_symbols": [
+        "C",
+        "G",
+        "Am",
+        "F"
+      ],
+      "progression": ["C", "G", "Am", "F"],
+      "beats_per_chord": 4,
+      "boundary_cycles": 10,
+      "boundary_skip_beats": 4,
+      "min_root_recall": 0.7,
+      "min_unique_roots": 4,
+      "transpose_invariant": true,
+      "notes": "Hooktheory: C G Am F \u2014 I V vi IV in C major"
+    },
+    {
+      "id": "hey-jude",
+      "file": "downloads/spotify-1eT2CjXwFXNx6oY5ydvzKU.mp3",
+      "title": "Hey Jude \u2014 The Beatles",
+      "source": "https://www.hooktheory.com/theorytab/view/the-beatles/hey-jude",
+      "expected_key": "F Major",
+      "expected_roots": [
+        "F",
+        "C",
+        "A#",
+        "D#",
+        "G"
+      ],
+      "min_root_recall": 0.65,
+      "min_unique_roots": 3,
+      "transpose_invariant": true,
+      "notes": "Hooktheory: F major; verse F-C-Bb; outro F-Eb-Bb"
+    },
+    {
+      "id": "yellow-submarine",
+      "file": "downloads/spotify-0Dk6z7iOJzFYywJvxjNltW.mp3",
+      "title": "Yellow Submarine \u2014 The Beatles",
+      "source": "https://www.hooktheory.com/theorytab/view/the-beatles/yellow-submarine",
+      "expected_key": "F# Major",
+      "expected_roots": [
+        "F#",
+        "B",
+        "C#",
+        "G#",
+        "D#"
+      ],
+      "min_root_recall": 0.6,
+      "min_unique_roots": 3,
+      "transpose_invariant": true,
+      "notes": "Hooktheory: F# major (guitar shapes in G, record tuned down \u00bd step)"
+    },
+    {
+      "id": "wonderwall",
+      "file": "downloads/spotify-1qPbGZqppFwLwcBC1JQ6Vr.mp3",
+      "title": "Wonderwall \u2014 Oasis",
+      "source": "https://www.hooktheory.com/theorytab/view/oasis/wonderwall",
+      "expected_key": "F# Minor",
+      "expected_roots": [
+        "E",
+        "G",
+        "D",
+        "A"
+      ],
+      "min_root_recall": 0.55,
+      "min_unique_roots": 3,
+      "transpose_invariant": true,
+      "notes": "Hooktheory: Em7 G D A7sus4 \u2014 vi-IV-I-V in F# minor"
+    },
+    {
+      "id": "with-or-without-you",
+      "file": "downloads/spotify-0jlFldjaBMVMSzZyAEQ9sn.mp3",
+      "title": "With or Without You \u2014 U2",
+      "source": "https://www.hooktheory.com/theorytab/view/u2/with-or-without-you",
+      "expected_key": "D Major",
+      "expected_roots": [
+        "D",
+        "A",
+        "B",
+        "G"
+      ],
+      "min_root_recall": 0.55,
+      "min_unique_roots": 3,
+      "transpose_invariant": true,
+      "notes": "Hooktheory: D A Bm G \u2014 I V vi IV"
+    },
+    {
+      "id": "someone-like-you",
+      "file": "downloads/spotify-5lkpeJwmQKgY3bX2zChjxX.mp3",
+      "title": "Someone Like You \u2014 Adele",
+      "source": "https://www.hooktheory.com/theorytab/view/adele/someone-like-you",
+      "expected_key": "A Major",
+      "expected_roots": [
+        "A",
+        "E",
+        "F#",
+        "D"
+      ],
+      "min_root_recall": 0.55,
+      "min_unique_roots": 3,
+      "transpose_invariant": true,
+      "notes": "Hooktheory: A E F#m D \u2014 I V vi IV"
+    },
+    {
+      "id": "stand-by-me",
+      "file": "downloads/spotify-33HcQWMcBxyVY1h0xSVzUp.mp3",
+      "title": "Stand By Me \u2014 Ben E. King",
+      "source": "https://www.hooktheory.com/theorytab/view/ben-e-king/stand-by-me",
+      "expected_key": "A Major",
+      "expected_roots": [
+        "A",
+        "F#",
+        "D",
+        "E"
+      ],
+      "min_root_recall": 0.55,
+      "min_unique_roots": 3,
+      "transpose_invariant": true,
+      "notes": "Hooktheory: A F#m D E \u2014 I vi IV V"
+    },
+    {
+      "id": "counting-stars",
+      "file": "downloads/spotify-0Lh4pzuHcTH4SmXRWChbL8.mp3",
+      "title": "Counting Stars \u2014 OneRepublic",
+      "source": "https://www.hooktheory.com/theorytab/view/onerepublic/counting-stars",
+      "expected_key": "C# Minor",
+      "expected_roots": [
+        "A",
+        "C",
+        "G",
+        "F"
+      ],
+      "min_root_recall": 0.5,
+      "min_unique_roots": 3,
+      "transpose_invariant": true,
+      "notes": "Hooktheory: Am C G F \u2014 vi-I-V-IV in C# minor / Am relative"
+    },
+    {
+      "id": "ho-hey",
+      "file": "downloads/spotify-1gaYDBNwuZZ7TPjMCdvYKI.mp3",
+      "title": "Ho Hey \u2014 The Lumineers",
+      "source": "https://www.hooktheory.com/theorytab/view/the-lumineers/ho-hey",
+      "expected_key": "C Major",
+      "expected_roots": [
+        "C",
+        "F",
+        "A",
+        "G"
+      ],
+      "min_root_recall": 0.5,
+      "min_unique_roots": 3,
+      "transpose_invariant": true,
+      "notes": "Hooktheory: C F Am G \u2014 I IV vi V"
+    },
+    {
+      "id": "viva-la-vida",
+      "file": "downloads/spotify-0fhAEfzoI0JLyeb0BBrphd.mp3",
+      "title": "Viva La Vida \u2014 Coldplay",
+      "source": "https://www.hooktheory.com/theorytab/view/coldplay/viva-la-vida",
+      "expected_key": "C Major",
+      "expected_roots": [
+        "C",
+        "D",
+        "G",
+        "E"
+      ],
+      "min_root_recall": 0.5,
+      "min_unique_roots": 3,
+      "transpose_invariant": true,
+      "notes": "Hooktheory: C D G Em \u2014 I II V vi"
+    },
+    {
+      "id": "get-lucky",
+      "file": "downloads/spotify-69kOkLUCkxIZYexIgSG8rq.mp3",
+      "title": "Get Lucky \u2014 Daft Punk",
+      "source": "https://www.hooktheory.com/theorytab/view/daft-punk/get-lucky",
+      "expected_key": "B Dorian",
+      "expected_roots": [
+        "B",
+        "D",
+        "F#",
+        "E"
+      ],
+      "min_root_recall": 0.55,
+      "min_unique_roots": 4,
+      "transpose_invariant": true,
+      "expected_symbols": ["Bm7", "D", "F#m7", "E"],
+      "progression": ["Bm7", "D", "F#m7", "E"],
+      "beats_per_chord": 4,
+      "boundary_cycles": 8,
+      "notes": "Hooktheory: Bm7 D F#m7 E \u2014 B Dorian dorian-shuttle loop"
+    },
+    {
+      "id": "creep",
+      "file": "downloads/spotify-70LcF31zb1H0PyJoS1Sx1r.mp3",
+      "title": "Creep \u2014 Radiohead",
+      "source": "https://www.hooktheory.com/theorytab/view/radiohead/creep",
+      "expected_key": "G Major",
+      "expected_roots": [
+        "G",
+        "B",
+        "C"
+      ],
+      "min_root_recall": 0.55,
+      "min_unique_roots": 3,
+      "transpose_invariant": true,
+      "expected_symbols": ["G", "B", "C", "Cm"],
+      "progression": ["G", "B", "C", "Cm"],
+      "beats_per_chord": 4,
+      "boundary_cycles": 6,
+      "notes": "Hooktheory: G B C Cm \u2014 borrowed III and minor iv"
+    },
+    {
+      "id": "mr-brightside",
+      "file": "downloads/spotify-003vvx7Niy0yvhvHt4a68B.mp3",
+      "title": "Mr. Brightside \u2014 The Killers",
+      "source": "https://www.hooktheory.com/theorytab/view/the-killers/mr-brightside",
+      "expected_key": "C# Major",
+      "expected_roots": [
+        "C#",
+        "F#",
+        "G#",
+        "A#"
+      ],
+      "min_root_recall": 0.55,
+      "min_unique_roots": 3,
+      "transpose_invariant": true,
+      "expected_symbols": ["C#", "F#", "A#m", "G#"],
+      "progression": ["C#", "F#", "A#m", "G#"],
+      "beats_per_chord": 4,
+      "boundary_cycles": 8,
+      "notes": "Hooktheory: Db Gb Bbm Ab \u2014 I IV vi V (often played in D)"
+    },
+    {
+      "id": "boulevard-of-broken-dreams",
+      "file": "downloads/spotify-4kpOCLAZHM1F18gLjLI546.mp3",
+      "title": "Boulevard of Broken Dreams \u2014 Green Day",
+      "source": "https://www.hooktheory.com/theorytab/view/green-day/boulevard-of-broken-dreams",
+      "expected_key": "F Dorian",
+      "expected_roots": [
+        "F",
+        "G#",
+        "D#",
+        "A#"
+      ],
+      "min_root_recall": 0.5,
+      "min_unique_roots": 3,
+      "transpose_invariant": true,
+      "notes": "Hooktheory: Fm Ab Eb Bb \u2014 i III VII IV in F Dorian"
+    },
+    {
+      "id": "shape-of-you",
+      "file": "downloads/spotify-7qiZfU4dY1lWllzX7mPBI3.mp3",
+      "title": "Shape of You \u2014 Ed Sheeran",
+      "source": "https://www.hooktheory.com/theorytab/view/ed-sheeran/shape-of-you",
+      "expected_key": "C# Minor",
+      "expected_roots": [
+        "C#",
+        "B",
+        "F#",
+        "G#"
+      ],
+      "min_root_recall": 0.5,
+      "min_unique_roots": 3,
+      "transpose_invariant": true,
+      "notes": "Hooktheory: C#m F#m A B \u2014 i iv VI VII"
+    },
+    {
+      "id": "bad-guy",
+      "file": "downloads/spotify-2Fxmhks0bxGSBdJ92vM42m.mp3",
+      "title": "Bad Guy \u2014 Billie Eilish",
+      "source": "https://www.hooktheory.com/theorytab/view/billie-eilish/bad-guy",
+      "expected_key": "G Minor",
+      "expected_roots": [
+        "G",
+        "C",
+        "D"
+      ],
+      "min_root_recall": 0.55,
+      "min_unique_roots": 3,
+      "transpose_invariant": true,
+      "notes": "Hooktheory: G C D \u2014 i iv V in G minor"
+    },
+    {
+      "id": "hotel-california",
+      "file": "downloads/spotify-40riOy7x9W7GXjyGp4pjAv.mp3",
+      "title": "Hotel California \u2014 Eagles",
+      "source": "https://www.hooktheory.com/theorytab/view/eagles/hotel-california",
+      "expected_key": "B Minor",
+      "expected_roots": [
+        "B",
+        "F#",
+        "A",
+        "E",
+        "G",
+        "D"
+      ],
+      "min_root_recall": 0.45,
+      "min_unique_roots": 4,
+      "transpose_invariant": true,
+      "notes": "Hooktheory: Bm F# A E G D \u2014 complex progression"
+    },
+    {
+      "id": "sweet-child-o-mine",
+      "file": "downloads/spotify-7snQQk1zcKl8gZ92AnueZW.mp3",
+      "title": "Sweet Child O' Mine \u2014 Guns N' Roses",
+      "source": "https://www.hooktheory.com/theorytab/view/guns-n-roses/sweet-child-o-mine",
+      "expected_key": "D Major",
+      "expected_roots": [
+        "D",
+        "C",
+        "G"
+      ],
+      "min_root_recall": 0.5,
+      "min_unique_roots": 3,
+      "transpose_invariant": true,
+      "notes": "Hooktheory: D C G \u2014 I bVII IV"
+    },
+    {
+      "id": "thinking-out-loud",
+      "file": "downloads/spotify-34gCuhDGsG4bRPIf9bb02f.mp3",
+      "title": "Thinking Out Loud \u2014 Ed Sheeran",
+      "source": "https://www.hooktheory.com/theorytab/view/ed-sheeran/thinking-out-loud",
+      "expected_key": "D Major",
+      "expected_roots": [
+        "D",
+        "G",
+        "A",
+        "B"
+      ],
+      "min_root_recall": 0.55,
+      "min_unique_roots": 3,
+      "transpose_invariant": true,
+      "notes": "Hooktheory: D G A Bm \u2014 I IV V vi"
+    },
+    {
+      "id": "radioactive",
+      "file": "downloads/spotify-5E1o3ewgTQ8c5LpfSMM5ac.mp3",
+      "title": "Radioactive \u2014 Imagine Dragons",
+      "source": "https://www.hooktheory.com/theorytab/view/imagine-dragons/radioactive",
+      "expected_key": "B Dorian",
+      "expected_roots": [
+        "B",
+        "D",
+        "A",
+        "E",
+        "G"
+      ],
+      "min_root_recall": 0.5,
+      "min_unique_roots": 3,
+      "transpose_invariant": true,
+      "notes": "Hooktheory: Bm D A E G \u2014 i III VI VII iv"
+    },
+    {
+      "id": "hallelujah",
+      "file": "downloads/spotify-7yzbimr8WVyAtBX3Eg6UL9.mp3",
+      "title": "Hallelujah \u2014 Leonard Cohen",
+      "source": "https://www.hooktheory.com/theorytab/view/leonard-cohen/hallelujah",
+      "expected_key": "C Major",
+      "expected_roots": [
+        "C",
+        "A",
+        "F",
+        "G"
+      ],
+      "min_root_recall": 0.55,
+      "min_unique_roots": 3,
+      "transpose_invariant": true,
+      "notes": "Hooktheory: C Am F G \u2014 I vi IV V"
+    },
+    {
+      "id": "smells-like-teen-spirit",
+      "file": "downloads/spotify-5ghIIDpPgdJcK7B5X6JDlF.mp3",
+      "title": "Smells Like Teen Spirit \u2014 Nirvana",
+      "source": "https://www.hooktheory.com/theorytab/view/nirvana/smells-like-teen-spirit",
+      "expected_key": "F Minor",
+      "expected_roots": [
+        "F",
+        "A#",
+        "G#",
+        "C#"
+      ],
+      "min_root_recall": 0.45,
+      "min_unique_roots": 3,
+      "transpose_invariant": true,
+      "notes": "Hooktheory: F5 Bb5 Ab5 Db5 \u2014 i iv III VI (power chords)"
+    },
+    {
+      "id": "imagine",
+      "file": "downloads/spotify-3EJS5LyBJHfyR7lFls1e38.mp3",
+      "title": "Imagine \u2014 John Lennon",
+      "source": "https://www.hooktheory.com/theorytab/view/john-lennon/imagine",
+      "expected_key": "C Major",
+      "expected_roots": [
+        "C",
+        "F",
+        "G",
+        "E"
+      ],
+      "min_root_recall": 0.55,
+      "min_unique_roots": 3,
+      "transpose_invariant": true,
+      "notes": "Hooktheory: C Cmaj7 F \u2014 I I7 IV"
+    },
+    {
+      "id": "rolling-in-the-deep",
+      "file": "downloads/spotify-1c8gkexLLshvpDHY6npDE7.mp3",
+      "title": "Rolling in the Deep \u2014 Adele",
+      "source": "https://www.hooktheory.com/theorytab/view/adele/rolling-in-the-deep",
+      "expected_key": "C Minor",
+      "expected_roots": [
+        "C",
+        "G",
+        "A#",
+        "G#"
+      ],
+      "min_root_recall": 0.5,
+      "min_unique_roots": 3,
+      "transpose_invariant": true,
+      "notes": "Hooktheory: Cm G Bb G \u2014 i v VI v"
+    },
+    {
+      "id": "love-story",
+      "file": "downloads/spotify-3CeCwYWvdfXbZLl4KB3Cnr.mp3",
+      "title": "Love Story \u2014 Taylor Swift",
+      "source": "https://www.hooktheory.com/theorytab/view/taylor-swift/love-story",
+      "expected_key": "D Major",
+      "expected_roots": [
+        "D",
+        "G",
+        "A",
+        "B"
+      ],
+      "min_root_recall": 0.55,
+      "min_unique_roots": 3,
+      "transpose_invariant": true,
+      "notes": "Hooktheory: D G A Bm \u2014 I IV V vi"
+    },
+    {
+      "id": "dont-stop-believin",
+      "file": "downloads/spotify-77NNZQSxLN5jjLw2G2eh69.mp3",
+      "title": "Don't Stop Believin' \u2014 Journey",
+      "source": "https://www.hooktheory.com/theorytab/view/journey/dont-stop-believin",
+      "expected_key": "E Major",
+      "expected_roots": [
+        "E",
+        "B",
+        "C#",
+        "A"
+      ],
+      "min_root_recall": 0.55,
+      "min_unique_roots": 3,
+      "transpose_invariant": true,
+      "notes": "Hooktheory: E B C#m A \u2014 I V vi IV"
+    },
+    {
+      "id": "africa",
+      "file": "downloads/spotify-7FRW07ElWFdbC5nTr2U8iO.mp3",
+      "title": "Africa \u2014 Toto",
+      "source": "https://www.hooktheory.com/theorytab/view/toto/africa",
+      "expected_key": "F# Minor",
+      "expected_roots": [
+        "F#",
+        "D",
+        "A",
+        "C#"
+      ],
+      "min_root_recall": 0.5,
+      "min_unique_roots": 3,
+      "transpose_invariant": true,
+      "notes": "Hooktheory: F#m D A C#m \u2014 i VI III v"
+    },
+    {
+      "id": "seven-nation-army",
+      "file": "downloads/spotify-2IH8tNQAz0QZDAe2U8Q0Hf.mp3",
+      "title": "Seven Nation Army \u2014 The White Stripes",
+      "source": "https://www.hooktheory.com/theorytab/view/the-white-stripes/seven-nation-army",
+      "expected_key": "E Minor",
+      "expected_roots": [
+        "E",
+        "G",
+        "A",
+        "B"
+      ],
+      "min_root_recall": 0.38,
+      "min_unique_roots": 3,
+      "transpose_invariant": true,
+      "notes": "Hooktheory: Em G A \u2014 i III IV (mostly E5/G5 riff)"
+    },
+    {
+      "id": "demons",
+      "file": "downloads/spotify-0sW7NKeUXGuXBluxZmSJVW.mp3",
+      "title": "Demons \u2014 Imagine Dragons",
+      "source": "https://www.hooktheory.com/theorytab/view/imagine-dragons/demons",
+      "expected_key": "B Minor",
+      "expected_roots": [
+        "B",
+        "D",
+        "G",
+        "A"
+      ],
+      "min_root_recall": 0.5,
+      "min_unique_roots": 3,
+      "transpose_invariant": true,
+      "notes": "Hooktheory: Bm D G A \u2014 i III VI VII"
+    },
+    {
+      "id": "iris",
+      "file": "downloads/spotify-5oA6Ta6bZEVmeacEp8DnbS.mp3",
+      "title": "Iris \u2014 Goo Goo Dolls",
+      "source": "https://www.hooktheory.com/theorytab/view/goo-goo-dolls/iris",
+      "expected_key": "D Major",
+      "expected_roots": [
+        "D",
+        "G",
+        "B",
+        "A"
+      ],
+      "min_root_recall": 0.5,
+      "min_unique_roots": 3,
+      "transpose_invariant": true,
+      "notes": "Hooktheory: D G Bm A \u2014 I IV vi V"
+    },
+    {
+      "id": "zombie",
+      "file": "downloads/spotify-6Qyc6fS7Ds6B4k4h1sH9Le.mp3",
+      "title": "Zombie \u2014 The Cranberries",
+      "source": "https://www.hooktheory.com/theorytab/view/the-cranberries/zombie",
+      "expected_key": "E Minor",
+      "expected_roots": [
+        "E",
+        "C",
+        "G",
+        "D"
+      ],
+      "min_root_recall": 0.55,
+      "min_unique_roots": 3,
+      "transpose_invariant": true,
+      "notes": "Hooktheory: Em C G D \u2014 i VI III VII"
+    }
+  ]
+}

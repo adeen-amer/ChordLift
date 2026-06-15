@@ -1,0 +1,9 @@
+# Optional ML chord engine (CHORD_ENGINE=ml)
+# Also requires: brew install vamp-plugin-sdk
+# And copy nnls-chroma.dylib to ~/Library/Audio/Plug-Ins/Vamp/
+autochord
+tensorflow<2.16
+gdown
+lazycats
+setuptools>=69,<82
+# vamp: pip install vamp --no-build-isolation (PKG_CONFIG_PATH=/opt/homebrew/lib/pkgconfig)

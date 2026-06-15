@@ -1,0 +1,14 @@
+.venv/
+venv/
+venv2/
+venv2/
+__pycache__/
+*.py[cod]
+.cache/
+cache/
+downloads/
+uploads/
+.env
+eval-results.json
+training_labels/
+*.egg-info/

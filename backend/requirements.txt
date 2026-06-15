@@ -1,0 +1,9 @@
+fastapi
+uvicorn
+yt-dlp>=2025.10.14
+librosa
+scipy
+httpx
+scikit-learn>=0.17,<=1.5.1
+basic-pitch[onnx]
+python-multipart

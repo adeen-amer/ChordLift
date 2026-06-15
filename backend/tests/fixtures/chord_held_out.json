@@ -1,0 +1,14 @@
+{
+  "description": "Held-out eval tracks — never use to tune thresholds or pick algorithm constants. Report metrics separately from chord_benchmark.json.",
+  "tracks": [
+    { "id": "ho-hey", "notes": "Simple I-V-vi-IV folk — not in benchmark" },
+    { "id": "stand-by-me", "notes": "Classic 50s progression" },
+    { "id": "with-or-without-you", "notes": "U2 — sustained guitar, sparse changes" },
+    { "id": "mr-brightside", "notes": "I-V-vi-IV in C# — sharp key" },
+    { "id": "rolling-in-the-deep", "notes": "Adele — minor pop" },
+    { "id": "hallelujah", "notes": "Slow ballad — vi-IV-I-V" },
+    { "id": "love-story", "notes": "Country-pop I-V-vi-IV variant" },
+    { "id": "seven-nation-army", "notes": "Riff-based — power/minimal harmony" },
+    { "id": "farda", "notes": "Urdu pop — outside Hooktheory anchor set" }
+  ]
+}
