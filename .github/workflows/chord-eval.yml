@@ -6,9 +6,47 @@ on:
   pull_request:
 
 jobs:
+  unit-tests:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: backend
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Install dependencies
+        run: |
+          pip install --upgrade pip
+          pip install -r requirements.txt -r requirements-ml.txt pytest mir-eval soundfile
+      - name: Run unit tests
+        run: python -m pytest tests/ -q --ignore=tests/fixtures
+        env:
+          CHORD_ENGINE: ml
+          CHORD_ENGINE_STRICT: "1"
+
+  frontend:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: frontend
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: npm
+          cache-dependency-path: frontend/package-lock.json
+      - run: npm ci
+      - run: npm run lint
+      - run: npm test
+      - run: npm run build
+
   eval:
     runs-on: ubuntu-latest
-    timeout-minutes: 60
+    timeout-minutes: 90
+    needs: [unit-tests, frontend]
     defaults:
       run:
         working-directory: backend
@@ -21,45 +59,29 @@ jobs:
           python-version: "3.11"
 
       - name: Install system dependencies
-        run: sudo apt-get update && sudo apt-get install -y --no-install-recommends ffmpeg libvamp-sdk2v5
+        run: sudo apt-get update && sudo apt-get install -y --no-install-recommends ffmpeg
 
       - name: Install Python dependencies
         run: |
           pip install --upgrade pip
-          pip install -r requirements.txt
-          pip install soundfile "tensorflow<2.16" gdown lazycats vamp
-          pip install autochord --no-deps
+          pip install -r requirements.txt -r requirements-ml.txt soundfile
 
       - name: Download eval audio
         run: python scripts/download_eval_tracks.py
         env:
           CHORD_ENGINE: ml
+          CHORD_ML_MODEL: chordia
 
-      - name: Verify chord stamp eval fixtures
-        run: python scripts/build_chord_stamp_eval.py --check
-
-      - name: Chord eval — root recall + key labels (both gate CI)
-        run: |
-          set +e
-          python eval_chords.py --require-all --write-results eval-results.json
-          ROOT_EXIT=$?
-          python eval_key_labels.py eval-results.json --min-rate 0.50
-          KEY_EXIT=$?
-          python eval_symbol_recall.py eval-results.json --min-rate 0.42
-          SYMBOL_EXIT=$?
-          python eval_boundary.py eval-results.json --min-rate 0.20
-          BOUNDARY_EXIT=$?
-          python eval_timeline.py eval-results.json --min-rate 0.12
-          TIMELINE_EXIT=$?
-          if [ $ROOT_EXIT -ne 0 ]; then exit $ROOT_EXIT; fi
-          if [ $KEY_EXIT -ne 0 ]; then exit $KEY_EXIT; fi
-          if [ $SYMBOL_EXIT -ne 0 ]; then exit $SYMBOL_EXIT; fi
-          if [ $BOUNDARY_EXIT -ne 0 ]; then exit $BOUNDARY_EXIT; fi
-          exit $TIMELINE_EXIT
+      - name: Gold v2 DEV — mir_eval vs v49 baseline
+        run: python eval_gold_mir.py --no-cache --split dev --require-audio-identity --check-baseline
         env:
           CHORD_ENGINE: ml
+          CHORD_ML_MODEL: chordia
+          CHORD_ENGINE_STRICT: "1"
 
-      - name: Run Beatles subset eval
-        run: python eval_beatles.py
+      - name: Gold v2 TEST — mir_eval vs v49 baseline
+        run: python eval_gold_mir.py --no-cache --split test --require-audio-identity --check-baseline
         env:
           CHORD_ENGINE: ml
+          CHORD_ML_MODEL: chordia
+          CHORD_ENGINE_STRICT: "1"
