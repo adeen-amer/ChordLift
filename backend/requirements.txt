@@ -7,3 +7,4 @@ httpx
 scikit-learn>=0.17,<=1.5.1
 basic-pitch[onnx]
 python-multipart
+mir-eval>=0.7

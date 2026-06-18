@@ -1,65 +1,28 @@
-# ML chord engine setup (CHORD_ENGINE=ml)
+# ML chord engine — lv-chordia (raw segments + pitch reliability gate)
 
-Requires **Python 3.11+**. Create a venv with:
-
-```bash
-cd backend
-./scripts/setup_venv.sh
-source .venv/bin/activate
-```
-
-## 1. System dependencies (macOS)
-
-```bash
-brew install vamp-plugin-sdk
-```
-
-## 2. NNLS-Chroma VAMP plugin (required — bundled .so is Linux-only)
-
-Download the **macOS** NNLS-Chroma plugin from the [Vamp Plugin Pack](https://vamp-plugins.org/pack.html) or [NNLS-Chroma project files](https://code.soundsoftware.ac.uk/projects/nnls-chroma/files).
-
-Copy the `.dylib` and `.cat` files into:
-
-```
-~/Library/Audio/Plug-Ins/Vamp/
-```
-
-Verify with:
-
-```bash
-ls ~/Library/Audio/Plug-Ins/Vamp/
-# Should include nnls-chroma.dylib (or similar), NOT the Linux .so from autochord
-```
-
-## 3. Python packages (project venv)
+**Production:** `CHORD_ENGINE=ml` with `CHORD_MODEL=chordia` (default).
 
 ```bash
 cd backend
-source .venv/bin/activate   # or venv2 while migrating
-pip install -r requirements-ml.txt
-
-# vamp must be built against Homebrew SDK:
-export PKG_CONFIG_PATH="/opt/homebrew/lib/pkgconfig:$PKG_CONFIG_PATH"
-pip install vamp --no-build-isolation
-pip install autochord --no-deps
-pip install lazycats gdown
+pip install -r requirements.txt -r requirements-ml.txt
 ```
 
-**Important:** autochord requires `tensorflow<2.16` (Keras 2). TensorFlow 2.20+ will fail to load the model.
+Check readiness: `GET /api/health` → `ml_ready: true`.
 
-## 4. Test
+## Eval
 
 ```bash
-CHORD_ENGINE=ml ./venv/bin/python compare_engines.py
-CHORD_ENGINE=ml ./venv/bin/python eval_chords.py --require-all
+make eval          # gold v2 DEV+TEST vs v49 baseline
+make phase13-v49   # regenerate v49 baselines
 ```
 
-## 5. Enable in app
+## Environment
 
-Set in `.env`:
+| Variable | Default | Notes |
+|----------|---------|-------|
+| `CHORD_ENGINE` | `ml` | `ml` or `classic` |
+| `CHORD_MODEL` | `chordia` | `ensemble` accepted as deprecated alias |
+| `CHORD_PITCH_CORRECT` | `1` | Reliability-gated ±1 semitone detune fix |
+| `CHORD_STEM_MODE` | `auto` | `auto` \| `hpss` \| `demucs` |
 
-```
-CHORD_ENGINE=ml
-```
-
-Falls back to classic automatically if ML fails.
+Cached analyses invalidate when `ANALYZER_VERSION` or engine flags change.

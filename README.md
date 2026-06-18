@@ -1,11 +1,11 @@
 # ChordLift 🎸
 
-ChordLift is an AI-powered guitar practice tool that analyzes YouTube videos to detect chords, strumming patterns, and guitar solos. It features a real-time, high-performance sync engine that ties the audio playback directly to an SVG-rendered chord sequence and an interactive fretboard for solos.
+ChordLift is an AI-powered guitar practice tool that analyzes YouTube videos to detect chords, rhythm-density hints, and guitar solos. It features a real-time, high-performance sync engine that ties the audio playback directly to an SVG-rendered chord sequence and an interactive fretboard for solos.
 
 ## Features
 - **Multi-Source Audio**: YouTube, Spotify (via search match), SoundCloud, or direct file upload (MP3/WAV/M4A).
 - **Resilient YouTube Downloads**: Uses current yt-dlp client workarounds, optional cookies file, and Piped/Invidious fallbacks.
-- **Chord Detection**: Harmonic-percussive separation, smoothed chroma analysis, and extended chord types (maj/min, 7, maj7, m7, sus2, sus4).
+- **Chord Detection**: lv-chordia on HPSS chord stem, pitch reliability gate, beat-synced presentation layer.
 - **Solo Fretboard**: Pinpoints individual guitar notes using `basic-pitch` and renders them on an interactive SVG fretboard synced to playback.
 - **Real-Time Sync**: Uses a `requestAnimationFrame` loop to guarantee buttery-smooth 60 FPS highlighting of chords and notes without React re-render lag.
 
@@ -13,7 +13,7 @@ ChordLift is an AI-powered guitar practice tool that analyzes YouTube videos to 
 
 ## Prerequisites
 
-- **Python 3.10+** (Required for the AI backend)
+- **Python 3.11+** (Required for the AI backend — matches Docker and CI)
 - **Node.js 18+** (Required for the React frontend)
 - **FFmpeg** (Required system-level dependency for yt-dlp audio extraction)
   - **Mac**: `brew install ffmpeg`
@@ -34,6 +34,8 @@ pip install -r requirements.txt
 cp .env.example .env   # optional
 uvicorn main:app --reload --port 8000
 ```
+
+**ML chord engine (default):** see [backend/ML_SETUP.md](backend/ML_SETUP.md) — `pip install -r requirements-ml.txt` (lv-chordia + torch). Spotify links use spotdl. Check readiness with `GET /api/health`.
 
 ### 2. Frontend Setup
 
@@ -97,5 +99,6 @@ docker compose up --build
 ## Architecture Notes
 
 - The backend uses harmonic-percussive separation and median-filtered chroma for chord detection, plus Spotify's `basic-pitch` (ONNX) for polyphonic note detection.
+- Rhythm hints under each chord are **estimated from onset density**, not true strumming-pattern recognition.
 - Analysis results are cached with a version stamp; bumping `ANALYZER_VERSION` in `analyzer.py` invalidates stale cache entries.
 - The frontend circumvents React-state bottlenecks during playback by reading `audio.currentTime` in a `requestAnimationFrame` loop and updating DOM/SVG nodes directly.

@@ -21,3 +21,24 @@ def test_estimate_pitch_shift_detects_sharp_signal():
     y_sharp = librosa.effects.pitch_shift(y, sr=sr, n_steps=0.5)
     shift = estimate_pitch_shift_semitones(y_sharp, sr)
     assert shift > 0.1
+
+
+def test_pitch_gate_skips_unreliable_correction(monkeypatch):
+    """Unreliable correction should skip apply (shift returned as 0)."""
+    from pitch_utils import normalize_pitch
+
+    sr = 22050
+    y = librosa.tone(110, sr=sr, duration=2.0)
+
+    monkeypatch.setattr(
+        "pitch_utils.estimate_pitch_shift_semitones",
+        lambda _y, _sr: 0.5,
+    )
+    monkeypatch.setattr(
+        "pitch_utils._estimate_reliable",
+        lambda shift, _y, _sr, _corrected: False,
+    )
+    out, applied = normalize_pitch(y, sr)
+    assert applied == 0.0
+    np.testing.assert_array_equal(out, y)
+

@@ -1,17 +1,28 @@
 import { useState, useEffect, type RefObject } from 'react';
-import { Play, Pause, Disc3, Music2 } from 'lucide-react';
-import type { KeyInfo, SongInfo } from '../types';
+import { Play, Pause, Disc3, Music2, Guitar } from 'lucide-react';
+import type { CapoInfo, KeyInfo, SongInfo, AudioLoadState } from '../types';
 
 interface AudioPlayerProps {
   audioRef: RefObject<HTMLAudioElement | null>;
   src: string | null;
   song?: SongInfo;
   songKey?: KeyInfo;
+  capo?: CapoInfo;
   analyzerVersion?: string;
   chordEngine?: string;
+  loadState?: AudioLoadState;
 }
 
-export const AudioPlayer = ({ audioRef, src, song, songKey, analyzerVersion, chordEngine }: AudioPlayerProps) => {
+export const AudioPlayer = ({
+  audioRef,
+  src,
+  song,
+  songKey,
+  capo,
+  analyzerVersion,
+  chordEngine,
+  loadState = 'idle',
+}: AudioPlayerProps) => {
   const [isPlaying, setIsPlaying] = useState(false);
   const [progress, setProgress] = useState(0);
   const [duration, setDuration] = useState(0);
@@ -20,11 +31,14 @@ export const AudioPlayer = ({ audioRef, src, song, songKey, analyzerVersion, cho
   const artist = song?.artist?.trim();
   const artUrl = song?.album_art_url;
   const keyDisplay = songKey?.display;
+  const capoDisplay = capo?.display;
   const engineLabel = chordEngine === 'ml' ? 'ML' : chordEngine === 'classic' ? 'Classic' : chordEngine;
   const metaParts = [
     engineLabel && `Engine: ${engineLabel}`,
     analyzerVersion && `v${analyzerVersion}`,
   ].filter(Boolean);
+
+  const canPlay = Boolean(src) && loadState === 'ready';
 
   useEffect(() => {
     const audio = audioRef.current;
@@ -39,27 +53,43 @@ export const AudioPlayer = ({ audioRef, src, song, songKey, analyzerVersion, cho
     };
 
     const handleEnded = () => setIsPlaying(false);
+    const handlePause = () => setIsPlaying(false);
+    const handlePlay = () => setIsPlaying(true);
 
     audio.addEventListener('timeupdate', updateProgress);
     audio.addEventListener('loadedmetadata', updateDuration);
     audio.addEventListener('ended', handleEnded);
+    audio.addEventListener('pause', handlePause);
+    audio.addEventListener('play', handlePlay);
 
     return () => {
       audio.removeEventListener('timeupdate', updateProgress);
       audio.removeEventListener('loadedmetadata', updateDuration);
       audio.removeEventListener('ended', handleEnded);
+      audio.removeEventListener('pause', handlePause);
+      audio.removeEventListener('play', handlePlay);
     };
-  }, [audioRef]);
+  }, [audioRef, src]);
 
-  const togglePlay = () => {
-    if (!audioRef.current || !src) return;
+  useEffect(() => {
+    setIsPlaying(false);
+    setProgress(0);
+    setDuration(0);
+  }, [src]);
+
+  const togglePlay = async () => {
+    if (!audioRef.current || !canPlay) return;
 
     if (isPlaying) {
       audioRef.current.pause();
-    } else {
-      audioRef.current.play();
+      return;
     }
-    setIsPlaying(!isPlaying);
+
+    try {
+      await audioRef.current.play();
+    } catch {
+      setIsPlaying(false);
+    }
   };
 
   const handleSeek = (e: React.MouseEvent<HTMLDivElement>) => {
@@ -76,6 +106,14 @@ export const AudioPlayer = ({ audioRef, src, song, songKey, analyzerVersion, cho
     const s = Math.floor(time % 60);
     return `${m}:${s.toString().padStart(2, '0')}`;
   };
+
+  const playDisabled = !canPlay;
+  const playHint =
+    loadState === 'loading'
+      ? 'Loading audio…'
+      : loadState === 'error'
+        ? 'Audio unavailable'
+        : undefined;
 
   return (
     <div className="audio-player glass-panel">
@@ -99,12 +137,24 @@ export const AudioPlayer = ({ audioRef, src, song, songKey, analyzerVersion, cho
               <span>Key: <strong>{keyDisplay}</strong></span>
             </div>
           )}
+          {capoDisplay && (
+            <div className="song-capo">
+              <Guitar size={14} />
+              <span><strong>{capoDisplay}</strong> (open shapes)</span>
+            </div>
+          )}
           {metaParts.length > 0 && (
             <p className="analysis-meta">{metaParts.join(' · ')}</p>
           )}
+          {playHint && <p className="analysis-meta">{playHint}</p>}
         </div>
 
-        <button className="play-btn" onClick={togglePlay} disabled={!src} aria-label={isPlaying ? 'Pause' : 'Play'}>
+        <button
+          className="play-btn"
+          onClick={togglePlay}
+          disabled={playDisabled}
+          aria-label={isPlaying ? 'Pause' : 'Play'}
+        >
           {isPlaying ? <Pause size={24} /> : <Play size={24} fill="currentColor" />}
         </button>
       </div>

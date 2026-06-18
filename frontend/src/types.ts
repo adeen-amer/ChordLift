@@ -4,15 +4,38 @@ export interface LyricLine {
   text: string;
 }
 
+export type AudioLoadState = 'idle' | 'loading' | 'ready' | 'error';
+
 export interface ChordEvent {
   time: number;
   end_time: number;
   chord: string;
   confidence: number;
   is_low_confidence: boolean;
-  strumming: string;
+  confidence_tier?: 'low' | 'medium' | 'high';
+  strumming?: string;
+  /** True when strumming is an onset-density estimate, not detected pattern. */
+  strumming_is_heuristic?: boolean;
   is_power?: boolean;
   lyrics?: string;
+  /** Original model chord when display was key-adjusted or user-corrected. */
+  model_chord?: string;
+  concert_chord?: string;
+  display_adjusted?: boolean;
+  user_corrected?: boolean;
+}
+
+export interface BeatGridInfo {
+  tempo_bpm: number;
+  beat_times: number[];
+  downbeat_times: number[];
+  beat_duration: number;
+}
+
+export interface CapoInfo {
+  capo_fret: number;
+  display: string | null;
+  transpose_semitones: number;
 }
 
 export interface SoloNote {
@@ -47,6 +70,10 @@ export interface KeyInfo {
 export interface AnalysisData {
   video_id: string;
   timeline: ChordEvent[];
+  model_timeline?: ChordEvent[];
+  beats?: BeatGridInfo;
+  capo?: CapoInfo;
+  presentation?: string;
   solos: SoloSection[];
   song?: SongInfo;
   key?: KeyInfo;

@@ -1,7 +1,9 @@
 import { useEffect, useRef, type RefObject } from 'react';
 import type { AnalysisData, KeyInfo } from '../types';
 import { boundsToSvgRect } from '../utils/fretboardLayout';
-import { activeLyricIndex, lyricLineState } from '../utils/lyricsSync';
+import { lyricLineState } from '../utils/lyricsSync';
+import { activeLyricIndexBinary, activeRangeIndex, activeSegmentIndex } from '../utils/timeline';
+import { segmentTimeKey } from '../utils/chordCorrections';
 import {
   getActiveBoxForChord,
   getKeyCagedBoxes,
@@ -98,7 +100,7 @@ function updateLyricsPanel(
   currentTime: number,
   scrollToActive: boolean,
 ) {
-  const activeIdx = activeLyricIndex(lines, currentTime);
+  const activeIdx = activeLyricIndexBinary(lines, currentTime);
   const lineEls = scrollContainer.querySelectorAll<HTMLElement>('.lyrics-line');
 
   lineEls.forEach((el, i) => {
@@ -127,54 +129,55 @@ export function useSyncEngine({
 }: SyncEngineProps) {
   const requestRef = useRef<number>(0);
   const lastLyricScrollIdx = useRef<number>(-1);
+  const lastChordIdx = useRef<number>(-1);
+  const lastSoloIdx = useRef<number>(-1);
+  const playingRef = useRef(false);
 
   useEffect(() => {
     if (!data) return;
 
-    const animate = () => {
-      if (!audioRef.current) {
-        requestRef.current = requestAnimationFrame(animate);
-        return;
-      }
+    const syncFrame = () => {
+      const audio = audioRef.current;
+      if (!audio) return;
 
-      const currentTime = audioRef.current.currentTime;
+      const currentTime = audio.currentTime;
       let activeChordName: string | null = null;
 
       if (chordContainerRef.current) {
-        const cards = chordContainerRef.current.children;
+        const chordIdx = activeSegmentIndex(data.timeline, currentTime);
+        const container = chordContainerRef.current;
 
-        for (let i = 0; i < data.timeline.length; i++) {
-          const chord = data.timeline[i];
-          const isMatch = currentTime >= chord.time && currentTime < chord.end_time;
-
-          if (isMatch) {
-            activeChordName = chord.chord;
-          }
-
-          if (cards[i]) {
-            const el = cards[i] as HTMLElement;
-            if (isMatch) {
-              if (!el.classList.contains('active')) {
-                el.classList.add('active');
-                const containerRect = chordContainerRef.current!.getBoundingClientRect();
-                const elRect = el.getBoundingClientRect();
-                if (elRect.right > containerRect.right || elRect.left < containerRect.left) {
-                  chordContainerRef.current!.scrollTo({
-                    left: el.offsetLeft - chordContainerRef.current!.clientWidth / 2 + el.clientWidth / 2,
-                    behavior: 'smooth',
-                  });
-                }
+        if (chordIdx >= 0) {
+          activeChordName = data.timeline[chordIdx].chord;
+          const segKey = segmentTimeKey(data.timeline[chordIdx].time);
+          const el = container.querySelector<HTMLElement>(`[data-time="${segKey}"]`);
+          if (el) {
+            container.querySelectorAll('.chord-card.active').forEach((c) => {
+              c.classList.remove('active');
+            });
+            if (!el.classList.contains('active')) {
+              el.classList.add('active');
+              const containerRect = container.getBoundingClientRect();
+              const elRect = el.getBoundingClientRect();
+              if (elRect.right > containerRect.right || elRect.left < containerRect.left) {
+                container.scrollTo({
+                  left: el.offsetLeft - container.clientWidth / 2 + el.clientWidth / 2,
+                  behavior: 'smooth',
+                });
               }
-            } else {
-              el.classList.remove('active');
             }
           }
+        } else {
+          container.querySelectorAll('.chord-card.active').forEach((c) => {
+            c.classList.remove('active');
+          });
         }
+        lastChordIdx.current = chordIdx;
       }
 
       const lyricLines = data.lyrics?.lines ?? [];
       if (lyricsPanelRef?.current && lyricLines.length) {
-        const activeIdx = activeLyricIndex(lyricLines, currentTime);
+        const activeIdx = activeLyricIndexBinary(lyricLines, currentTime);
         const scrollToActive = activeIdx !== lastLyricScrollIdx.current;
         updateLyricsPanel(lyricsPanelRef.current, lyricLines, currentTime, scrollToActive);
         if (scrollToActive) lastLyricScrollIdx.current = activeIdx;
@@ -193,18 +196,18 @@ export function useSyncEngine({
         }
 
         if (hasSolos) {
-          const soloIdx = data.solos.findIndex(
-            (s) => currentTime >= s.start && currentTime <= s.end,
-          );
+          const soloIdx = activeRangeIndex(data.solos, currentTime);
 
-          const dots = svg.querySelectorAll('.note-dot');
-          const texts = svg.querySelectorAll('.note-text');
-
-          dots.forEach((dot) => {
-            (dot as SVGCircleElement).setAttribute('opacity', '0');
-            (dot as SVGCircleElement).setAttribute('r', '0');
-          });
-          texts.forEach((t) => (t as SVGTextElement).setAttribute('opacity', '0'));
+          if (soloIdx !== lastSoloIdx.current) {
+            const dots = svg.querySelectorAll('.note-dot');
+            const texts = svg.querySelectorAll('.note-text');
+            dots.forEach((dot) => {
+              (dot as SVGCircleElement).setAttribute('opacity', '0');
+              (dot as SVGCircleElement).setAttribute('r', '0');
+            });
+            texts.forEach((t) => (t as SVGTextElement).setAttribute('opacity', '0'));
+            lastSoloIdx.current = soloIdx;
+          }
 
           if (soloIdx >= 0) {
             const currentSolo = data.solos[soloIdx];
@@ -231,6 +234,9 @@ export function useSyncEngine({
                   dot.setAttribute('r', (4 + ratio * 2).toString());
                   dot.setAttribute('fill', 'var(--accent-secondary)');
                 }
+              } else if (dot) {
+                dot.setAttribute('opacity', '0');
+                dot.setAttribute('r', '0');
               }
             });
           } else if (wrapper && !improvEnabled) {
@@ -240,15 +246,58 @@ export function useSyncEngine({
           wrapper.classList.add('inactive');
         }
       }
-
-      requestRef.current = requestAnimationFrame(animate);
     };
 
-    requestRef.current = requestAnimationFrame(animate);
+    const scheduleLoop = () => {
+      cancelAnimationFrame(requestRef.current);
+      const tick = () => {
+        syncFrame();
+        if (playingRef.current) {
+          requestRef.current = requestAnimationFrame(tick);
+        }
+      };
+      requestRef.current = requestAnimationFrame(tick);
+    };
+
+    const stopLoop = () => {
+      playingRef.current = false;
+      cancelAnimationFrame(requestRef.current);
+      syncFrame();
+    };
+
+    const audio = audioRef.current;
+    if (!audio) return;
+
+    const onPlay = () => {
+      playingRef.current = true;
+      scheduleLoop();
+    };
+    const onPause = () => stopLoop();
+    const onEnded = () => stopLoop();
+    const onSeeked = () => syncFrame();
+
+    audio.addEventListener('play', onPlay);
+    audio.addEventListener('pause', onPause);
+    audio.addEventListener('ended', onEnded);
+    audio.addEventListener('seeked', onSeeked);
+
+    if (!audio.paused) {
+      playingRef.current = true;
+      scheduleLoop();
+    } else {
+      syncFrame();
+    }
 
     return () => {
-      if (requestRef.current) cancelAnimationFrame(requestRef.current);
+      playingRef.current = false;
+      cancelAnimationFrame(requestRef.current);
+      audio.removeEventListener('play', onPlay);
+      audio.removeEventListener('pause', onPause);
+      audio.removeEventListener('ended', onEnded);
+      audio.removeEventListener('seeked', onSeeked);
       lastLyricScrollIdx.current = -1;
+      lastChordIdx.current = -1;
+      lastSoloIdx.current = -1;
     };
   }, [data, audioRef, chordContainerRef, lyricsPanelRef, fretboardRef, improvEnabled]);
 }

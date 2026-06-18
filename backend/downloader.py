@@ -1,5 +1,6 @@
 import hashlib
 import json
+import logging
 import os
 import re
 import shutil
@@ -37,22 +38,36 @@ INVIDIOUS_INSTANCES = [
 YOUTUBE_ID_RE = re.compile(r"^[a-zA-Z0-9_-]{11}$")
 LOCAL_URL_PREFIX = "chordlift://local/"
 
+logger = logging.getLogger(__name__)
+
+
+def _bitrate_value(stream: dict) -> int:
+    try:
+        return int(stream.get("bitrate") or 0)
+    except (TypeError, ValueError):
+        return 0
+
 
 def is_local_source(url: str) -> bool:
     return url.startswith(LOCAL_URL_PREFIX)
 
 
 def local_source_id(url: str) -> str:
-    return url[len(LOCAL_URL_PREFIX):]
+    from safe_paths import validate_source_id
+
+    source_id = url[len(LOCAL_URL_PREFIX):]
+    return validate_source_id(source_id)
 
 
 def extract_youtube_id(url: str) -> Optional[str]:
-    if "v=" in url:
-        return url.split("v=")[1].split("&")[0][:11]
-    if "youtu.be/" in url:
-        return url.split("youtu.be/")[1].split("?")[0][:11]
-    if "/shorts/" in url:
-        return url.split("/shorts/")[1].split("?")[0][:11]
+    if not url:
+        return None
+    match = re.search(
+        r"(?:[?&]v=|youtu\.be/|/shorts/|/embed/|/live/)([a-zA-Z0-9_-]{11})",
+        url,
+    )
+    if match and YOUTUBE_ID_RE.match(match.group(1)):
+        return match.group(1)
     return None
 
 
@@ -178,13 +193,13 @@ def _run_ytdlp(url: str, output_template: str, strategies: List[Dict]) -> None:
     for strategy in strategies:
         label = strategy.pop("_label", "unknown")
         try:
-            print(f"Trying download strategy: {label}")
+            logger.info(f"Trying download strategy: {label}")
             with yt_dlp.YoutubeDL(strategy) as ydl:
                 ydl.download([url])
             return
         except Exception as exc:
             last_error = exc
-            print(f"Strategy '{label}' failed: {exc}")
+            logger.info(f"Strategy '{label}' failed: {exc}")
     raise RuntimeError(f"All yt-dlp strategies failed. Last error: {last_error}")
 
 
@@ -224,15 +239,15 @@ def _download_youtube_via_piped(video_id: str, output_path: str) -> bool:
             streams = payload.get("audioStreams") or []
             if not streams:
                 continue
-            best = sorted(streams, key=lambda s: s.get("bitrate", 0), reverse=True)[0]
+            best = sorted(streams, key=_bitrate_value, reverse=True)[0]
             stream_url = best.get("url")
             if not stream_url:
                 continue
-            print(f"Piped download via {instance}")
+            logger.info("Piped download via %s", instance)
             _download_stream_to_mp3(stream_url, output_path)
             return True
         except Exception as exc:
-            print(f"Piped instance {instance} failed: {exc}")
+            logger.warning("Piped instance %s failed: %s", instance, exc)
     return False
 
 
@@ -250,15 +265,15 @@ def _download_youtube_via_invidious(video_id: str, output_path: str) -> bool:
             ]
             if not formats:
                 continue
-            best = sorted(formats, key=lambda s: s.get("bitrate", ""), reverse=True)[0]
+            best = sorted(formats, key=_bitrate_value, reverse=True)[0]
             stream_url = best.get("url")
             if not stream_url:
                 continue
-            print(f"Invidious download via {instance}")
+            logger.info("Invidious download via %s", instance)
             _download_stream_to_mp3(stream_url, output_path)
             return True
         except Exception as exc:
-            print(f"Invidious instance {instance} failed: {exc}")
+            logger.warning("Invidious instance %s failed: %s", instance, exc)
     return False
 
 
@@ -331,11 +346,49 @@ SPOTIFY_ID_SEARCH = {
 }
 
 
+def _download_spotify_via_spotdl(url: str, expected_path: str) -> None:
+    """YT-Music metadata-matched download + Spotify duration verification."""
+    import shutil
+    import subprocess
+    import sys
+    import tempfile
+
+    import librosa
+
+    from spotify_metadata import verify_audio_matches_spotify
+
+    tmp = tempfile.mkdtemp(prefix="spotdl_")
+    try:
+        subprocess.run(
+            [sys.executable, "-m", "spotdl", "download", url, "--output", tmp, "--format", "mp3"],
+            check=True,
+        )
+        mp3s = [f for f in os.listdir(tmp) if f.endswith(".mp3")]
+        if not mp3s:
+            raise RuntimeError("spotdl produced no mp3")
+        src = os.path.join(tmp, mp3s[0])
+        duration = float(librosa.get_duration(path=src))
+        check = verify_audio_matches_spotify(url, duration, tolerance_sec=1.0)
+        if check.get("spotify_duration_status") == "fail":
+            raise RuntimeError(
+                f"Downloaded audio {duration:.1f}s does not match Spotify official "
+                f"{check.get('spotify_duration_sec')}s (Δ={check.get('spotify_delta_sec'):.2f}s)"
+            )
+        shutil.copy2(src, expected_path)
+        if check.get("spotify_duration_status") == "pass":
+            logger.info(
+                f"Spotify duration verified: {duration:.1f}s "
+                f"(official {check.get('spotify_duration_sec')}s)"
+            )
+    finally:
+        shutil.rmtree(tmp, ignore_errors=True)
+
+
 def _resolve_spotify_to_youtube_search(url: str) -> str:
     spotify_id = extract_spotify_id(url)
     if spotify_id and spotify_id in SPOTIFY_ID_SEARCH:
         query = f"ytsearch1:{SPOTIFY_ID_SEARCH[spotify_id]}"
-        print(f"Spotify ID fallback search: {query}")
+        logger.info(f"Spotify ID fallback search: {query}")
         return query
 
     try:
@@ -349,7 +402,7 @@ def _resolve_spotify_to_youtube_search(url: str) -> str:
     except Exception as exc:
         if spotify_id and spotify_id in SPOTIFY_ID_SEARCH:
             query = f"ytsearch1:{SPOTIFY_ID_SEARCH[spotify_id]}"
-            print(f"Spotify oembed failed ({exc}); using ID fallback: {query}")
+            logger.info(f"Spotify oembed failed ({exc}); using ID fallback: {query}")
             return query
         raise RuntimeError(f"Could not resolve Spotify track: {exc}") from exc
 
@@ -357,7 +410,7 @@ def _resolve_spotify_to_youtube_search(url: str) -> str:
         raise RuntimeError("Could not resolve Spotify track title.")
 
     query = _spotify_youtube_query(title)
-    print(f"Spotify resolved to search: {query}")
+    logger.info(f"Spotify resolved to search: {query}")
     return query
 
 
@@ -396,7 +449,7 @@ def fetch_track_metadata(url: str) -> dict:
                 {"url": url},
             )
         except Exception as exc:
-            print(f"Spotify metadata failed: {exc}")
+            logger.info(f"Spotify metadata failed: {exc}")
 
     yt_id = extract_youtube_id(url)
     if yt_id:
@@ -406,7 +459,7 @@ def fetch_track_metadata(url: str) -> dict:
                 {"url": f"https://www.youtube.com/watch?v={yt_id}", "format": "json"},
             )
         except Exception as exc:
-            print(f"YouTube oembed failed: {exc}")
+            logger.info(f"YouTube oembed failed: {exc}")
 
     try:
         with yt_dlp.YoutubeDL({"quiet": True, "no_warnings": True, "skip_download": True}) as ydl:
@@ -417,7 +470,7 @@ def fetch_track_metadata(url: str) -> dict:
             "album_art_url": info.get("thumbnail"),
         }
     except Exception as exc:
-        print(f"yt-dlp metadata fallback failed: {exc}")
+        logger.info(f"yt-dlp metadata fallback failed: {exc}")
 
     return {"title": "Unknown track", "artist": "", "album_art_url": None}
 
@@ -472,6 +525,14 @@ async def download_audio(url: str) -> dict:
         spotify_id = extract_spotify_id(url)
         yt_id = extract_youtube_id(url)
 
+        if spotify_id and not yt_id:
+            try:
+                logger.info(f"Spotify link → spotdl YT-Music match: {url}")
+                _download_spotify_via_spotdl(url, expected_path)
+                return
+            except Exception as spotdl_err:
+                logger.info(f"spotdl failed ({spotdl_err}); falling back to ytsearch")
+
         download_url = url
         if spotify_id and not yt_id:
             download_url = _resolve_spotify_to_youtube_search(url)
@@ -482,7 +543,7 @@ async def download_audio(url: str) -> dict:
                 _run_ytdlp(download_url, output_template, strategies)
             except Exception as primary_error:
                 if yt_id:
-                    print(f"yt-dlp failed, trying proxy fallbacks: {primary_error}")
+                    logger.info(f"yt-dlp failed, trying proxy fallbacks: {primary_error}")
                     if _download_youtube_via_piped(yt_id, expected_path):
                         return
                     if _download_youtube_via_invidious(yt_id, expected_path):

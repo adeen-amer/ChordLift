@@ -517,13 +517,85 @@ body {
   gap: 6px;
 }
 
-.chord-card.low-confidence {
+.chord-card.low-confidence,
+.chord-card.confidence-low {
   opacity: 0.55;
   border-color: rgba(255, 255, 255, 0.06);
 }
 
-.chord-card.low-confidence.active {
+.chord-card.confidence-medium {
+  opacity: 0.78;
+  border-style: dashed;
+}
+
+.chord-card.low-confidence.active,
+.chord-card.confidence-low.active {
   opacity: 0.85;
+}
+
+.chord-card.display-adjusted {
+  border-color: rgba(100, 180, 255, 0.25);
+}
+
+.chord-card.user-corrected {
+  border-color: rgba(120, 220, 140, 0.35);
+}
+
+.medium-confidence {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+}
+
+.user-corrected-badge {
+  font-size: 0.75rem;
+  color: #8fd9a0;
+}
+
+.chord-edit-input {
+  width: 100%;
+  text-align: center;
+  font-size: 1.25rem;
+  font-weight: bold;
+  background: rgba(0, 0, 0, 0.25);
+  border: 1px solid var(--accent-secondary);
+  border-radius: 6px;
+  color: inherit;
+  padding: 4px 8px;
+  margin-bottom: 8px;
+}
+
+.chord-edit-hint {
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  text-align: center;
+  margin-top: 8px;
+}
+
+.presentation-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin: 12px 0 4px;
+}
+
+.presentation-label {
+  color: var(--text-muted);
+  font-size: 0.9rem;
+}
+
+.presentation-btn.active {
+  border-color: var(--accent-secondary);
+  color: var(--accent-secondary);
+}
+
+.song-capo {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.9rem;
+  color: var(--text-muted);
+  margin-top: 4px;
 }
 
 .low-confidence {
