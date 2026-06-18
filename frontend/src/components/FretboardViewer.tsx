@@ -18,13 +18,11 @@ export const FretboardViewer = forwardRef<SVGSVGElement, FretboardViewerProps>(
       [improvEnabled, songKey],
     );
 
-    const soloNotes = (
-      <>
-        {solos.map((solo, soloIdx) =>
-          solo.notes.map((note, noteIdx) => {
-            const { x, y } = stringFretToXY(note.string, note.fret);
-            return (
-              <g key={`note-${soloIdx}-${noteIdx}`}>
+    const soloNotes = solos.flatMap((solo, soloIdx) =>
+      solo.notes.map((note, noteIdx) => {
+        const { x, y } = stringFretToXY(note.string, note.fret);
+        return (
+          <g key={`solo-${soloIdx}-note-${noteIdx}`}>
                 <circle
                   id={`dot-${soloIdx}-${noteIdx}`}
                   className="note-dot"
@@ -46,10 +44,8 @@ export const FretboardViewer = forwardRef<SVGSVGElement, FretboardViewerProps>(
                   {note.note.replace(/[0-9]/g, '')}
                 </text>
               </g>
-            );
-          }),
-        )}
-      </>
+        );
+      }),
     );
 
     return (

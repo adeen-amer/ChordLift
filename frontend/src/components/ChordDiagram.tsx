@@ -103,7 +103,7 @@ export const ChordDiagram = ({ chordName }: ChordDiagramProps) => {
         if (fret === -1) {
           return (
             <text
-              key={`mark-${stringIdx}`}
+              key={`mute-${stringIdx}`}
               x={x}
               y={yOffset - 10}
               fill="var(--accent-primary)"
@@ -119,7 +119,7 @@ export const ChordDiagram = ({ chordName }: ChordDiagramProps) => {
         if (fret === 0) {
           return (
             <circle
-              key={`mark-${stringIdx}`}
+              key={`open-${stringIdx}`}
               cx={x}
               cy={yOffset - 12}
               r={3}
@@ -138,7 +138,7 @@ export const ChordDiagram = ({ chordName }: ChordDiagramProps) => {
         const y = yOffset + (relativeFret - 0.5) * fretSpacing;
         return (
           <circle
-            key={`mark-${stringIdx}`}
+            key={`finger-${stringIdx}`}
             cx={x}
             cy={y}
             r={5}

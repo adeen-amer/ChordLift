@@ -402,6 +402,7 @@ function App() {
           <div className="playback-main">
             <div className="glass-panel chord-panel">
               <ChordSequence
+                key={`${data.video_id}-${effectivePresentationMode}`}
                 timeline={displayTimeline}
                 ref={chordContainerRef}
                 onCorrectChord={handleCorrectChord}

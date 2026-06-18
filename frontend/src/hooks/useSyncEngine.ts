@@ -3,7 +3,6 @@ import type { AnalysisData, KeyInfo } from '../types';
 import { boundsToSvgRect } from '../utils/fretboardLayout';
 import { lyricLineState } from '../utils/lyricsSync';
 import { activeLyricIndexBinary, activeRangeIndex, activeSegmentIndex } from '../utils/timeline';
-import { segmentTimeKey } from '../utils/chordCorrections';
 import {
   getActiveBoxForChord,
   getKeyCagedBoxes,
@@ -149,8 +148,7 @@ export function useSyncEngine({
 
         if (chordIdx >= 0) {
           activeChordName = data.timeline[chordIdx].chord;
-          const segKey = segmentTimeKey(data.timeline[chordIdx].time);
-          const el = container.querySelector<HTMLElement>(`[data-time="${segKey}"]`);
+          const el = container.querySelector<HTMLElement>(`[data-seg-index="${chordIdx}"]`);
           if (el) {
             container.querySelectorAll('.chord-card.active').forEach((c) => {
               c.classList.remove('active');

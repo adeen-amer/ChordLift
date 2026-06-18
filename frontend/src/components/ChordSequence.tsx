@@ -1,7 +1,7 @@
 import { forwardRef, useState } from 'react';
 import type { ChordEvent } from '../types';
 import { ChordDiagram } from './ChordDiagram';
-import { segmentTimeKey } from '../utils/chordCorrections';
+import { segmentTimeKey, timelineListKey } from '../utils/chordCorrections';
 
 interface ChordSequenceProps {
   timeline: ChordEvent[];
@@ -13,9 +13,9 @@ export const ChordSequence = forwardRef<HTMLDivElement, ChordSequenceProps>(
     const [editingKey, setEditingKey] = useState<string | null>(null);
     const [draft, setDraft] = useState('');
 
-    const startEdit = (seg: ChordEvent) => {
+    const startEdit = (seg: ChordEvent, idx: number) => {
       if (!onCorrectChord) return;
-      setEditingKey(segmentTimeKey(seg.time));
+      setEditingKey(String(idx));
       setDraft(seg.chord);
     };
 
@@ -29,8 +29,9 @@ export const ChordSequence = forwardRef<HTMLDivElement, ChordSequenceProps>(
     return (
       <div className="chord-sequence-wrap">
         <div className="chord-container" ref={ref}>
-          {timeline.map((chord) => {
+          {timeline.map((chord, idx) => {
             const segKey = segmentTimeKey(chord.time);
+            const editKey = String(idx);
             const tier = chord.user_corrected
               ? 'high'
               : (chord.confidence_tier ?? (chord.is_low_confidence ? 'low' : 'high'));
@@ -40,9 +41,10 @@ export const ChordSequence = forwardRef<HTMLDivElement, ChordSequenceProps>(
 
             return (
               <div
-                key={segKey}
+                key={timelineListKey(idx)}
                 className={`chord-card${tierClass}${adjustedClass}${correctedClass}`}
-                id={`chord-${segKey}`}
+                id={`chord-${timelineListKey(idx)}`}
+                data-seg-index={idx}
                 data-time={segKey}
                 title={
                   chord.model_chord && chord.model_chord !== chord.chord
@@ -50,7 +52,7 @@ export const ChordSequence = forwardRef<HTMLDivElement, ChordSequenceProps>(
                     : undefined
                 }
               >
-                {editingKey === segKey ? (
+                {editingKey === editKey ? (
                   <input
                     className="chord-edit-input"
                     value={draft}
@@ -68,11 +70,11 @@ export const ChordSequence = forwardRef<HTMLDivElement, ChordSequenceProps>(
                     className="chord-name"
                     role="button"
                     tabIndex={onCorrectChord ? 0 : undefined}
-                    onDoubleClick={() => startEdit(chord)}
+                    onDoubleClick={() => startEdit(chord, idx)}
                     onKeyDown={(e) => {
                       if (onCorrectChord && (e.key === 'Enter' || e.key === ' ')) {
                         e.preventDefault();
-                        startEdit(chord);
+                        startEdit(chord, idx);
                       }
                     }}
                   >

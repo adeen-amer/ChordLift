@@ -4,6 +4,7 @@ import {
   loadCorrections,
   saveCorrection,
   segmentTimeKey,
+  timelineListKey,
 } from './chordCorrections';
 import type { ChordEvent } from '../types';
 
@@ -11,6 +12,12 @@ describe('segmentTimeKey', () => {
   it('rounds to 100ms', () => {
     expect(segmentTimeKey(0.04)).toBe('0.0');
     expect(segmentTimeKey(2.06)).toBe('2.1');
+  });
+
+  it('collides for segments in the same 100ms bucket', () => {
+    expect(segmentTimeKey(49.35)).toBe('49.4');
+    expect(segmentTimeKey(49.42)).toBe('49.4');
+    expect(timelineListKey(0)).not.toBe(timelineListKey(1));
   });
 });
 

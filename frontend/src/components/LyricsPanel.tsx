@@ -33,7 +33,7 @@ export const LyricsPanel = forwardRef<HTMLDivElement, LyricsPanelProps>(
           <div className="lyrics-panel-scroll" ref={ref}>
             {lines.map((line, idx) => (
               <p
-                key={`${line.time}-${idx}`}
+                key={`lyric-${idx}`}
                 className="lyrics-line"
                 data-index={idx}
               >
@@ -46,7 +46,7 @@ export const LyricsPanel = forwardRef<HTMLDivElement, LyricsPanelProps>(
         <div className="lyrics-panel lyrics-panel-plain" aria-label="Lyrics">
           <div className="lyrics-panel-scroll">
             {plainLines.map((text, idx) => (
-              <p key={idx} className="lyrics-line plain">
+              <p key={`plain-lyric-${idx}`} className="lyrics-line plain">
                 {text}
               </p>
             ))}

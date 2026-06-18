@@ -12,6 +12,11 @@ export function segmentTimeKey(time: number): string {
   return (Math.round(time * 10) / 10).toFixed(1);
 }
 
+/** React list key for a timeline segment — never use segmentTimeKey alone (100ms buckets collide). */
+export function timelineListKey(index: number): string {
+  return `seg-${index}`;
+}
+
 export type CorrectionsMap = Record<string, string>;
 
 function parseStored(raw: string): CorrectionsMap {
