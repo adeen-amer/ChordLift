@@ -1,8 +1,15 @@
-import { useState, useRef } from 'react';
-import type { AnalysisData } from './types';
+import { useState, useRef, useEffect, useCallback, useMemo } from 'react';
+import type { AnalysisData, AudioLoadState, ChordEvent } from './types';
 import { AudioPlayer } from './components/AudioPlayer';
 import { ChordSequence } from './components/ChordSequence';
-import { LyricsPanel, plainLinesFromTimeline } from './components/LyricsPanel';
+import { LyricsPanel } from './components/LyricsPanel';
+import { plainLinesFromTimeline } from './utils/lyricsSync';
+import { applyCorrections, loadCorrections, saveCorrection, type CorrectionsMap } from './utils/chordCorrections';
+import {
+  loadPresentationMode,
+  savePresentationMode,
+  type PresentationMode,
+} from './utils/presentation';
 import { FretboardViewer } from './components/FretboardViewer';
 import { ScalePractice } from './components/ScalePractice';
 import { useSyncEngine } from './hooks/useSyncEngine';
@@ -19,34 +26,132 @@ function App() {
   const [error, setError] = useState<string | null>(null);
   const [data, setData] = useState<AnalysisData | null>(null);
   const [improvEnabled, setImprovEnabled] = useState(false);
+  const [audioLoadState, setAudioLoadState] = useState<AudioLoadState>('idle');
+  const [presentationMode, setPresentationMode] = useState<PresentationMode>(loadPresentationMode);
+  const [corrections, setCorrections] = useState<CorrectionsMap>({});
 
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const chordContainerRef = useRef<HTMLDivElement | null>(null);
   const lyricsPanelRef = useRef<HTMLDivElement | null>(null);
   const fretboardRef = useRef<SVGSVGElement | null>(null);
   const fileInputRef = useRef<HTMLInputElement | null>(null);
+  const analysisGenRef = useRef(0);
+  const eventSourceRef = useRef<EventSource | null>(null);
+  const abortRef = useRef<AbortController | null>(null);
+
+  const cancelInFlightAnalysis = useCallback(() => {
+    abortRef.current?.abort();
+    abortRef.current = null;
+    eventSourceRef.current?.close();
+    eventSourceRef.current = null;
+  }, []);
+
+  useEffect(() => () => cancelInFlightAnalysis(), [cancelInFlightAnalysis]);
+
+  useEffect(() => {
+    if (!data?.video_id) {
+      setCorrections({});
+      return;
+    }
+    setCorrections(loadCorrections(data.video_id));
+  }, [data?.video_id]);
+
+  useEffect(() => {
+    if (data && presentationMode === 'raw' && !data.model_timeline?.length) {
+      setPresentationMode('synced');
+      savePresentationMode('synced');
+    }
+  }, [data, presentationMode]);
+
+  const baseTimeline = useMemo((): ChordEvent[] => {
+    if (!data) return [];
+    if (presentationMode === 'raw' && data.model_timeline?.length) {
+      return data.model_timeline;
+    }
+    return data.timeline;
+  }, [data, presentationMode]);
+
+  const displayTimeline = useMemo(
+    () => applyCorrections(baseTimeline, corrections),
+    [baseTimeline, corrections],
+  );
+
+  const syncData = useMemo((): AnalysisData | null => {
+    if (!data) return null;
+    return { ...data, timeline: displayTimeline };
+  }, [data, displayTimeline]);
 
   useSyncEngine({
     audioRef,
-    data,
+    data: syncData,
     chordContainerRef,
     lyricsPanelRef,
     fretboardRef,
     improvEnabled,
   });
 
+  const handleCorrectChord = useCallback((time: number, chord: string) => {
+    if (!data?.video_id) return;
+    saveCorrection(data.video_id, time, chord);
+    setCorrections(loadCorrections(data.video_id));
+  }, [data?.video_id]);
+
+  const handlePresentationToggle = (mode: PresentationMode) => {
+    setPresentationMode(mode);
+    savePresentationMode(mode);
+  };
+
+  useEffect(() => {
+    const audio = audioRef.current;
+    if (!audio || !data) {
+      setAudioLoadState('idle');
+      return;
+    }
+
+    setAudioLoadState('loading');
+
+    const onReady = () => setAudioLoadState('ready');
+    const onError = () => {
+      setAudioLoadState('error');
+      setError('Audio failed to load. Try re-analyzing or upload a file.');
+    };
+
+    audio.addEventListener('loadedmetadata', onReady);
+    audio.addEventListener('canplay', onReady);
+    audio.addEventListener('error', onError);
+
+    if (audio.readyState >= HTMLMediaElement.HAVE_METADATA) {
+      onReady();
+    }
+
+    return () => {
+      audio.removeEventListener('loadedmetadata', onReady);
+      audio.removeEventListener('canplay', onReady);
+      audio.removeEventListener('error', onError);
+    };
+  }, [data?.video_id]);
+
   const runAnalysis = async (sourceUrl: string, forceReanalyze = false) => {
+    cancelInFlightAnalysis();
+    const gen = ++analysisGenRef.current;
+    const controller = new AbortController();
+    abortRef.current = controller;
+
     setIsAnalyzing(true);
     setStage(forceReanalyze ? "Re-analyzing..." : "Starting...");
     setError(null);
+    setAudioLoadState('idle');
     if (forceReanalyze) setData(null);
 
     try {
       const res = await fetch(apiUrl('/api/analyze'), {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ url: sourceUrl, force_reanalyze: forceReanalyze })
+        body: JSON.stringify({ url: sourceUrl, force_reanalyze: forceReanalyze }),
+        signal: controller.signal,
       });
+
+      if (gen !== analysisGenRef.current) return;
 
       if (!res.ok) {
         const err = await res.json();
@@ -65,31 +170,40 @@ function App() {
 
       const sseUrl = `${apiUrl(`/api/progress/${videoId}`)}?url=${encodeURIComponent(sourceUrl)}&force_reanalyze=${forceReanalyze}`;
       const eventSource = new EventSource(sseUrl);
+      eventSourceRef.current = eventSource;
 
       eventSource.onmessage = (event) => {
+        if (gen !== analysisGenRef.current) return;
+
         const payload = JSON.parse(event.data);
         if (payload.error) {
           setError(payload.error);
           setIsAnalyzing(false);
           setStage(null);
           eventSource.close();
+          eventSourceRef.current = null;
         } else if (payload.stage === 'Complete') {
           setData(payload.result);
           setIsAnalyzing(false);
           setStage(null);
           eventSource.close();
+          eventSourceRef.current = null;
         } else {
           setStage(payload.stage);
         }
       };
 
       eventSource.onerror = () => {
+        if (gen !== analysisGenRef.current) return;
         setError("Connection to analysis server lost.");
         setIsAnalyzing(false);
         setStage(null);
         eventSource.close();
+        eventSourceRef.current = null;
       };
     } catch (err: unknown) {
+      if (err instanceof DOMException && err.name === 'AbortError') return;
+      if (gen !== analysisGenRef.current) return;
       setError(err instanceof Error ? err.message : "Unknown error");
       setIsAnalyzing(false);
       setStage(null);
@@ -106,10 +220,16 @@ function App() {
     const file = e.target.files?.[0];
     if (!file) return;
 
+    cancelInFlightAnalysis();
+    const gen = ++analysisGenRef.current;
+    const controller = new AbortController();
+    abortRef.current = controller;
+
     setIsAnalyzing(true);
     setStage("Uploading...");
     setError(null);
     setData(null);
+    setAudioLoadState('idle');
 
     try {
       const formData = new FormData();
@@ -118,7 +238,10 @@ function App() {
       const res = await fetch(apiUrl('/api/upload'), {
         method: "POST",
         body: formData,
+        signal: controller.signal,
       });
+
+      if (gen !== analysisGenRef.current) return;
 
       if (!res.ok) {
         const err = await res.json();
@@ -129,6 +252,8 @@ function App() {
       setUrl(uploadData.url);
       await runAnalysis(uploadData.url);
     } catch (err: unknown) {
+      if (err instanceof DOMException && err.name === 'AbortError') return;
+      if (gen !== analysisGenRef.current) return;
       setError(err instanceof Error ? err.message : "Upload failed");
       setIsAnalyzing(false);
       setStage(null);
@@ -234,9 +359,32 @@ function App() {
             src={apiUrl(`/api/audio/${data.video_id}`)}
             song={data.song}
             songKey={data.key}
+            capo={data.capo}
             analyzerVersion={data.analyzer_version}
             chordEngine={data.chord_engine}
+            loadState={audioLoadState}
           />
+
+          <div className="presentation-row">
+            <span className="presentation-label">Chord view:</span>
+            <button
+              type="button"
+              className={`btn-secondary presentation-btn${presentationMode === 'synced' ? ' active' : ''}`}
+              onClick={() => handlePresentationToggle('synced')}
+              aria-pressed={presentationMode === 'synced'}
+            >
+              Synced (recommended)
+            </button>
+            <button
+              type="button"
+              className={`btn-secondary presentation-btn${presentationMode === 'raw' ? ' active' : ''}`}
+              onClick={() => handlePresentationToggle('raw')}
+              disabled={!data.model_timeline?.length}
+              aria-pressed={presentationMode === 'raw'}
+            >
+              Raw model
+            </button>
+          </div>
 
           <div className="reanalyze-row">
             <button
@@ -251,10 +399,14 @@ function App() {
 
           <div className="playback-main">
             <div className="glass-panel chord-panel">
-              <ChordSequence timeline={data.timeline} ref={chordContainerRef} />
+              <ChordSequence
+                timeline={displayTimeline}
+                ref={chordContainerRef}
+                onCorrectChord={handleCorrectChord}
+              />
             </div>
 
-            {(data.lyrics?.lines?.length || data.lyrics?.plain_text || data.timeline.some(s => s.lyrics)) && (
+            {(data.lyrics?.lines?.length || data.lyrics?.plain_text || displayTimeline.some(s => s.lyrics)) && (
               <div className="glass-panel lyrics-glass">
                 <LyricsPanel
                   ref={lyricsPanelRef}
@@ -263,7 +415,7 @@ function App() {
                   plainLines={
                     data.lyrics?.plain_text
                       ? data.lyrics.plain_text.split(/\n+/).map(l => l.trim()).filter(Boolean)
-                      : plainLinesFromTimeline(data.timeline)
+                      : plainLinesFromTimeline(displayTimeline)
                   }
                 />
               </div>

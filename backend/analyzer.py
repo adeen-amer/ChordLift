@@ -10,26 +10,15 @@ from scipy.signal import find_peaks
 
 previous_level = logging.getLogger().getEffectiveLevel()
 logging.getLogger().setLevel(logging.ERROR)
-from basic_pitch.inference import predict
+from basic_pitch.inference import predict as _basic_pitch_predict
 logging.getLogger().setLevel(previous_level)
 
 CACHE_DIR = "cache"
-ANALYZER_VERSION = "27"
+ANALYZER_VERSION = "45"
 
-# Frozen polish defaults (v25) — change only with held-out eval, not per-song tuning.
-CHORD_POLISH_DEFAULTS = {
-    "label_inertia": 0.15,
-    "flux_keep_threshold": 0.50,
-    "flux_keep_threshold_flicker": 0.56,
-    "match_keep_threshold": 0.30,
-    "match_keep_threshold_flicker": 0.32,
-    "cross_validate_min_gain": 0.14,
-    "intro_stable_beats": 4,
-    "intro_max_sec": 22.0,
-    "flicker_min_beats": 1.5,
-    "ml_beats_per_bar": 4,
-    "ml_bar_merge_match_threshold": 0.28,
-}
+from chord_constants import CHORD_POLISH_DEFAULTS, PLACEHOLDER_STRUMMING  # noqa: E402
+from chord_polish import polish_chord_timeline as _polish_chord_timeline  # noqa: E402
+
 os.makedirs(CACHE_DIR, exist_ok=True)
 
 
@@ -38,20 +27,26 @@ def get_chord_engine_name():
 
 
 def cache_metadata():
-    return {
+    """Cache key — must include every flag that changes chord output."""
+    engine = get_chord_engine_name()
+    meta = {
         "analyzer_version": ANALYZER_VERSION,
-        "chord_engine": get_chord_engine_name(),
+        "chord_engine": engine,
+        "chord_stem_mode": os.getenv("CHORD_STEM_MODE", "auto").lower().strip(),
+        "chord_pitch_correct": os.getenv("CHORD_PITCH_CORRECT", "1").lower()
+        not in ("0", "false", "no"),
     }
+    if engine == "ml":
+        meta["chord_ml_model"] = os.getenv("CHORD_ML_MODEL", "chordia").lower().strip()
+        meta["chord_chordia_dict"] = os.getenv("CHORD_CHORDIA_DICT", "submission").lower().strip()
+    return meta
 
 
 def is_cache_valid(cached):
     if not cached:
         return False
     meta = cache_metadata()
-    return (
-        cached.get("analyzer_version") == meta["analyzer_version"]
-        and cached.get("chord_engine") == meta["chord_engine"]
-    )
+    return all(cached.get(key) == value for key, value in meta.items())
 
 ROOT_NAMES = ['C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B']
 FLAT_KEYS = {1, 3, 5, 6, 8, 10}  # legacy — display always uses sharps now
@@ -59,9 +54,9 @@ FLAT_KEYS = {1, 3, 5, 6, 8, 10}  # legacy — display always uses sharps now
 MAJOR_KEY_PROFILE = np.array([6.35, 2.23, 3.48, 2.33, 4.38, 4.09, 2.52, 5.19, 2.39, 3.66, 2.29, 2.88])
 MINOR_KEY_PROFILE = np.array([6.33, 2.68, 3.52, 5.38, 2.60, 3.53, 2.54, 4.75, 3.98, 2.69, 3.34, 3.17])
 
-# Major-key diatonic triads: I, ii, iii, IV, V, vi (skip vii°)
-DIATONIC_MAJOR_INTERVALS = [0, 2, 4, 5, 7, 9]
-DIATONIC_MAJOR_QUALITIES = ['', 'm', 'm', '', '', 'm']
+# Major-key diatonic triads: I, ii, iii, IV, V, vi, vii°
+DIATONIC_MAJOR_INTERVALS = [0, 2, 4, 5, 7, 9, 11]
+DIATONIC_MAJOR_QUALITIES = ['', 'm', 'm', '', '', 'm', 'dim']
 
 ENHARMONIC = {
     'A#': 'Bb', 'Bb': 'Bb',
@@ -378,14 +373,19 @@ def _key_at_time(time_sec, beat_times, frame_keys):
     return frame_keys[idx]
 
 
-def _beat_sync_chroma_stack(y_harmonic, chroma, chroma_low, chroma_mid, sr, hop_length=512):
+def _beat_sync_chroma_stack(y_harmonic, chroma, chroma_low, chroma_mid, sr, hop_length=512, beat_times=None):
     """Sync chroma layers to beat grid; returns segments and beat times in seconds."""
-    _, beat_frames = librosa.beat.beat_track(
-        y=y_harmonic, sr=sr, hop_length=hop_length, units='frames',
-    )
-    beat_frames = librosa.util.fix_frames(beat_frames, x_min=0, x_max=chroma.shape[1] - 1)
-    if len(beat_frames) < 4:
-        beat_frames = np.arange(0, chroma.shape[1], max(1, chroma.shape[1] // 64))
+    if beat_times is not None and len(beat_times) >= 2:
+        beat_frames = librosa.time_to_frames(beat_times, sr=sr, hop_length=hop_length)
+        beat_frames = librosa.util.fix_frames(beat_frames, x_min=0, x_max=chroma.shape[1] - 1)
+    else:
+        _, beat_frames = librosa.beat.beat_track(
+            y=y_harmonic, sr=sr, hop_length=hop_length, units='frames',
+        )
+        beat_frames = librosa.util.fix_frames(beat_frames, x_min=0, x_max=chroma.shape[1] - 1)
+        if len(beat_frames) < 4:
+            beat_frames = np.arange(0, chroma.shape[1], max(1, chroma.shape[1] // 64))
+        beat_times = librosa.frames_to_time(beat_frames, sr=sr, hop_length=hop_length)
 
     chroma_segments = librosa.util.sync(chroma, beat_frames, aggregate=np.median)
     bass_segments = librosa.util.sync(chroma_low, beat_frames, aggregate=np.median)
@@ -406,11 +406,11 @@ def _resolve_key_from_chroma_stack(chroma, chroma_low, chroma_mid, y_harmonic, s
     return _resolve_key(chroma_mean, raw_em, bass_segments, chroma_segments)
 
 
-def _windowed_keys_from_chroma(chroma, chroma_low, chroma_mid, y_harmonic, sr, hop_length=512, step=12):
+def _windowed_keys_from_chroma(chroma, chroma_low, chroma_mid, y_harmonic, sr, hop_length=512, step=12, beat_times=None):
     """Beat-synced chroma + per-window key estimates for segment refinement."""
     chroma_mean = np.mean(chroma, axis=1)
     chroma_segments, bass_segments, mid_segments, beat_times = _beat_sync_chroma_stack(
-        y_harmonic, chroma, chroma_low, chroma_mid, sr, hop_length,
+        y_harmonic, chroma, chroma_low, chroma_mid, sr, hop_length, beat_times=beat_times,
     )
     frame_keys = _windowed_key_for_frames(
         chroma_segments, bass_segments, chroma_mean, mid_segments, step=step,
@@ -482,12 +482,15 @@ def _chroma_alignment_score(segments, chroma_mean, shift):
     return score
 
 
-def _align_segments_to_chroma(segments, chroma_mean, min_gain=0.06):
+def _align_segments_to_chroma(segments, chroma_mean, min_gain=None):
     """
     Globally shift ML chord labels so roots match the chroma profile.
 
-    Fixes systematic autochord transposition (e.g. Viva La Vida +8 semitones).
+    Only applied when alignment gain is strong (Phase 2 gate) — weak shifts
+    are rejected to avoid flipping every root on noisy evidence.
     """
+    if min_gain is None:
+        min_gain = CHORD_POLISH_DEFAULTS["chroma_align_min_gain_ratio"]
     if not segments:
         return segments, 0
 
@@ -500,7 +503,11 @@ def _align_segments_to_chroma(segments, chroma_mean, min_gain=0.06):
             best_score = score
             best_shift = shift
 
-    if best_shift == 0 or (best_score - base) < min_gain * max(base, 1e-6):
+    if best_shift == 0:
+        return segments, 0
+
+    rel_gain = (best_score - base) / max(base, 1e-6)
+    if rel_gain < min_gain:
         return segments, 0
 
     out = []
@@ -594,8 +601,6 @@ def _key_candidate_score(
     diatonic = _segment_diatonic_coverage(segments, root, major)
     chroma_sc = _chroma_profile_score(chroma_mean, root, major)
     score = diatonic * 3.0 + chroma_sc * 0.12
-    if major:
-        score += _score_pop_loop_fit(segments, root, True) * 1.8
     if (root, major) == (classic_root, classic_major):
         score += 0.3
     if (root, major) == (profile_root, profile_major):
@@ -605,10 +610,9 @@ def _key_candidate_score(
 
 def _resolve_song_key(chroma_mean, segments, chroma, chroma_low, chroma_mid, y_harmonic, sr):
     """
-    Pick global key/mode from chroma profile, chord votes, and segment fit.
+    Pick global key/mode from chroma profile, chord votes, and diatonic fit.
 
-    Evaluates relative major/minor pairs so a strong C-major chroma profile
-    is not overridden by spurious A-minor segment votes (and vice versa).
+    Principled scoring only — no pop-loop tonic overrides or dominant→tonic hacks.
     """
     dorian = _detect_dorian_from_segments(segments)
     if dorian is not None:
@@ -630,9 +634,6 @@ def _resolve_song_key(chroma_mean, segments, chroma, chroma_low, chroma_mid, y_h
         (vote_root, vote_major),
         (profile_root, profile_major),
     ]
-    loop_tonic = _detect_major_loop_tonic(segments)
-    if loop_tonic is not None:
-        seeds.insert(0, (loop_tonic, True))
 
     candidates = []
     seen = set()
@@ -652,70 +653,6 @@ def _resolve_song_key(chroma_mean, segments, chroma, chroma_low, chroma_mid, y_h
         if score > best_score:
             best_score = score
             best = (root, major)
-
-    if loop_tonic is not None and best[1]:
-        loop_score = _key_candidate_score(
-            loop_tonic, True, segments, chroma_mean,
-            classic_root, classic_major, profile_root, profile_major,
-        )
-        if loop_score >= best_score * 0.82:
-            best = (loop_tonic, True)
-            best_score = loop_score
-
-    # Prefer I over V when the winning root is the dominant, not the tonic (e.g. C# over G#).
-    if best[1] and best[0] not in (classic_root, profile_root):
-        tonic_pc = (best[0] - 7) % 12
-        tonic_score = _key_candidate_score(
-            tonic_pc, True, segments, chroma_mean,
-            classic_root, classic_major, profile_root, profile_major,
-        )
-        if tonic_score >= best_score * 0.85:
-            pop_tonic = _score_pop_loop_fit(segments, tonic_pc, True)
-            pop_dominant = _score_pop_loop_fit(segments, best[0], True)
-            if pop_tonic > pop_dominant * 0.92 and tonic_score >= best_score * 0.88:
-                best = (tonic_pc, True)
-                best_score = tonic_score
-
-    # Same-root major/minor: follow sustained chord quality (e.g. Bad Guy → G minor).
-    if best[1]:
-        minor_score = _key_candidate_score(
-            best[0], False, segments, chroma_mean,
-            classic_root, classic_major, profile_root, profile_major,
-        )
-        minor_w = 0.0
-        major_w = 0.0
-        for seg in segments:
-            chord = seg.get("chord", "")
-            if not chord or chord == "N":
-                continue
-            if _root_to_pitch_class(_chord_root_name(chord)) != best[0]:
-                continue
-            dur = max(float(seg.get("end_time", 0)) - float(seg.get("time", 0)), 0.25)
-            q = _chord_quality(chord)
-            if q in ("m", "m7"):
-                minor_w += dur
-            elif q in ("", "5", "7", "maj7", "sus2", "sus4"):
-                major_w += dur
-        if minor_w > major_w * 1.2 and minor_w > major_w + 1.0 and minor_score >= best_score * 0.82:
-            best = (best[0], False)
-            best_score = minor_score
-
-    # Prefer chroma-stack key when segment vote wins but chroma profile disagrees.
-    if (
-        chords
-        and best == (vote_root, vote_major)
-        and (vote_root, vote_major) != (classic_root, classic_major)
-    ):
-        sc_classic = _chroma_profile_score(chroma_mean, classic_root, classic_major)
-        sc_vote = _chroma_profile_score(chroma_mean, vote_root, vote_major)
-        if sc_classic >= sc_vote * 1.05:
-            classic_total = _key_candidate_score(
-                classic_root, classic_major, segments, chroma_mean,
-                classic_root, classic_major, profile_root, profile_major,
-            )
-            if classic_total >= best_score * 0.84:
-                best = (classic_root, classic_major)
-                best_score = classic_total
 
     mode = "major" if best[1] else "minor"
     return best[0], best[1], mode
@@ -877,33 +814,37 @@ def _root_pitch_class(root_name):
         return None
 
 
-def _third_quality_bias(chroma, root_name):
+def _third_quality_bias(chroma, root_name, chroma_mid=None, threshold=None):
     """
-    Boost maj vs min (and extensions) from relative third strength in chroma.
+    Boost maj vs min from relative third strength.
 
-    Audio-driven quality hint for a fixed root — not song-specific tuning.
+    Uses mid-register chroma when provided (Phase 3) — less bass bleed than full stack.
     """
+    if threshold is None:
+        threshold = CHORD_POLISH_DEFAULTS.get("third_quality_mid_threshold", 1.15)
+
     root_pc = _root_pitch_class(root_name)
     if root_pc is None:
         return {}
 
-    chroma = np.clip(np.asarray(chroma, dtype=np.float64), 0, None)
-    total = float(chroma.sum())
+    source = chroma_mid if chroma_mid is not None else chroma
+    source = np.clip(np.asarray(source, dtype=np.float64), 0, None)
+    total = float(source.sum())
     if total < 1e-6:
         return {}
 
-    c = chroma / total
+    c = source / total
     min3 = float(c[(root_pc + 3) % 12])
     maj3 = float(c[(root_pc + 4) % 12])
 
-    if min3 > maj3 * 1.10:
+    if min3 > maj3 * threshold:
         return {"m": 1.14, "m7": 1.10, "": 0.92, "7": 0.96, "5": 0.98}
-    if maj3 > min3 * 1.10:
+    if maj3 > min3 * threshold:
         return {"": 1.12, "7": 1.06, "maj7": 1.04, "m": 0.90, "m7": 0.88, "5": 1.02}
     return {}
 
 
-def _apply_third_quality_bias(vote, vocab, chroma, root_hint=None):
+def _apply_third_quality_bias(vote, vocab, chroma, root_hint=None, chroma_mid=None):
     """Apply third-interval bias to vote vector for likely roots in the region."""
     if root_hint and root_hint not in ("N", ""):
         roots = {_chord_root_name(root_hint)}
@@ -916,7 +857,7 @@ def _apply_third_quality_bias(vote, vocab, chroma, root_hint=None):
                 roots.add(_chord_root_name(name))
 
     for root in roots:
-        bias = _third_quality_bias(chroma, root)
+        bias = _third_quality_bias(chroma, root, chroma_mid=chroma_mid)
         if not bias:
             continue
         for j, name in enumerate(vocab):
@@ -1218,13 +1159,13 @@ def _detect_dorian_from_segments(segments):
     return best_tonic, "dorian"
 
 
-def _extract_chroma_stack(y, sr, hop_length=512):
-    from harmonic_separation import extract_harmonic
-
-    y_harmonic = extract_harmonic(y, sr)
+def _extract_chroma_stack(y, sr, hop_length=512, y_harmonic=None):
+    if y_harmonic is None:
+        from harmonic_separation import extract_harmonic
+        y_harmonic = extract_harmonic(y, sr)
     chroma_low = librosa.feature.chroma_cqt(
         y=y_harmonic, sr=sr, hop_length=hop_length,
-        fmin=librosa.note_to_hz('C2'), n_octaves=4,
+        fmin=librosa.note_to_hz('C1'), n_octaves=3,
     )
     chroma_mid = librosa.feature.chroma_cqt(
         y=y_harmonic, sr=sr, hop_length=hop_length,
@@ -1551,7 +1492,9 @@ def _pick_chord_for_region(
     if n_frames > 0:
         vote = 0.62 * vote + 0.38 * (mean_scores * n_frames)
 
-    vote = _apply_third_quality_bias(vote, CHORD_VOCAB, mean_chroma, root_hint=hint_root)
+    vote = _apply_third_quality_bias(
+        vote, CHORD_VOCAB, mean_chroma, root_hint=hint_root, chroma_mid=mean_mid,
+    )
 
     if quality_bonus:
         for j, name in enumerate(CHORD_VOCAB):
@@ -1652,8 +1595,27 @@ def _segment_center_chroma(chroma, chroma_low, chroma_mid, start_sec, end_sec, s
     return c, b, m
 
 
+def _quality_match_variants(target_q: str) -> tuple[str, ...]:
+    """Qualities that count as matching target when scoring a labeled segment (symmetric maj/min)."""
+    if not target_q:
+        return ("", "5")
+    if target_q == "m":
+        return ("m", "m7")
+    if target_q == "7":
+        return ("7", "")
+    if target_q == "maj7":
+        return ("maj7", "")
+    if target_q == "m7":
+        return ("m7", "m")
+    if target_q == "5":
+        return ("5", "")
+    if target_q in ("sus2", "sus4"):
+        return (target_q,)
+    return (target_q,)
+
+
 def _match_score_for_chord(chroma, bass, chroma_mid, chord_name, key_root, is_major, bass_weight=0.0):
-    """How well a chroma vector matches a chord label."""
+    """How well a chroma vector matches a chord label (best-of-template per quality class)."""
     if not chord_name or chord_name == "N":
         return 0.0
 
@@ -1664,6 +1626,7 @@ def _match_score_for_chord(chroma, bass, chroma_mid, chord_name, key_root, is_ma
     )
     target_root = _internal_root(_chord_root_name(chord_name))
     target_q = _chord_quality(chord_name)
+    allowed = set(_quality_match_variants(target_q))
     best = 0.0
     for j, name in enumerate(CHORD_VOCAB):
         if name == "N":
@@ -1671,9 +1634,7 @@ def _match_score_for_chord(chroma, bass, chroma_mid, chord_name, key_root, is_ma
         if _internal_root(_chord_root_name(name)) != target_root:
             continue
         q = _chord_quality(name)
-        if target_q and q != target_q:
-            continue
-        if not target_q and q not in ("", "5"):
+        if q not in allowed:
             continue
         best = max(best, float(scores[j]))
 
@@ -1808,418 +1769,6 @@ def _snap_boundaries_to_harmonic_changes(
 
     if out:
         out[-1]["end_time"] = float(segments[-1].get("end_time", out[-1]["time"] + 1.0))
-    return out
-
-
-def _quality_bonus_for_song(prefer_sevenths=False, prefer_power=False):
-    if prefer_sevenths:
-        return {
-            '': 1.04, 'm': 0.76, '5': 1.0,
-            'sus4': 0.84, 'sus2': 0.84,
-            '7': 0.90, 'maj7': 0.86, 'm7': 1.18,
-        }
-    if prefer_power:
-        return {
-            '': 1.0, 'm': 0.88, '5': 1.14,
-            'sus4': 0.90, 'sus2': 0.90,
-            '7': 0.94, 'maj7': 0.92, 'm7': 0.90,
-        }
-    return {
-        '': 1.05, 'm': 1.05, '5': 1.02,
-        'sus4': 0.86, 'sus2': 0.86,
-        '7': 0.92, 'maj7': 0.90, 'm7': 0.92,
-    }
-
-
-def _bar_aware_merge_short_segments(
-    segments,
-    beat_duration,
-    flux,
-    sr,
-    hop,
-    chroma,
-    chroma_low,
-    chroma_mid,
-    frame_keys,
-    beat_times,
-    flux_keep_threshold=None,
-    match_keep_threshold=None,
-    min_duration_override=None,
-):
-    """
-    Merge sub-half-bar flicker unless flux and chroma support a real change.
-
-    Keeps short segments when harmonic flux is strong and both neighbors
-    match their labels in the merged audio.
-    """
-    if len(segments) < 2:
-        return segments
-
-    if flux_keep_threshold is None:
-        flux_keep_threshold = CHORD_POLISH_DEFAULTS["flux_keep_threshold"]
-    if match_keep_threshold is None:
-        match_keep_threshold = CHORD_POLISH_DEFAULTS["match_keep_threshold"]
-
-    min_dur = (
-        min_duration_override
-        if min_duration_override is not None
-        else _bar_aware_min_duration(beat_duration)
-    )
-    merged = [dict(segments[0])]
-
-    for seg in segments[1:]:
-        prev = merged[-1]
-        duration = float(seg["time"]) - float(prev["time"])
-        if duration >= min_dur:
-            merged.append(dict(seg))
-            continue
-
-        boundary_t = float(seg["time"])
-        merge_end = float(seg.get("end_time", boundary_t + beat_duration))
-        left_name = prev.get("chord", "N")
-        right_name = seg.get("chord", "N")
-        left_root = _chord_root_name(left_name)
-        right_root = _chord_root_name(right_name)
-
-        flux_val = _flux_at_time(flux, boundary_t, sr, hop) if flux is not None else 0.0
-        keep_split = False
-        if (
-            flux_val >= flux_keep_threshold
-            and left_root not in ("N", "")
-            and right_root not in ("N", "")
-            and left_root != right_root
-        ):
-            if frame_keys is not None and beat_times is not None:
-                key_l = _key_at_time((float(prev["time"]) + boundary_t) / 2.0, beat_times, frame_keys)
-                key_r = _key_at_time((boundary_t + merge_end) / 2.0, beat_times, frame_keys)
-            else:
-                key_l = key_r = (0, True)
-
-            lc, lb, lm = _segment_center_chroma(
-                chroma, chroma_low, chroma_mid, float(prev["time"]), boundary_t, sr, hop,
-            )
-            rc, rb, rm = _segment_center_chroma(
-                chroma, chroma_low, chroma_mid, boundary_t, merge_end, sr, hop,
-            )
-            score_l = _match_score_for_chord(lc, lb, lm, left_name, key_l[0], key_l[1])
-            score_r = _match_score_for_chord(rc, rb, rm, right_name, key_r[0], key_r[1])
-            keep_split = score_l >= match_keep_threshold and score_r >= match_keep_threshold
-
-        if keep_split:
-            merged.append(dict(seg))
-            continue
-
-        if frame_keys is not None and beat_times is not None:
-            key_m = _key_at_time((float(prev["time"]) + merge_end) / 2.0, beat_times, frame_keys)
-        else:
-            key_m = (0, True)
-
-        mc, mb, mm = _segment_center_chroma(
-            chroma, chroma_low, chroma_mid, float(prev["time"]), merge_end, sr, hop,
-        )
-        score_prev = _match_score_for_chord(mc, mb, mm, left_name, key_m[0], key_m[1])
-        score_next = _match_score_for_chord(mc, mb, mm, right_name, key_m[0], key_m[1])
-        prev["end_time"] = merge_end
-        if score_next > score_prev:
-            prev["chord"] = right_name
-            prev["confidence"] = max(float(prev.get("confidence", 0)), float(seg.get("confidence", 0)))
-
-    for i in range(len(merged) - 1):
-        merged[i]["end_time"] = float(merged[i + 1]["time"])
-    if merged:
-        merged[-1]["end_time"] = float(segments[-1].get("end_time", merged[-1]["time"] + beat_duration))
-    return merged
-
-
-def _polish_segment_boundaries(
-    segments,
-    chroma,
-    chroma_low,
-    chroma_mid,
-    frame_keys,
-    beat_times,
-    onset_times,
-    beat_duration,
-    sr,
-    hop=512,
-):
-    """Move segment boundaries to flux/onset peaks; labels stay fixed."""
-    if not segments:
-        return segments, None
-
-    flux = _chroma_flux_series(chroma)
-    flux_peak_times = librosa.frames_to_time(
-        _flux_peak_frames(flux, sr, hop, beat_duration),
-        sr=sr,
-        hop_length=hop,
-    ).tolist()
-
-    segments = _optimize_segment_boundaries(
-        segments, chroma, chroma_low, chroma_mid, frame_keys, beat_times, sr,
-        flux, flux_peak_times, onset_times, beat_duration, hop,
-    )
-    segments = _snap_boundaries_to_harmonic_changes(
-        segments, flux, flux_peak_times, onset_times, beat_duration, sr, hop,
-    )
-    return segments, flux
-
-
-def _polish_segment_labels(
-    segments,
-    chroma,
-    chroma_low,
-    chroma_mid,
-    frame_keys,
-    beat_times,
-    key_root,
-    is_major,
-    prefer_sevenths=False,
-    prefer_power=False,
-    ml_root_bias=1.0,
-    label_inertia=None,
-):
-    """Re-score chord symbols for fixed segment windows."""
-    if label_inertia is None:
-        label_inertia = CHORD_POLISH_DEFAULTS["label_inertia"]
-    if not segments:
-        return segments
-
-    quality_bonus = _quality_bonus_for_song(prefer_sevenths, prefer_power)
-    segments = _refine_segments_with_vocabulary(
-        segments, chroma, chroma_low, key_root, is_major,
-        prefer_sevenths=prefer_sevenths,
-        prefer_power=prefer_power,
-        chroma_mid=chroma_mid,
-        frame_keys=frame_keys,
-        beat_times=beat_times,
-        ml_root_bias=ml_root_bias,
-        quality_bonus=quality_bonus,
-        label_inertia=label_inertia,
-    )
-    segments = _cross_validate_adjacent_segments(
-        segments, chroma, chroma_low, chroma_mid, frame_keys, beat_times, 22050, 512,
-    )
-    segments = _refine_segments_with_vocabulary(
-        segments, chroma, chroma_low, key_root, is_major,
-        prefer_sevenths=prefer_sevenths,
-        prefer_power=prefer_power,
-        chroma_mid=chroma_mid,
-        frame_keys=frame_keys,
-        beat_times=beat_times,
-        ml_root_bias=1.0,
-        quality_bonus=quality_bonus,
-        label_inertia=label_inertia,
-    )
-    return segments
-
-
-def _polish_chord_timeline(
-    segments,
-    chroma,
-    chroma_low,
-    chroma_mid,
-    frame_keys,
-    beat_times,
-    onset_times,
-    beat_duration,
-    sr,
-    hop=512,
-    key_root=0,
-    is_major=True,
-    prefer_sevenths=False,
-    prefer_power=False,
-    ml_root_bias=1.0,
-):
-    """
-    Audio-driven polish: boundaries first, then labels, then bar-aware merge.
-    """
-    if not segments:
-        return segments
-
-    segments, flux = _polish_segment_boundaries(
-        segments, chroma, chroma_low, chroma_mid,
-        frame_keys, beat_times, onset_times, beat_duration, sr, hop,
-    )
-    segments = _polish_segment_labels(
-        segments, chroma, chroma_low, chroma_mid,
-        frame_keys, beat_times, key_root, is_major,
-        prefer_sevenths=prefer_sevenths,
-        prefer_power=prefer_power,
-        ml_root_bias=ml_root_bias,
-    )
-    if flux is not None:
-        segments = _bar_aware_merge_short_segments(
-            segments, beat_duration, flux, sr, hop,
-            chroma, chroma_low, chroma_mid, frame_keys, beat_times,
-        )
-        segments = _cross_validate_adjacent_segments(
-            segments, chroma, chroma_low, chroma_mid, frame_keys, beat_times, sr, hop,
-        )
-        segments = _merge_flicker_segments(
-            segments, beat_duration, flux, sr, hop,
-            chroma, chroma_low, chroma_mid, frame_keys, beat_times,
-        )
-    else:
-        segments = _merge_adjacent_same_root(segments)
-    segments = _apply_intro_guard(
-        segments, beat_duration, chroma, chroma_low, chroma_mid,
-        frame_keys, beat_times, sr, hop,
-        key_root=key_root, is_major=is_major,
-    )
-    return _finalize_timeline(segments, beat_duration)
-
-
-def _merge_flicker_segments(
-    segments,
-    beat_duration,
-    flux,
-    sr,
-    hop,
-    chroma,
-    chroma_low,
-    chroma_mid,
-    frame_keys,
-    beat_times,
-):
-    """Extra anti-flicker pass (~1.5 beats) after label polish."""
-    if len(segments) < 2:
-        return segments
-
-    segments = _merge_adjacent_same_root(segments)
-    min_dur = min(max(float(beat_duration) * CHORD_POLISH_DEFAULTS["flicker_min_beats"], 0.5), 1.35)
-    return _bar_aware_merge_short_segments(
-        segments, beat_duration, flux, sr, hop,
-        chroma, chroma_low, chroma_mid, frame_keys, beat_times,
-        flux_keep_threshold=CHORD_POLISH_DEFAULTS["flux_keep_threshold_flicker"],
-        match_keep_threshold=CHORD_POLISH_DEFAULTS["match_keep_threshold_flicker"],
-        min_duration_override=min_dur,
-    )
-
-
-def _apply_intro_guard(
-    segments,
-    beat_duration,
-    chroma,
-    chroma_low,
-    chroma_mid,
-    frame_keys,
-    beat_times,
-    sr,
-    hop=512,
-    key_root=0,
-    is_major=True,
-    stable_beats=None,
-    max_intro_sec=None,
-):
-    """
-    Collapse unstable early segment flips into one intro chord.
-
-    Waits until a segment spans stable_beats before allowing changes.
-    """
-    if stable_beats is None:
-        stable_beats = CHORD_POLISH_DEFAULTS["intro_stable_beats"]
-    if max_intro_sec is None:
-        max_intro_sec = CHORD_POLISH_DEFAULTS["intro_max_sec"]
-    if len(segments) < 2:
-        return segments
-
-    intro_cap = float(segments[0]["time"]) + max_intro_sec
-    flicker_end = 0
-    for i in range(len(segments) - 1):
-        seg_end = float(segments[i + 1]["time"])
-        if seg_end > intro_cap:
-            break
-        duration = seg_end - float(segments[i]["time"])
-        if duration >= float(beat_duration) * stable_beats:
-            break
-        flicker_end = i + 1
-
-    if flicker_end == 0:
-        return segments
-
-    merge_start = float(segments[0]["time"])
-    if flicker_end + 1 < len(segments):
-        merge_end = float(segments[flicker_end + 1]["time"])
-    else:
-        merge_end = float(
-            segments[flicker_end].get("end_time", segments[flicker_end]["time"] + beat_duration),
-        )
-    if merge_end - merge_start < float(beat_duration) * 0.75:
-        return segments
-
-    if frame_keys is not None and beat_times is not None and len(beat_times) > 0:
-        seg_key_root, seg_major = _key_at_time(
-            (merge_start + merge_end) / 2.0, beat_times, frame_keys,
-        )
-    else:
-        seg_key_root, seg_major = key_root, is_major
-
-    best_name, confidence = _pick_chord_for_region(
-        chroma, chroma_low, chroma_mid,
-        merge_start, merge_end, sr, hop,
-        seg_key_root, seg_major,
-        hint_root=_chord_root_name(segments[flicker_end].get("chord", "N")),
-    )
-
-    merged = {
-        "time": merge_start,
-        "end_time": merge_end,
-        "chord": _format_chord_name(best_name, seg_key_root, seg_major),
-        "confidence": confidence,
-        "is_low_confidence": confidence < 0.35,
-        "is_power": str(best_name).endswith("5"),
-        "strumming": segments[0].get("strumming", "D DU UDU"),
-    }
-    tail = [dict(s) for s in segments[flicker_end + 1:]]
-    return [merged] + tail
-
-
-def _cross_validate_adjacent_segments(
-    segments,
-    chroma,
-    chroma_low,
-    chroma_mid,
-    frame_keys,
-    beat_times,
-    sr,
-    hop=512,
-    min_gain_ratio=None,
-):
-    """Swap neighbor chord labels when each fits the other's region better."""
-    if len(segments) < 2:
-        return segments
-
-    if min_gain_ratio is None:
-        min_gain_ratio = CHORD_POLISH_DEFAULTS["cross_validate_min_gain"]
-
-    out = [dict(s) for s in segments]
-    for i in range(len(out) - 1):
-        a = out[i]
-        b = out[i + 1]
-        if a.get("chord") == b.get("chord"):
-            continue
-
-        a_end = float(b["time"])
-        b_end = float(b.get("end_time", a_end + 1.0))
-        key_a = _key_at_time((float(a["time"]) + a_end) / 2.0, beat_times, frame_keys)
-        key_b = _key_at_time((a_end + b_end) / 2.0, beat_times, frame_keys)
-
-        ca, ba, ma = _segment_center_chroma(chroma, chroma_low, chroma_mid, float(a["time"]), a_end, sr, hop)
-        cb, cbass, cm = _segment_center_chroma(chroma, chroma_low, chroma_mid, a_end, b_end, sr, hop)
-
-        score_aa = _match_score_for_chord(ca, ba, ma, a["chord"], key_a[0], key_a[1], bass_weight=0.10)
-        score_bb = _match_score_for_chord(cb, cbass, cm, b["chord"], key_b[0], key_b[1], bass_weight=0.10)
-        score_ab = _match_score_for_chord(ca, ba, ma, b["chord"], key_a[0], key_a[1], bass_weight=0.10)
-        score_ba = _match_score_for_chord(cb, cbass, cm, a["chord"], key_b[0], key_b[1], bass_weight=0.10)
-
-        current = score_aa + score_bb
-        swapped = score_ab + score_ba
-        if current <= 0:
-            continue
-        if swapped > current * (1.0 + min_gain_ratio):
-            a["chord"], b["chord"] = b["chord"], a["chord"]
-            a["confidence"], b["confidence"] = b.get("confidence", 0), a.get("confidence", 0)
-
     return out
 
 
@@ -2575,16 +2124,22 @@ def _refine_segments_with_vocabulary(
     return refined
 
 
-def extract_chords(y, sr):
+def extract_chords(y, sr, pipeline=None, bar_finalize=True):
     hop_length = 512
-    y_harmonic, chroma, chroma_low, chroma_mid = _extract_chroma_stack(y, sr, hop_length)
+    if pipeline is None:
+        from chord_pipeline import build_chord_pipeline_context
+        pipeline = build_chord_pipeline_context(y, sr, hop_length)
 
-    _, beat_frames = librosa.beat.beat_track(
-        y=y_harmonic, sr=sr, hop_length=hop_length, units='frames',
+    y_harmonic, chroma, chroma_low, chroma_mid = _extract_chroma_stack(
+        y, sr, hop_length, y_harmonic=pipeline.y_chord,
     )
+
+    beat_times = pipeline.beat_times
+    beat_frames = librosa.time_to_frames(beat_times, sr=sr, hop_length=hop_length)
     beat_frames = librosa.util.fix_frames(beat_frames, x_min=0, x_max=chroma.shape[1] - 1)
     if len(beat_frames) < 4:
         beat_frames = np.arange(0, chroma.shape[1], max(1, chroma.shape[1] // 64))
+        beat_times = librosa.frames_to_time(beat_frames, sr=sr, hop_length=hop_length)
 
     segment_frames = beat_frames
     if len(segment_frames) < 2:
@@ -2594,9 +2149,9 @@ def extract_chords(y, sr):
     bass_segments = librosa.util.sync(chroma_low, segment_frames, aggregate=np.median)
     mid_segments = librosa.util.sync(chroma_mid, segment_frames, aggregate=np.median)
     segment_times = librosa.frames_to_time(segment_frames, sr=sr, hop_length=hop_length)
-    beat_duration = float(np.median(np.diff(segment_times))) if len(segment_times) > 1 else 0.5
+    beat_duration = pipeline.beat_duration
     bar_duration = _estimate_bar_duration(beat_duration)
-    downbeats = _downbeat_indices(segment_frames, y_harmonic, sr, hop_length)
+    downbeats = _downbeat_indices(segment_frames, pipeline.y_bass, sr, hop_length)
 
     log_em, raw_em = _frame_emission_matrix(
         chroma_segments, bass_segments, 0, True, mid_segments,
@@ -2645,6 +2200,13 @@ def extract_chords(y, sr):
         prefer_power=prefer_power,
     )
 
+    from chord_pipeline import finalize_bar_timeline
+    if bar_finalize:
+        segments = finalize_bar_timeline(
+            segments, pipeline, chroma, chroma_low, chroma_mid, frame_keys, sr,
+        )
+    segments = _merge_adjacent_same_root(segments)
+
     chroma_mean = np.mean(chroma, axis=1)
     key_root, is_major, mode = _resolve_song_key(
         chroma_mean, segments, chroma, chroma_low, chroma_mid, y_harmonic, sr,
@@ -2680,6 +2242,7 @@ def extract_chords(y, sr):
             strum = "D DU UDUD"
 
         segments[i]["strumming"] = strum
+        segments[i]["strumming_is_heuristic"] = True
 
     return segments, key_info
 
@@ -2779,7 +2342,11 @@ def analyze_audio(audio_path, video_id, progress_callback=None, force_reanalyze=
     if progress_callback:
         progress_callback("Analyzing chords...")
     from chord_engine import extract_chords as run_chord_extraction
-    chords, key_info = run_chord_extraction(y, sr)
+    from presentation_timeline import build_display_timeline
+
+    model_chords, key_info, pipeline = run_chord_extraction(y, sr, return_pipeline=True)
+    display = build_display_timeline(model_chords, pipeline, key_info or {})
+    chords = display["timeline"]
 
     if progress_callback:
         progress_callback("Fetching lyrics...")
@@ -2801,16 +2368,21 @@ def analyze_audio(audio_path, video_id, progress_callback=None, force_reanalyze=
     if progress_callback:
         progress_callback("Detecting solos...")
 
-    _, _, note_events = predict(audio_path)
+    from model_cache import get_basic_pitch_model
+
+    _, _, note_events = _basic_pitch_predict(audio_path, get_basic_pitch_model())
     raw_notes = _map_notes_to_fretboard(note_events)
     solo_sections = _cluster_solo_sections(raw_notes)
 
     meta = cache_metadata()
     result = {
         "video_id": video_id,
-        "analyzer_version": meta["analyzer_version"],
-        "chord_engine": meta["chord_engine"],
+        **meta,
         "timeline": chords,
+        "model_timeline": display["model_timeline"],
+        "beats": display["beats"],
+        "capo": display["capo"],
+        "presentation": display["presentation"],
         "solos": solo_sections,
         "key": key_info,
         "song": song_metadata or {},
@@ -2819,5 +2391,9 @@ def analyze_audio(audio_path, video_id, progress_callback=None, force_reanalyze=
 
     with open(cache_file, "w") as f:
         json.dump(result, f)
+
+    from cache_eviction import evict_analysis_cache
+
+    evict_analysis_cache(CACHE_DIR)
 
     return result
