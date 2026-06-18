@@ -28,6 +28,15 @@ backend/cache/
 backend/uploads/
 backend/training_labels/
 backend/eval-results*.json
+eval-results-*.json
+
+# ML third-party clones (BTC removed; keep ignore for stale checkouts)
+backend/third_party/
+
+# Model weights (download separately)
+backend/models/*.pt
+backend/models/*.pth
+!backend/models/.gitkeep
 
 # Editor
 .vscode/*

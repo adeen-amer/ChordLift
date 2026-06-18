@@ -4,6 +4,7 @@ from fastapi.middleware.cors import CORSMiddleware
 import os
 import json
 import asyncio
+import logging
 from pydantic import BaseModel
 
 from downloader import (
@@ -12,9 +13,15 @@ from downloader import (
     extract_youtube_id,
     fetch_track_metadata,
     save_uploaded_file,
-    DOWNLOAD_DIR,
 )
-from analyzer import analyze_audio, CACHE_DIR, is_cache_valid
+from analyzer import analyze_audio, is_cache_valid, ANALYZER_VERSION
+from chord_engine import CHORD_ENGINE, log_chord_engine_status
+from ml_env import summarize_ml_readiness
+from safe_paths import InvalidSourceIdError, resolve_cache_json, resolve_download_mp3, validate_source_id
+from analysis_runtime import run_analysis_deduped
+from model_cache import preload_ml_models
+
+logger = logging.getLogger(__name__)
 
 ALLOWED_ORIGINS = [
     origin.strip()
@@ -25,6 +32,11 @@ ALLOWED_ORIGINS = [
 ALLOWED_UPLOAD_EXTENSIONS = {".mp3", ".wav", ".m4a", ".flac", ".ogg", ".webm", ".mp4", ".aac"}
 
 app = FastAPI(title="ChordLift API")
+
+@app.on_event("startup")
+async def startup():
+    log_chord_engine_status()
+    await asyncio.to_thread(preload_ml_models)
 
 app.add_middleware(
     CORSMiddleware,
@@ -38,6 +50,17 @@ app.add_middleware(
 class AnalyzeRequest(BaseModel):
     url: str
     force_reanalyze: bool = False
+
+def _client_error_message(exc: Exception) -> str:
+    """Safe user-facing message — no stack traces or internal paths."""
+    if isinstance(exc, InvalidSourceIdError):
+        return "Invalid track id."
+    if isinstance(exc, FileNotFoundError):
+        return "Audio file not found. Try uploading again or re-analyze."
+    if isinstance(exc, RuntimeError):
+        return "Download failed. Try another link or upload a file."
+    logger.exception("Request failed")
+    return "Analysis failed. Please try again."
 
 def _enrich_analysis(data: dict, url: str) -> dict:
     if not data.get("song"):
@@ -73,7 +96,16 @@ def _timeline_duration(timeline: list) -> float:
 
 @app.get("/api/health")
 async def health():
-    return {"status": "ok"}
+    ml = summarize_ml_readiness()
+    return {
+        "status": "ok",
+        "analyzer_version": ANALYZER_VERSION,
+        "chord_engine": CHORD_ENGINE,
+        "ml_ready": ml["ml_deps_ok"] if CHORD_ENGINE == "ml" else None,
+        "ml_setup_hint": ml.get("setup_hint"),
+    }
+
+MAX_UPLOAD_BYTES = 50 * 1024 * 1024
 
 @app.post("/api/upload")
 async def upload_audio(file: UploadFile = File(...)):
@@ -87,14 +119,24 @@ async def upload_audio(file: UploadFile = File(...)):
             detail=f"Unsupported file type '{ext}'. Use MP3, WAV, M4A, FLAC, or OGG.",
         )
 
-    contents = await file.read()
-    if len(contents) > 50 * 1024 * 1024:
-        raise HTTPException(status_code=400, detail="File too large (max 50 MB).")
+    chunks: list[bytes] = []
+    total = 0
+    while True:
+        chunk = await file.read(1024 * 1024)
+        if not chunk:
+            break
+        total += len(chunk)
+        if total > MAX_UPLOAD_BYTES:
+            raise HTTPException(status_code=400, detail="File too large (max 50 MB).")
+        chunks.append(chunk)
+    contents = b"".join(chunks)
+    if not contents:
+        raise HTTPException(status_code=400, detail="Empty file.")
 
     try:
         result = await asyncio.to_thread(save_uploaded_file, contents, file.filename)
     except Exception as exc:
-        raise HTTPException(status_code=500, detail=str(exc)) from exc
+        raise HTTPException(status_code=500, detail=_client_error_message(exc)) from exc
 
     return {
         "status": "ready",
@@ -108,9 +150,13 @@ async def upload_audio(file: UploadFile = File(...)):
 @app.post("/api/analyze")
 async def analyze_endpoint(req: AnalyzeRequest):
     source_id = extract_source_id(req.url)
-    cache_file = os.path.join(CACHE_DIR, f"{source_id}.json")
+    try:
+        validate_source_id(source_id)
+        cache_file = resolve_cache_json(source_id)
+    except InvalidSourceIdError as exc:
+        raise HTTPException(status_code=400, detail="Invalid source.") from exc
 
-    if not req.force_reanalyze and os.path.exists(cache_file):
+    if not req.force_reanalyze and cache_file.is_file():
         with open(cache_file, "r") as f:
             data = json.load(f)
         if is_cache_valid(data):
@@ -121,12 +167,21 @@ async def analyze_endpoint(req: AnalyzeRequest):
 
 @app.get("/api/progress/{video_id}")
 async def progress_endpoint(video_id: str, url: str, force_reanalyze: bool = False):
+    source_id = extract_source_id(url)
+    try:
+        validate_source_id(source_id)
+        if video_id != source_id:
+            video_id = source_id
+    except InvalidSourceIdError as exc:
+        raise HTTPException(status_code=400, detail="Invalid track id.") from exc
+
     async def event_generator():
         try:
             yield f"data: {json.dumps({'stage': 'Downloading...'})}\n\n"
 
             download_info = await download_audio(url)
             audio_path = download_info["audio_path"]
+            canonical_id = download_info["video_id"]
             song_metadata = await asyncio.to_thread(fetch_track_metadata, url)
             yt_id = extract_youtube_id(url)
             if yt_id and song_metadata is not None:
@@ -138,27 +193,39 @@ async def progress_endpoint(video_id: str, url: str, force_reanalyze: bool = Fal
             def progress_cb(msg):
                 q.put_nowait(msg)
 
-            loop = asyncio.get_running_loop()
-            task = loop.run_in_executor(
-                None,
-                lambda: analyze_audio(
-                    audio_path, video_id, progress_cb, force_reanalyze, song_metadata,
-                ),
+            async def pump_progress(task: asyncio.Task):
+                while not task.done():
+                    try:
+                        msg = await asyncio.wait_for(q.get(), timeout=0.1)
+                        yield f"data: {json.dumps({'stage': msg})}\n\n"
+                    except asyncio.TimeoutError:
+                        pass
+                while not q.empty():
+                    msg = q.get_nowait()
+                    yield f"data: {json.dumps({'stage': msg})}\n\n"
+
+            analyze_task = asyncio.create_task(
+                run_analysis_deduped(
+                    canonical_id,
+                    lambda: analyze_audio(
+                        audio_path,
+                        canonical_id,
+                        progress_cb,
+                        force_reanalyze,
+                        song_metadata,
+                    ),
+                )
             )
 
-            while not task.done():
-                try:
-                    msg = await asyncio.wait_for(q.get(), timeout=0.1)
-                    yield f"data: {json.dumps({'stage': msg})}\n\n"
-                except asyncio.TimeoutError:
-                    pass
+            async for chunk in pump_progress(analyze_task):
+                yield chunk
 
-            result = task.result()
+            result = await analyze_task
             result = _enrich_analysis(result, url)
             yield f"data: {json.dumps({'stage': 'Complete', 'result': result})}\n\n"
 
-        except Exception as e:
-            yield f"data: {json.dumps({'error': str(e)})}\n\n"
+        except Exception as exc:
+            yield f"data: {json.dumps({'error': _client_error_message(exc)})}\n\n"
 
     return StreamingResponse(
         event_generator(),
@@ -172,8 +239,12 @@ async def progress_endpoint(video_id: str, url: str, force_reanalyze: bool = Fal
 
 @app.get("/api/audio/{video_id}")
 async def get_audio(video_id: str):
-    audio_path = os.path.join(DOWNLOAD_DIR, f"{video_id}.mp3")
-    if os.path.exists(audio_path):
+    try:
+        audio_path = resolve_download_mp3(video_id)
+    except InvalidSourceIdError as exc:
+        raise HTTPException(status_code=400, detail="Invalid track id.") from exc
+
+    if audio_path.is_file():
         return FileResponse(audio_path, media_type="audio/mpeg")
     raise HTTPException(status_code=404, detail="Audio file not found")
 
