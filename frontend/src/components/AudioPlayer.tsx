@@ -71,12 +71,6 @@ export const AudioPlayer = ({
     };
   }, [audioRef, src]);
 
-  useEffect(() => {
-    setIsPlaying(false);
-    setProgress(0);
-    setDuration(0);
-  }, [src]);
-
   const togglePlay = async () => {
     if (!audioRef.current || !canPlay) return;
 

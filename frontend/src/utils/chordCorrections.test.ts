@@ -7,11 +7,6 @@ import {
 } from './chordCorrections';
 import type { ChordEvent } from '../types';
 
-const timeline: ChordEvent[] = [
-  { time: 0.04, end_time: 2, chord: 'C', confidence: 0.3, is_low_confidence: true },
-  { time: 2.01, end_time: 4, chord: 'G', confidence: 0.8, is_low_confidence: false },
-];
-
 describe('segmentTimeKey', () => {
   it('rounds to 100ms', () => {
     expect(segmentTimeKey(0.04)).toBe('0.0');

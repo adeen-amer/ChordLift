@@ -4,7 +4,7 @@ import { AudioPlayer } from './components/AudioPlayer';
 import { ChordSequence } from './components/ChordSequence';
 import { LyricsPanel } from './components/LyricsPanel';
 import { plainLinesFromTimeline } from './utils/lyricsSync';
-import { applyCorrections, loadCorrections, saveCorrection, type CorrectionsMap } from './utils/chordCorrections';
+import { applyCorrections, loadCorrections, saveCorrection } from './utils/chordCorrections';
 import {
   loadPresentationMode,
   savePresentationMode,
@@ -26,9 +26,30 @@ function App() {
   const [error, setError] = useState<string | null>(null);
   const [data, setData] = useState<AnalysisData | null>(null);
   const [improvEnabled, setImprovEnabled] = useState(false);
-  const [audioLoadState, setAudioLoadState] = useState<AudioLoadState>('idle');
   const [presentationMode, setPresentationMode] = useState<PresentationMode>(loadPresentationMode);
-  const [corrections, setCorrections] = useState<CorrectionsMap>({});
+  const [correctionCache, setCorrectionCache] = useState<{ videoId: string; map: ReturnType<typeof loadCorrections> } | null>(null);
+  const [audioLoadState, setAudioLoadState] = useState<AudioLoadState>('idle');
+  const [audioTrackId, setAudioTrackId] = useState<string | undefined>();
+
+  const videoId = data?.video_id;
+
+  if (videoId !== audioTrackId) {
+    setAudioTrackId(videoId);
+    setAudioLoadState(videoId ? 'loading' : 'idle');
+  }
+
+  const corrections = useMemo(() => {
+    if (!videoId) return {};
+    if (correctionCache?.videoId === videoId) return correctionCache.map;
+    return loadCorrections(videoId);
+  }, [videoId, correctionCache]);
+
+  const effectivePresentationMode = useMemo((): PresentationMode => {
+    if (presentationMode === 'raw' && data && !data.model_timeline?.length) {
+      return 'synced';
+    }
+    return presentationMode;
+  }, [presentationMode, data]);
 
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const chordContainerRef = useRef<HTMLDivElement | null>(null);
@@ -48,28 +69,13 @@ function App() {
 
   useEffect(() => () => cancelInFlightAnalysis(), [cancelInFlightAnalysis]);
 
-  useEffect(() => {
-    if (!data?.video_id) {
-      setCorrections({});
-      return;
-    }
-    setCorrections(loadCorrections(data.video_id));
-  }, [data?.video_id]);
-
-  useEffect(() => {
-    if (data && presentationMode === 'raw' && !data.model_timeline?.length) {
-      setPresentationMode('synced');
-      savePresentationMode('synced');
-    }
-  }, [data, presentationMode]);
-
   const baseTimeline = useMemo((): ChordEvent[] => {
     if (!data) return [];
-    if (presentationMode === 'raw' && data.model_timeline?.length) {
+    if (effectivePresentationMode === 'raw' && data.model_timeline?.length) {
       return data.model_timeline;
     }
     return data.timeline;
-  }, [data, presentationMode]);
+  }, [data, effectivePresentationMode]);
 
   const displayTimeline = useMemo(
     () => applyCorrections(baseTimeline, corrections),
@@ -93,8 +99,8 @@ function App() {
   const handleCorrectChord = useCallback((time: number, chord: string) => {
     if (!data?.video_id) return;
     saveCorrection(data.video_id, time, chord);
-    setCorrections(loadCorrections(data.video_id));
-  }, [data?.video_id]);
+    setCorrectionCache({ videoId: data.video_id, map: loadCorrections(data.video_id) });
+  }, [data]);
 
   const handlePresentationToggle = (mode: PresentationMode) => {
     setPresentationMode(mode);
@@ -103,12 +109,7 @@ function App() {
 
   useEffect(() => {
     const audio = audioRef.current;
-    if (!audio || !data) {
-      setAudioLoadState('idle');
-      return;
-    }
-
-    setAudioLoadState('loading');
+    if (!audio || !videoId) return;
 
     const onReady = () => setAudioLoadState('ready');
     const onError = () => {
@@ -129,7 +130,7 @@ function App() {
       audio.removeEventListener('canplay', onReady);
       audio.removeEventListener('error', onError);
     };
-  }, [data?.video_id]);
+  }, [videoId]);
 
   const runAnalysis = async (sourceUrl: string, forceReanalyze = false) => {
     cancelInFlightAnalysis();
@@ -355,6 +356,7 @@ function App() {
           />
 
           <AudioPlayer
+            key={data.video_id}
             audioRef={audioRef}
             src={apiUrl(`/api/audio/${data.video_id}`)}
             song={data.song}
