@@ -1,0 +1,119 @@
+{
+  "analyzer_version": "44",
+  "chord_engine": "ml",
+  "chord_ml_model": "ensemble",
+  "summary": {
+    "track_count": 8,
+    "avg_root_wcsr": 0.5883,
+    "avg_majmin_wcsr": 0.5101,
+    "avg_sevenths_wcsr": 0.4675,
+    "avg_seg_score": 0.5876
+  },
+  "tracks": [
+    {
+      "id": "let-it-be",
+      "title": "Let It Be \u2014 The Beatles",
+      "skipped": false,
+      "eval_start": null,
+      "eval_end": null,
+      "ref_segments": 161,
+      "est_segments": 107,
+      "root": 0.46525202684446376,
+      "majmin": 0.4467732171662666,
+      "sevenths": 0.4331987302945389,
+      "seg": 0.576346147550298
+    },
+    {
+      "id": "yellow-submarine",
+      "title": "Yellow Submarine \u2014 The Beatles",
+      "skipped": false,
+      "eval_start": null,
+      "eval_end": null,
+      "ref_segments": 107,
+      "est_segments": 47,
+      "root": 0.7374707497469073,
+      "majmin": 0.6198032504829231,
+      "sevenths": 0.6198032504829231,
+      "seg": 0.6765584824025623
+    },
+    {
+      "id": "come-together",
+      "title": "Come Together \u2014 The Beatles",
+      "skipped": false,
+      "eval_start": null,
+      "eval_end": null,
+      "ref_segments": 36,
+      "est_segments": 23,
+      "root": 0.7818377729168565,
+      "majmin": 0.6323376645306814,
+      "sevenths": 0.6052560328226506,
+      "seg": 0.8384958293037577
+    },
+    {
+      "id": "yesterday",
+      "title": "Yesterday \u2014 The Beatles",
+      "skipped": false,
+      "eval_start": null,
+      "eval_end": null,
+      "ref_segments": 97,
+      "est_segments": 56,
+      "root": 0.47173013848044576,
+      "majmin": 0.24634390884042454,
+      "sevenths": 0.2089457629291272,
+      "seg": 0.6129392641179476
+    },
+    {
+      "id": "help",
+      "title": "Help! \u2014 The Beatles",
+      "skipped": false,
+      "eval_start": null,
+      "eval_end": null,
+      "ref_segments": 59,
+      "est_segments": 30,
+      "root": 0.41255185906064673,
+      "majmin": 0.3941190579959276,
+      "sevenths": 0.36132455600392405,
+      "seg": 0.5620659751445238
+    },
+    {
+      "id": "twist-and-shout",
+      "title": "Twist And Shout \u2014 The Beatles",
+      "skipped": false,
+      "eval_start": null,
+      "eval_end": null,
+      "ref_segments": 116,
+      "est_segments": 9,
+      "root": 0.5525938901876438,
+      "majmin": 0.5179790083781142,
+      "sevenths": 0.5051679200073729,
+      "seg": 0.16545202980797713
+    },
+    {
+      "id": "something",
+      "title": "Something \u2014 The Beatles",
+      "skipped": false,
+      "eval_start": null,
+      "eval_end": null,
+      "ref_segments": 99,
+      "est_segments": 47,
+      "root": 0.5364340891436562,
+      "majmin": 0.517877500784625,
+      "sevenths": 0.4170227458743647,
+      "seg": 0.4962275168128081
+    },
+    {
+      "id": "ticket-to-ride",
+      "title": "Ticket To Ride \u2014 The Beatles",
+      "skipped": false,
+      "eval_start": null,
+      "eval_end": null,
+      "ref_segments": 53,
+      "est_segments": 41,
+      "root": 0.7487078275430467,
+      "majmin": 0.7051738152912186,
+      "sevenths": 0.5896322917131512,
+      "seg": 0.7727593688985064
+    }
+  ],
+  "note": "Phase 5: ensemble only. Same scores as v43."
+}

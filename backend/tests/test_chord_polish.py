@@ -1,8 +1,8 @@
 """Tests for flux-guided boundary detection and frame-voting label scoring."""
 import numpy as np
 
+from chord_polish import apply_intro_guard as _apply_intro_guard
 from analyzer import (
-    _apply_intro_guard,
     _bar_aware_min_duration,
     _boundary_candidate_times,
     _chroma_flux_series,

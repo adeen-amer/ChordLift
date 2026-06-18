@@ -1,0 +1,1073 @@
+{
+  "splits": {
+    "dev": {
+      "chordia": {
+        "summary": {
+          "majmin": 0.6153,
+          "seg": 0.7522,
+          "root": 0.6254,
+          "sevenths": 0.5329,
+          "n": 14
+        },
+        "tracks": [
+          {
+            "id": "let-it-be",
+            "title": "Let It Be \u2014 The Beatles",
+            "skipped": false,
+            "ref_segments": 161,
+            "chordia_est_segments": 131,
+            "btc_est_segments": 160,
+            "chordia": {
+              "root": 0.1329755665925012,
+              "majmin": 0.1329755665925012,
+              "sevenths": 0.13508750312599693,
+              "seg": 0.8140054116988784
+            },
+            "btc": {
+              "root": 0.15841141848362178,
+              "majmin": 0.15841141848362178,
+              "sevenths": 0.15659734021543328,
+              "seg": 0.8197688037035957
+            },
+            "majmin_delta_btc_minus_chordia": 0.0254,
+            "seg_delta_btc_minus_chordia": 0.0058
+          },
+          {
+            "id": "yellow-submarine",
+            "title": "Yellow Submarine \u2014 The Beatles",
+            "skipped": false,
+            "ref_segments": 107,
+            "chordia_est_segments": 53,
+            "btc_est_segments": 108,
+            "chordia": {
+              "root": 0.012950557487145097,
+              "majmin": 0.012950557487145097,
+              "sevenths": 0.012950557487145097,
+              "seg": 0.7440982963759064
+            },
+            "btc": {
+              "root": 0.7812601753509276,
+              "majmin": 0.7605306428408158,
+              "sevenths": 0.7605306428408158,
+              "seg": 0.825666681907641
+            },
+            "majmin_delta_btc_minus_chordia": 0.7476,
+            "seg_delta_btc_minus_chordia": 0.0816
+          },
+          {
+            "id": "come-together",
+            "title": "Come Together \u2014 The Beatles",
+            "skipped": false,
+            "ref_segments": 36,
+            "chordia_est_segments": 27,
+            "btc_est_segments": 110,
+            "chordia": {
+              "root": 0.886654857257846,
+              "majmin": 0.8633501123732576,
+              "sevenths": 0.7916979212470462,
+              "seg": 0.9022780026780965
+            },
+            "btc": {
+              "root": 0.8050987166675518,
+              "majmin": 0.7483416815320645,
+              "sevenths": 0.6911903989423474,
+              "seg": 0.4686904780139607
+            },
+            "majmin_delta_btc_minus_chordia": -0.115,
+            "seg_delta_btc_minus_chordia": -0.4336
+          },
+          {
+            "id": "help",
+            "title": "Help! \u2014 The Beatles",
+            "skipped": false,
+            "ref_segments": 59,
+            "chordia_est_segments": 51,
+            "btc_est_segments": 62,
+            "chordia": {
+              "root": 0.6654495246834571,
+              "majmin": 0.6654495246834571,
+              "sevenths": 0.6576228354894199,
+              "seg": 0.719037009038096
+            },
+            "btc": {
+              "root": 0.6299241227939184,
+              "majmin": 0.6299241227939184,
+              "sevenths": 0.6111918509373142,
+              "seg": 0.6836947492770793
+            },
+            "majmin_delta_btc_minus_chordia": -0.0355,
+            "seg_delta_btc_minus_chordia": -0.0353
+          },
+          {
+            "id": "twist-and-shout",
+            "title": "Twist And Shout \u2014 The Beatles",
+            "skipped": false,
+            "ref_segments": 116,
+            "chordia_est_segments": 102,
+            "btc_est_segments": 106,
+            "chordia": {
+              "root": 0.9260057942673232,
+              "majmin": 0.9260057942673232,
+              "sevenths": 0.8848181465265417,
+              "seg": 0.8781989246692448
+            },
+            "btc": {
+              "root": 0.9224224749759626,
+              "majmin": 0.9224224749759626,
+              "sevenths": 0.8812348272351811,
+              "seg": 0.8795311407562388
+            },
+            "majmin_delta_btc_minus_chordia": -0.0036,
+            "seg_delta_btc_minus_chordia": 0.0013
+          },
+          {
+            "id": "something",
+            "title": "Something \u2014 The Beatles",
+            "skipped": false,
+            "ref_segments": 99,
+            "chordia_est_segments": 79,
+            "btc_est_segments": 128,
+            "chordia": {
+              "root": 0.7150104084820637,
+              "majmin": 0.7437412597994357,
+              "sevenths": 0.6487062513443347,
+              "seg": 0.733656661090295
+            },
+            "btc": {
+              "root": 0.717679984821615,
+              "majmin": 0.7399600087220398,
+              "sevenths": 0.6340792072651648,
+              "seg": 0.755078881079291
+            },
+            "majmin_delta_btc_minus_chordia": -0.0038,
+            "seg_delta_btc_minus_chordia": 0.0214
+          },
+          {
+            "id": "ticket-to-ride",
+            "title": "Ticket To Ride \u2014 The Beatles",
+            "skipped": false,
+            "ref_segments": 53,
+            "chordia_est_segments": 39,
+            "btc_est_segments": 67,
+            "chordia": {
+              "root": 0.7195300529698515,
+              "majmin": 0.6898030805689703,
+              "sevenths": 0.5900214675930512,
+              "seg": 0.7306276309511703
+            },
+            "btc": {
+              "root": 0.7313816391812347,
+              "majmin": 0.715994920005414,
+              "sevenths": 0.599864996634441,
+              "seg": 0.7470915026484837
+            },
+            "majmin_delta_btc_minus_chordia": 0.0262,
+            "seg_delta_btc_minus_chordia": 0.0165
+          },
+          {
+            "id": "i-saw-her-standing-there",
+            "title": "I Saw Her Standing There \u2014 The Beatles",
+            "skipped": false,
+            "ref_segments": 62,
+            "chordia_est_segments": 58,
+            "btc_est_segments": 57,
+            "chordia": {
+              "root": 0.9353418502155902,
+              "majmin": 0.9329962846558554,
+              "sevenths": 0.7177563279408572,
+              "seg": 0.9322500259123677
+            },
+            "btc": {
+              "root": 0.9547219222765895,
+              "majmin": 0.9460767178824037,
+              "sevenths": 0.9103674802508183,
+              "seg": 0.9235930036490747
+            },
+            "majmin_delta_btc_minus_chordia": 0.0131,
+            "seg_delta_btc_minus_chordia": -0.0087
+          },
+          {
+            "id": "cant-buy-me-love",
+            "title": "Can't Buy Me Love \u2014 The Beatles",
+            "skipped": false,
+            "ref_segments": 65,
+            "chordia_est_segments": 55,
+            "btc_est_segments": 78,
+            "chordia": {
+              "root": 0.6081149973305313,
+              "majmin": 0.6081149973305313,
+              "sevenths": 0.44230112591132226,
+              "seg": 0.7630286347635649
+            },
+            "btc": {
+              "root": 0.6112607013280872,
+              "majmin": 0.6112607013280872,
+              "sevenths": 0.23005369129417413,
+              "seg": 0.7335335731487391
+            },
+            "majmin_delta_btc_minus_chordia": 0.0031,
+            "seg_delta_btc_minus_chordia": -0.0295
+          },
+          {
+            "id": "while-my-guitar-gently-weeps",
+            "title": "While My Guitar Gently Weeps \u2014 The Beatles",
+            "skipped": false,
+            "ref_segments": 142,
+            "chordia_est_segments": 124,
+            "btc_est_segments": 160,
+            "chordia": {
+              "root": 0.8263574137981047,
+              "majmin": 0.8057422696837516,
+              "sevenths": 0.7883509871877442,
+              "seg": 0.7844923841061968
+            },
+            "btc": {
+              "root": 0.7801939445885047,
+              "majmin": 0.7713492236130542,
+              "sevenths": 0.8071474381534162,
+              "seg": 0.883120426603155
+            },
+            "majmin_delta_btc_minus_chordia": -0.0344,
+            "seg_delta_btc_minus_chordia": 0.0986
+          },
+          {
+            "id": "another-one-bites-the-dust",
+            "title": "Another One Bites The Dust \u2014 Queen",
+            "skipped": false,
+            "ref_segments": 105,
+            "chordia_est_segments": 53,
+            "btc_est_segments": 92,
+            "chordia": {
+              "root": 0.3421160141288386,
+              "majmin": 0.30793779462567683,
+              "sevenths": 0.30793779462567683,
+              "seg": 0.7085110208522548
+            },
+            "btc": {
+              "root": 0.36109410834194133,
+              "majmin": 0.2798529467349178,
+              "sevenths": 0.2798529467349178,
+              "seg": 0.765247915602675
+            },
+            "majmin_delta_btc_minus_chordia": -0.0281,
+            "seg_delta_btc_minus_chordia": 0.0567
+          },
+          {
+            "id": "dont-stop-me-now",
+            "title": "Don't Stop Me Now \u2014 Queen",
+            "skipped": false,
+            "ref_segments": 133,
+            "chordia_est_segments": 87,
+            "btc_est_segments": 159,
+            "chordia": {
+              "root": 0.6317673673919506,
+              "majmin": 0.6284014991037961,
+              "sevenths": 0.34365804330531236,
+              "seg": 0.5920286398435761
+            },
+            "btc": {
+              "root": 0.6808634424452467,
+              "majmin": 0.6368012089959013,
+              "sevenths": 0.4318084918684947,
+              "seg": 0.7811385793183628
+            },
+            "majmin_delta_btc_minus_chordia": 0.0084,
+            "seg_delta_btc_minus_chordia": 0.1891
+          },
+          {
+            "id": "play-the-game",
+            "title": "Play The Game \u2014 Queen",
+            "skipped": false,
+            "ref_segments": 132,
+            "chordia_est_segments": 104,
+            "btc_est_segments": 139,
+            "chordia": {
+              "root": 0.5954266229737732,
+              "majmin": 0.5745765375066781,
+              "sevenths": 0.46747273812890844,
+              "seg": 0.6277524881977623
+            },
+            "btc": {
+              "root": 0.6122875584121609,
+              "majmin": 0.5909944166850012,
+              "sevenths": 0.45652992957131994,
+              "seg": 0.6769967612321602
+            },
+            "majmin_delta_btc_minus_chordia": 0.0164,
+            "seg_delta_btc_minus_chordia": 0.0492
+          },
+          {
+            "id": "youre-my-best-friend",
+            "title": "You're My Best Friend \u2014 Queen",
+            "skipped": false,
+            "ref_segments": 102,
+            "chordia_est_segments": 62,
+            "btc_est_segments": 117,
+            "chordia": {
+              "root": 0.7573274168036415,
+              "majmin": 0.7222487457678367,
+              "sevenths": 0.6724478222617952,
+              "seg": 0.6009498198517385
+            },
+            "btc": {
+              "root": 0.7881443965382772,
+              "majmin": 0.7720024967497581,
+              "sevenths": 0.7146031712381424,
+              "seg": 0.7875244344028625
+            },
+            "majmin_delta_btc_minus_chordia": 0.0498,
+            "seg_delta_btc_minus_chordia": 0.1866
+          }
+        ]
+      },
+      "btc": {
+        "summary": {
+          "majmin": 0.6631,
+          "seg": 0.7665,
+          "root": 0.6811,
+          "sevenths": 0.5832,
+          "n": 14
+        },
+        "tracks": [
+          {
+            "id": "let-it-be",
+            "title": "Let It Be \u2014 The Beatles",
+            "skipped": false,
+            "ref_segments": 161,
+            "chordia_est_segments": 131,
+            "btc_est_segments": 160,
+            "chordia": {
+              "root": 0.1329755665925012,
+              "majmin": 0.1329755665925012,
+              "sevenths": 0.13508750312599693,
+              "seg": 0.8140054116988784
+            },
+            "btc": {
+              "root": 0.15841141848362178,
+              "majmin": 0.15841141848362178,
+              "sevenths": 0.15659734021543328,
+              "seg": 0.8197688037035957
+            },
+            "majmin_delta_btc_minus_chordia": 0.0254,
+            "seg_delta_btc_minus_chordia": 0.0058
+          },
+          {
+            "id": "yellow-submarine",
+            "title": "Yellow Submarine \u2014 The Beatles",
+            "skipped": false,
+            "ref_segments": 107,
+            "chordia_est_segments": 53,
+            "btc_est_segments": 108,
+            "chordia": {
+              "root": 0.012950557487145097,
+              "majmin": 0.012950557487145097,
+              "sevenths": 0.012950557487145097,
+              "seg": 0.7440982963759064
+            },
+            "btc": {
+              "root": 0.7812601753509276,
+              "majmin": 0.7605306428408158,
+              "sevenths": 0.7605306428408158,
+              "seg": 0.825666681907641
+            },
+            "majmin_delta_btc_minus_chordia": 0.7476,
+            "seg_delta_btc_minus_chordia": 0.0816
+          },
+          {
+            "id": "come-together",
+            "title": "Come Together \u2014 The Beatles",
+            "skipped": false,
+            "ref_segments": 36,
+            "chordia_est_segments": 27,
+            "btc_est_segments": 110,
+            "chordia": {
+              "root": 0.886654857257846,
+              "majmin": 0.8633501123732576,
+              "sevenths": 0.7916979212470462,
+              "seg": 0.9022780026780965
+            },
+            "btc": {
+              "root": 0.8050987166675518,
+              "majmin": 0.7483416815320645,
+              "sevenths": 0.6911903989423474,
+              "seg": 0.4686904780139607
+            },
+            "majmin_delta_btc_minus_chordia": -0.115,
+            "seg_delta_btc_minus_chordia": -0.4336
+          },
+          {
+            "id": "help",
+            "title": "Help! \u2014 The Beatles",
+            "skipped": false,
+            "ref_segments": 59,
+            "chordia_est_segments": 51,
+            "btc_est_segments": 62,
+            "chordia": {
+              "root": 0.6654495246834571,
+              "majmin": 0.6654495246834571,
+              "sevenths": 0.6576228354894199,
+              "seg": 0.719037009038096
+            },
+            "btc": {
+              "root": 0.6299241227939184,
+              "majmin": 0.6299241227939184,
+              "sevenths": 0.6111918509373142,
+              "seg": 0.6836947492770793
+            },
+            "majmin_delta_btc_minus_chordia": -0.0355,
+            "seg_delta_btc_minus_chordia": -0.0353
+          },
+          {
+            "id": "twist-and-shout",
+            "title": "Twist And Shout \u2014 The Beatles",
+            "skipped": false,
+            "ref_segments": 116,
+            "chordia_est_segments": 102,
+            "btc_est_segments": 106,
+            "chordia": {
+              "root": 0.9260057942673232,
+              "majmin": 0.9260057942673232,
+              "sevenths": 0.8848181465265417,
+              "seg": 0.8781989246692448
+            },
+            "btc": {
+              "root": 0.9224224749759626,
+              "majmin": 0.9224224749759626,
+              "sevenths": 0.8812348272351811,
+              "seg": 0.8795311407562388
+            },
+            "majmin_delta_btc_minus_chordia": -0.0036,
+            "seg_delta_btc_minus_chordia": 0.0013
+          },
+          {
+            "id": "something",
+            "title": "Something \u2014 The Beatles",
+            "skipped": false,
+            "ref_segments": 99,
+            "chordia_est_segments": 79,
+            "btc_est_segments": 128,
+            "chordia": {
+              "root": 0.7150104084820637,
+              "majmin": 0.7437412597994357,
+              "sevenths": 0.6487062513443347,
+              "seg": 0.733656661090295
+            },
+            "btc": {
+              "root": 0.717679984821615,
+              "majmin": 0.7399600087220398,
+              "sevenths": 0.6340792072651648,
+              "seg": 0.755078881079291
+            },
+            "majmin_delta_btc_minus_chordia": -0.0038,
+            "seg_delta_btc_minus_chordia": 0.0214
+          },
+          {
+            "id": "ticket-to-ride",
+            "title": "Ticket To Ride \u2014 The Beatles",
+            "skipped": false,
+            "ref_segments": 53,
+            "chordia_est_segments": 39,
+            "btc_est_segments": 67,
+            "chordia": {
+              "root": 0.7195300529698515,
+              "majmin": 0.6898030805689703,
+              "sevenths": 0.5900214675930512,
+              "seg": 0.7306276309511703
+            },
+            "btc": {
+              "root": 0.7313816391812347,
+              "majmin": 0.715994920005414,
+              "sevenths": 0.599864996634441,
+              "seg": 0.7470915026484837
+            },
+            "majmin_delta_btc_minus_chordia": 0.0262,
+            "seg_delta_btc_minus_chordia": 0.0165
+          },
+          {
+            "id": "i-saw-her-standing-there",
+            "title": "I Saw Her Standing There \u2014 The Beatles",
+            "skipped": false,
+            "ref_segments": 62,
+            "chordia_est_segments": 58,
+            "btc_est_segments": 57,
+            "chordia": {
+              "root": 0.9353418502155902,
+              "majmin": 0.9329962846558554,
+              "sevenths": 0.7177563279408572,
+              "seg": 0.9322500259123677
+            },
+            "btc": {
+              "root": 0.9547219222765895,
+              "majmin": 0.9460767178824037,
+              "sevenths": 0.9103674802508183,
+              "seg": 0.9235930036490747
+            },
+            "majmin_delta_btc_minus_chordia": 0.0131,
+            "seg_delta_btc_minus_chordia": -0.0087
+          },
+          {
+            "id": "cant-buy-me-love",
+            "title": "Can't Buy Me Love \u2014 The Beatles",
+            "skipped": false,
+            "ref_segments": 65,
+            "chordia_est_segments": 55,
+            "btc_est_segments": 78,
+            "chordia": {
+              "root": 0.6081149973305313,
+              "majmin": 0.6081149973305313,
+              "sevenths": 0.44230112591132226,
+              "seg": 0.7630286347635649
+            },
+            "btc": {
+              "root": 0.6112607013280872,
+              "majmin": 0.6112607013280872,
+              "sevenths": 0.23005369129417413,
+              "seg": 0.7335335731487391
+            },
+            "majmin_delta_btc_minus_chordia": 0.0031,
+            "seg_delta_btc_minus_chordia": -0.0295
+          },
+          {
+            "id": "while-my-guitar-gently-weeps",
+            "title": "While My Guitar Gently Weeps \u2014 The Beatles",
+            "skipped": false,
+            "ref_segments": 142,
+            "chordia_est_segments": 124,
+            "btc_est_segments": 160,
+            "chordia": {
+              "root": 0.8263574137981047,
+              "majmin": 0.8057422696837516,
+              "sevenths": 0.7883509871877442,
+              "seg": 0.7844923841061968
+            },
+            "btc": {
+              "root": 0.7801939445885047,
+              "majmin": 0.7713492236130542,
+              "sevenths": 0.8071474381534162,
+              "seg": 0.883120426603155
+            },
+            "majmin_delta_btc_minus_chordia": -0.0344,
+            "seg_delta_btc_minus_chordia": 0.0986
+          },
+          {
+            "id": "another-one-bites-the-dust",
+            "title": "Another One Bites The Dust \u2014 Queen",
+            "skipped": false,
+            "ref_segments": 105,
+            "chordia_est_segments": 53,
+            "btc_est_segments": 92,
+            "chordia": {
+              "root": 0.3421160141288386,
+              "majmin": 0.30793779462567683,
+              "sevenths": 0.30793779462567683,
+              "seg": 0.7085110208522548
+            },
+            "btc": {
+              "root": 0.36109410834194133,
+              "majmin": 0.2798529467349178,
+              "sevenths": 0.2798529467349178,
+              "seg": 0.765247915602675
+            },
+            "majmin_delta_btc_minus_chordia": -0.0281,
+            "seg_delta_btc_minus_chordia": 0.0567
+          },
+          {
+            "id": "dont-stop-me-now",
+            "title": "Don't Stop Me Now \u2014 Queen",
+            "skipped": false,
+            "ref_segments": 133,
+            "chordia_est_segments": 87,
+            "btc_est_segments": 159,
+            "chordia": {
+              "root": 0.6317673673919506,
+              "majmin": 0.6284014991037961,
+              "sevenths": 0.34365804330531236,
+              "seg": 0.5920286398435761
+            },
+            "btc": {
+              "root": 0.6808634424452467,
+              "majmin": 0.6368012089959013,
+              "sevenths": 0.4318084918684947,
+              "seg": 0.7811385793183628
+            },
+            "majmin_delta_btc_minus_chordia": 0.0084,
+            "seg_delta_btc_minus_chordia": 0.1891
+          },
+          {
+            "id": "play-the-game",
+            "title": "Play The Game \u2014 Queen",
+            "skipped": false,
+            "ref_segments": 132,
+            "chordia_est_segments": 104,
+            "btc_est_segments": 139,
+            "chordia": {
+              "root": 0.5954266229737732,
+              "majmin": 0.5745765375066781,
+              "sevenths": 0.46747273812890844,
+              "seg": 0.6277524881977623
+            },
+            "btc": {
+              "root": 0.6122875584121609,
+              "majmin": 0.5909944166850012,
+              "sevenths": 0.45652992957131994,
+              "seg": 0.6769967612321602
+            },
+            "majmin_delta_btc_minus_chordia": 0.0164,
+            "seg_delta_btc_minus_chordia": 0.0492
+          },
+          {
+            "id": "youre-my-best-friend",
+            "title": "You're My Best Friend \u2014 Queen",
+            "skipped": false,
+            "ref_segments": 102,
+            "chordia_est_segments": 62,
+            "btc_est_segments": 117,
+            "chordia": {
+              "root": 0.7573274168036415,
+              "majmin": 0.7222487457678367,
+              "sevenths": 0.6724478222617952,
+              "seg": 0.6009498198517385
+            },
+            "btc": {
+              "root": 0.7881443965382772,
+              "majmin": 0.7720024967497581,
+              "sevenths": 0.7146031712381424,
+              "seg": 0.7875244344028625
+            },
+            "majmin_delta_btc_minus_chordia": 0.0498,
+            "seg_delta_btc_minus_chordia": 0.1866
+          }
+        ]
+      },
+      "delta_btc_minus_chordia": {
+        "majmin": 0.0478,
+        "seg": 0.0143
+      }
+    },
+    "test": {
+      "chordia": {
+        "summary": {
+          "majmin": 0.629,
+          "seg": 0.6365,
+          "root": 0.6255,
+          "sevenths": 0.5835,
+          "n": 9
+        },
+        "tracks": [
+          {
+            "id": "yesterday",
+            "title": "Yesterday \u2014 The Beatles",
+            "skipped": false,
+            "ref_segments": 97,
+            "chordia_est_segments": 72,
+            "btc_est_segments": 109,
+            "chordia": {
+              "root": 0.8272331441127527,
+              "majmin": 0.8595489519659112,
+              "sevenths": 0.7428037812115982,
+              "seg": 0.8219054753268656
+            },
+            "btc": {
+              "root": 0.8090188944463302,
+              "majmin": 0.8270476037129973,
+              "sevenths": 0.7055821766861685,
+              "seg": 0.8665270284026145
+            },
+            "majmin_delta_btc_minus_chordia": -0.0325,
+            "seg_delta_btc_minus_chordia": 0.0446
+          },
+          {
+            "id": "back-in-the-ussr",
+            "title": "Back In The USSR \u2014 The Beatles",
+            "skipped": false,
+            "ref_segments": 98,
+            "chordia_est_segments": 73,
+            "btc_est_segments": 84,
+            "chordia": {
+              "root": 0.41424865598186733,
+              "majmin": 0.4226091968846468,
+              "sevenths": 0.39198102416356173,
+              "seg": 0.713578873099805
+            },
+            "btc": {
+              "root": 0.4095616096648048,
+              "majmin": 0.41803912590727754,
+              "sevenths": 0.30728387133378954,
+              "seg": 0.7335289169030973
+            },
+            "majmin_delta_btc_minus_chordia": -0.0046,
+            "seg_delta_btc_minus_chordia": 0.02
+          },
+          {
+            "id": "norwegian-wood",
+            "title": "Norwegian Wood \u2014 The Beatles",
+            "skipped": false,
+            "ref_segments": 45,
+            "chordia_est_segments": 13,
+            "btc_est_segments": 55,
+            "chordia": {
+              "root": 0.8890687553146258,
+              "majmin": 0.8879300914115645,
+              "sevenths": 0.8879300914115645,
+              "seg": 0.42832706207482985
+            },
+            "btc": {
+              "root": 0.8995664685492247,
+              "majmin": 0.8818285820578226,
+              "sevenths": 0.8754884495464846,
+              "seg": 0.8967046083711256
+            },
+            "majmin_delta_btc_minus_chordia": -0.0061,
+            "seg_delta_btc_minus_chordia": 0.4684
+          },
+          {
+            "id": "penny-lane",
+            "title": "Penny Lane \u2014 The Beatles",
+            "skipped": false,
+            "ref_segments": 142,
+            "chordia_est_segments": 67,
+            "btc_est_segments": 122,
+            "chordia": {
+              "root": 0.6785409184589792,
+              "majmin": 0.694758091201018,
+              "sevenths": 0.6442075528909308,
+              "seg": 0.5339754424926031
+            },
+            "btc": {
+              "root": 0.684491552146604,
+              "majmin": 0.7127581370307106,
+              "sevenths": 0.637070578357239,
+              "seg": 0.6518932496735161
+            },
+            "majmin_delta_btc_minus_chordia": 0.018,
+            "seg_delta_btc_minus_chordia": 0.1179
+          },
+          {
+            "id": "here-comes-the-sun",
+            "title": "Here Comes The Sun \u2014 The Beatles",
+            "skipped": false,
+            "ref_segments": 131,
+            "chordia_est_segments": 89,
+            "btc_est_segments": 126,
+            "chordia": {
+              "root": 0.8674896097175915,
+              "majmin": 0.8810405741816374,
+              "sevenths": 0.8588865477695502,
+              "seg": 0.806460325197278
+            },
+            "btc": {
+              "root": 0.8978275960681157,
+              "majmin": 0.8933845164598913,
+              "sevenths": 0.809673879736852,
+              "seg": 0.8535827769418665
+            },
+            "majmin_delta_btc_minus_chordia": 0.0123,
+            "seg_delta_btc_minus_chordia": 0.0471
+          },
+          {
+            "id": "crazy-little-thing-called-love",
+            "title": "Crazy Little Thing Called Love \u2014 Queen",
+            "skipped": false,
+            "ref_segments": 100,
+            "chordia_est_segments": 82,
+            "btc_est_segments": 127,
+            "chordia": {
+              "root": 0.5891336592869304,
+              "majmin": 0.5782685393738514,
+              "sevenths": 0.5782685393738514,
+              "seg": 0.7319489461444086
+            },
+            "btc": {
+              "root": 0.5661666512590245,
+              "majmin": 0.5254631449179861,
+              "sevenths": 0.5254631449179861,
+              "seg": 0.6906633821149026
+            },
+            "majmin_delta_btc_minus_chordia": -0.0528,
+            "seg_delta_btc_minus_chordia": -0.0413
+          },
+          {
+            "id": "somebody-to-love",
+            "title": "Somebody To Love \u2014 Queen",
+            "skipped": false,
+            "ref_segments": 168,
+            "chordia_est_segments": 131,
+            "btc_est_segments": 177,
+            "chordia": {
+              "root": 0.4417688222073654,
+              "majmin": 0.44135814164992937,
+              "sevenths": 0.339008333362041,
+              "seg": 0.6977360607658891
+            },
+            "btc": {
+              "root": 0.44578586387050045,
+              "majmin": 0.4417919516255929,
+              "sevenths": 0.34745269972068915,
+              "seg": 0.7248957914567471
+            },
+            "majmin_delta_btc_minus_chordia": 0.0004,
+            "seg_delta_btc_minus_chordia": 0.0272
+          },
+          {
+            "id": "seven-seas-of-rhye",
+            "title": "Seven Seas Of Rhye \u2014 Queen",
+            "skipped": false,
+            "ref_segments": 90,
+            "chordia_est_segments": 44,
+            "btc_est_segments": 84,
+            "chordia": {
+              "root": 0.6247710986600543,
+              "majmin": 0.5792432252300063,
+              "sevenths": 0.502084596287161,
+              "seg": 0.6752274633800093
+            },
+            "btc": {
+              "root": 0.5403767909967263,
+              "majmin": 0.500343844465748,
+              "sevenths": 0.42404342442137755,
+              "seg": 0.6948441456502925
+            },
+            "majmin_delta_btc_minus_chordia": -0.0789,
+            "seg_delta_btc_minus_chordia": 0.0196
+          },
+          {
+            "id": "hammer-to-fall",
+            "title": "Hammer To Fall \u2014 Queen",
+            "skipped": false,
+            "ref_segments": 195,
+            "chordia_est_segments": 37,
+            "btc_est_segments": 108,
+            "chordia": {
+              "root": 0.2972852801079829,
+              "majmin": 0.31605537821017005,
+              "sevenths": 0.30593320194227247,
+              "seg": 0.3195430769126195
+            },
+            "btc": {
+              "root": 0.661487541932541,
+              "majmin": 0.7079231482992563,
+              "sevenths": 0.6850739764680532,
+              "seg": 0.5602225951071362
+            },
+            "majmin_delta_btc_minus_chordia": 0.3919,
+            "seg_delta_btc_minus_chordia": 0.2407
+          }
+        ]
+      },
+      "btc": {
+        "summary": {
+          "majmin": 0.6565,
+          "seg": 0.7414,
+          "root": 0.6571,
+          "sevenths": 0.5908,
+          "n": 9
+        },
+        "tracks": [
+          {
+            "id": "yesterday",
+            "title": "Yesterday \u2014 The Beatles",
+            "skipped": false,
+            "ref_segments": 97,
+            "chordia_est_segments": 72,
+            "btc_est_segments": 109,
+            "chordia": {
+              "root": 0.8272331441127527,
+              "majmin": 0.8595489519659112,
+              "sevenths": 0.7428037812115982,
+              "seg": 0.8219054753268656
+            },
+            "btc": {
+              "root": 0.8090188944463302,
+              "majmin": 0.8270476037129973,
+              "sevenths": 0.7055821766861685,
+              "seg": 0.8665270284026145
+            },
+            "majmin_delta_btc_minus_chordia": -0.0325,
+            "seg_delta_btc_minus_chordia": 0.0446
+          },
+          {
+            "id": "back-in-the-ussr",
+            "title": "Back In The USSR \u2014 The Beatles",
+            "skipped": false,
+            "ref_segments": 98,
+            "chordia_est_segments": 73,
+            "btc_est_segments": 84,
+            "chordia": {
+              "root": 0.41424865598186733,
+              "majmin": 0.4226091968846468,
+              "sevenths": 0.39198102416356173,
+              "seg": 0.713578873099805
+            },
+            "btc": {
+              "root": 0.4095616096648048,
+              "majmin": 0.41803912590727754,
+              "sevenths": 0.30728387133378954,
+              "seg": 0.7335289169030973
+            },
+            "majmin_delta_btc_minus_chordia": -0.0046,
+            "seg_delta_btc_minus_chordia": 0.02
+          },
+          {
+            "id": "norwegian-wood",
+            "title": "Norwegian Wood \u2014 The Beatles",
+            "skipped": false,
+            "ref_segments": 45,
+            "chordia_est_segments": 13,
+            "btc_est_segments": 55,
+            "chordia": {
+              "root": 0.8890687553146258,
+              "majmin": 0.8879300914115645,
+              "sevenths": 0.8879300914115645,
+              "seg": 0.42832706207482985
+            },
+            "btc": {
+              "root": 0.8995664685492247,
+              "majmin": 0.8818285820578226,
+              "sevenths": 0.8754884495464846,
+              "seg": 0.8967046083711256
+            },
+            "majmin_delta_btc_minus_chordia": -0.0061,
+            "seg_delta_btc_minus_chordia": 0.4684
+          },
+          {
+            "id": "penny-lane",
+            "title": "Penny Lane \u2014 The Beatles",
+            "skipped": false,
+            "ref_segments": 142,
+            "chordia_est_segments": 67,
+            "btc_est_segments": 122,
+            "chordia": {
+              "root": 0.6785409184589792,
+              "majmin": 0.694758091201018,
+              "sevenths": 0.6442075528909308,
+              "seg": 0.5339754424926031
+            },
+            "btc": {
+              "root": 0.684491552146604,
+              "majmin": 0.7127581370307106,
+              "sevenths": 0.637070578357239,
+              "seg": 0.6518932496735161
+            },
+            "majmin_delta_btc_minus_chordia": 0.018,
+            "seg_delta_btc_minus_chordia": 0.1179
+          },
+          {
+            "id": "here-comes-the-sun",
+            "title": "Here Comes The Sun \u2014 The Beatles",
+            "skipped": false,
+            "ref_segments": 131,
+            "chordia_est_segments": 89,
+            "btc_est_segments": 126,
+            "chordia": {
+              "root": 0.8674896097175915,
+              "majmin": 0.8810405741816374,
+              "sevenths": 0.8588865477695502,
+              "seg": 0.806460325197278
+            },
+            "btc": {
+              "root": 0.8978275960681157,
+              "majmin": 0.8933845164598913,
+              "sevenths": 0.809673879736852,
+              "seg": 0.8535827769418665
+            },
+            "majmin_delta_btc_minus_chordia": 0.0123,
+            "seg_delta_btc_minus_chordia": 0.0471
+          },
+          {
+            "id": "crazy-little-thing-called-love",
+            "title": "Crazy Little Thing Called Love \u2014 Queen",
+            "skipped": false,
+            "ref_segments": 100,
+            "chordia_est_segments": 82,
+            "btc_est_segments": 127,
+            "chordia": {
+              "root": 0.5891336592869304,
+              "majmin": 0.5782685393738514,
+              "sevenths": 0.5782685393738514,
+              "seg": 0.7319489461444086
+            },
+            "btc": {
+              "root": 0.5661666512590245,
+              "majmin": 0.5254631449179861,
+              "sevenths": 0.5254631449179861,
+              "seg": 0.6906633821149026
+            },
+            "majmin_delta_btc_minus_chordia": -0.0528,
+            "seg_delta_btc_minus_chordia": -0.0413
+          },
+          {
+            "id": "somebody-to-love",
+            "title": "Somebody To Love \u2014 Queen",
+            "skipped": false,
+            "ref_segments": 168,
+            "chordia_est_segments": 131,
+            "btc_est_segments": 177,
+            "chordia": {
+              "root": 0.4417688222073654,
+              "majmin": 0.44135814164992937,
+              "sevenths": 0.339008333362041,
+              "seg": 0.6977360607658891
+            },
+            "btc": {
+              "root": 0.44578586387050045,
+              "majmin": 0.4417919516255929,
+              "sevenths": 0.34745269972068915,
+              "seg": 0.7248957914567471
+            },
+            "majmin_delta_btc_minus_chordia": 0.0004,
+            "seg_delta_btc_minus_chordia": 0.0272
+          },
+          {
+            "id": "seven-seas-of-rhye",
+            "title": "Seven Seas Of Rhye \u2014 Queen",
+            "skipped": false,
+            "ref_segments": 90,
+            "chordia_est_segments": 44,
+            "btc_est_segments": 84,
+            "chordia": {
+              "root": 0.6247710986600543,
+              "majmin": 0.5792432252300063,
+              "sevenths": 0.502084596287161,
+              "seg": 0.6752274633800093
+            },
+            "btc": {
+              "root": 0.5403767909967263,
+              "majmin": 0.500343844465748,
+              "sevenths": 0.42404342442137755,
+              "seg": 0.6948441456502925
+            },
+            "majmin_delta_btc_minus_chordia": -0.0789,
+            "seg_delta_btc_minus_chordia": 0.0196
+          },
+          {
+            "id": "hammer-to-fall",
+            "title": "Hammer To Fall \u2014 Queen",
+            "skipped": false,
+            "ref_segments": 195,
+            "chordia_est_segments": 37,
+            "btc_est_segments": 108,
+            "chordia": {
+              "root": 0.2972852801079829,
+              "majmin": 0.31605537821017005,
+              "sevenths": 0.30593320194227247,
+              "seg": 0.3195430769126195
+            },
+            "btc": {
+              "root": 0.661487541932541,
+              "majmin": 0.7079231482992563,
+              "sevenths": 0.6850739764680532,
+              "seg": 0.5602225951071362
+            },
+            "majmin_delta_btc_minus_chordia": 0.3919,
+            "seg_delta_btc_minus_chordia": 0.2407
+          }
+        ]
+      },
+      "delta_btc_minus_chordia": {
+        "majmin": 0.0275,
+        "seg": 0.1049
+      }
+    }
+  },
+  "decision_gate": "BTC wins TEST majmin by >2pp \u2014 candidate for default base"
+}

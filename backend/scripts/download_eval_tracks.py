@@ -4,6 +4,7 @@ import asyncio
 import json
 import os
 import re
+import shutil
 import sys
 
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
@@ -12,9 +13,13 @@ from downloader import download_audio
 
 FIXTURES_DIR = os.path.join(os.path.dirname(os.path.dirname(__file__)), "tests", "fixtures")
 BACKEND_DIR = os.path.dirname(os.path.dirname(__file__))
+SKIP_FIXTURES = frozenset({"gold_audio_identity.json", "gold_split_v2.json"})
 
 
 def _track_source_url(track):
+    yt_id = track.get("youtube_id")
+    if yt_id:
+        return f"https://www.youtube.com/watch?v={yt_id}"
     if track.get("url"):
         return track["url"]
     file_path = track.get("file", "")
@@ -28,23 +33,34 @@ def _track_source_url(track):
 
 
 def _collect_tracks():
-    seen = set()
-    tracks = []
+    tracks_by_id: dict[str, dict] = {}
     for name in sorted(os.listdir(FIXTURES_DIR)):
-        if not name.endswith(".json"):
+        if not name.endswith(".json") or name in SKIP_FIXTURES:
             continue
         path = os.path.join(FIXTURES_DIR, name)
         data = json.loads(open(path, encoding="utf-8").read())
-        for track in data.get("tracks", []):
-            tid = track.get("id")
-            if tid in seen:
+        raw = data.get("tracks", [])
+        if isinstance(raw, dict):
+            items = [{"id": tid, **track} for tid, track in raw.items()]
+        else:
+            items = raw
+        for track in items:
+            if not isinstance(track, dict):
                 continue
-            seen.add(tid)
-            tracks.append(track)
-    return tracks
+            tid = track.get("id")
+            if tid:
+                tracks_by_id[tid] = track
+    return list(tracks_by_id.values())
 
 
 async def main():
+    import argparse
+
+    parser = argparse.ArgumentParser(description="Download eval fixture audio")
+    parser.add_argument("--force-ids", help="Comma-separated track ids to re-download")
+    args = parser.parse_args()
+    force = {x.strip() for x in (args.force_ids or "").split(",") if x.strip()}
+
     os.chdir(BACKEND_DIR)
     os.makedirs("downloads", exist_ok=True)
 
@@ -53,7 +69,7 @@ async def main():
         rel_path = track.get("file", "")
         if not rel_path:
             continue
-        if os.path.exists(rel_path):
+        if os.path.exists(rel_path) and track["id"] not in force:
             print(f"✓ {track['id']}")
             continue
         source = _track_source_url(track)
@@ -64,7 +80,12 @@ async def main():
         print(f"↓ {track['id']} ({track.get('title', '')})")
         try:
             result = await download_audio(source)
-            print(f"  → {result['audio_path']}")
+            dest = track.get("file")
+            if dest and result.get("audio_path") and result["audio_path"] != dest:
+                shutil.copy2(result["audio_path"], dest)
+                print(f"  → {dest} (from {result['audio_path']})")
+            else:
+                print(f"  → {result['audio_path']}")
         except Exception as exc:
             print(f"  ✗ failed: {exc}", file=sys.stderr)
             missing.append(track["id"])

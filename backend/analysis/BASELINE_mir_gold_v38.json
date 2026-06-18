@@ -1,0 +1,11 @@
+{
+  "analyzer_version": "38",
+  "description": "Honest mir_eval gold baseline (Isophonics labs, strict)",
+  "summary": {
+    "track_count": 2,
+    "avg_root_wcsr": 0.4269,
+    "avg_majmin_wcsr": 0.3952,
+    "avg_sevenths_wcsr": 0.3861,
+    "avg_seg_score": 0.6095
+  }
+}

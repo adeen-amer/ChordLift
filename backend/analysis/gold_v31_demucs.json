@@ -1,0 +1,560 @@
+{
+  "analyzer_version": "31",
+  "chord_engine": "ml",
+  "summary": {
+    "track_count": 2,
+    "avg_timeline_score": 0.379,
+    "avg_boundary_score": 0.402,
+    "avg_symbol_recall": 0.946,
+    "avg_root_mismatch_pct": 61.8,
+    "avg_quality_mismatch_pct": 0.0,
+    "avg_overseg_ratio": 2.91,
+    "worst_timeline": [
+      {
+        "id": "let-it-be",
+        "score": 0.343
+      },
+      {
+        "id": "get-lucky",
+        "score": 0.415
+      }
+    ],
+    "best_timeline": [
+      {
+        "id": "get-lucky",
+        "score": 0.415
+      },
+      {
+        "id": "let-it-be",
+        "score": 0.343
+      }
+    ]
+  },
+  "split_summary": {
+    "gold": {
+      "track_count": 2,
+      "avg_timeline_score": 0.379,
+      "avg_boundary_score": 0.402,
+      "avg_symbol_recall": 0.946,
+      "avg_root_recall": null
+    }
+  },
+  "tracks": [
+    {
+      "timeline_score": 0.343,
+      "boundary_score": 0.385,
+      "switch_mae_sec": 0.158,
+      "symbol_recall": 0.95,
+      "reference_offset_sec": 1.0,
+      "eval_window": {
+        "start": 12.0,
+        "end": 150.0
+      },
+      "segment_counts": {
+        "predicted": 101,
+        "reference": 40
+      },
+      "change_counts": {
+        "predicted": 100,
+        "reference": 39,
+        "missed_reference": 38,
+        "spurious_predicted": 99
+      },
+      "error_breakdown_sec": {
+        "match": 47.2,
+        "quality_mismatch": 0.0,
+        "root_mismatch": 90.8
+      },
+      "error_breakdown_pct": {
+        "match": 34.2,
+        "quality_mismatch": 0.0,
+        "root_mismatch": 65.8
+      },
+      "top_mismatches": [
+        {
+          "start": 97.75,
+          "end": 110.0,
+          "duration": 12.25,
+          "predicted": "C",
+          "expected": "F",
+          "error_kind": "root_mismatch"
+        },
+        {
+          "start": 127.5,
+          "end": 139.75,
+          "duration": 12.25,
+          "predicted": "C",
+          "expected": "F",
+          "error_kind": "root_mismatch"
+        },
+        {
+          "start": 115.5,
+          "end": 125.75,
+          "duration": 10.25,
+          "predicted": "C",
+          "expected": "F",
+          "error_kind": "root_mismatch"
+        },
+        {
+          "start": 141.25,
+          "end": 150.0,
+          "duration": 8.75,
+          "predicted": "C",
+          "expected": "F",
+          "error_kind": "root_mismatch"
+        },
+        {
+          "start": 88.75,
+          "end": 96.0,
+          "duration": 7.25,
+          "predicted": "G",
+          "expected": "Am",
+          "error_kind": "root_mismatch"
+        },
+        {
+          "start": 15.5,
+          "end": 20.75,
+          "duration": 5.25,
+          "predicted": "G",
+          "expected": "C",
+          "error_kind": "root_mismatch"
+        },
+        {
+          "start": 75.75,
+          "end": 80.75,
+          "duration": 5.0,
+          "predicted": "C",
+          "expected": "Am",
+          "error_kind": "root_mismatch"
+        },
+        {
+          "start": 27.25,
+          "end": 30.75,
+          "duration": 3.5,
+          "predicted": "C",
+          "expected": "G",
+          "error_kind": "root_mismatch"
+        }
+      ],
+      "top_quality_errors": [],
+      "top_root_errors": [
+        {
+          "start": 97.75,
+          "end": 110.0,
+          "duration": 12.25,
+          "predicted": "C",
+          "expected": "F",
+          "error_kind": "root_mismatch"
+        },
+        {
+          "start": 127.5,
+          "end": 139.75,
+          "duration": 12.25,
+          "predicted": "C",
+          "expected": "F",
+          "error_kind": "root_mismatch"
+        },
+        {
+          "start": 115.5,
+          "end": 125.75,
+          "duration": 10.25,
+          "predicted": "C",
+          "expected": "F",
+          "error_kind": "root_mismatch"
+        },
+        {
+          "start": 141.25,
+          "end": 150.0,
+          "duration": 8.75,
+          "predicted": "C",
+          "expected": "F",
+          "error_kind": "root_mismatch"
+        },
+        {
+          "start": 88.75,
+          "end": 96.0,
+          "duration": 7.25,
+          "predicted": "G",
+          "expected": "Am",
+          "error_kind": "root_mismatch"
+        }
+      ],
+      "missed_changes": [
+        {
+          "time": 29.58,
+          "chord": "Am"
+        },
+        {
+          "time": 31.56,
+          "chord": "F"
+        },
+        {
+          "time": 33.13,
+          "chord": "C"
+        },
+        {
+          "time": 34.99,
+          "chord": "G"
+        },
+        {
+          "time": 36.87,
+          "chord": "Am"
+        },
+        {
+          "time": 38.41,
+          "chord": "F"
+        },
+        {
+          "time": 40.26,
+          "chord": "C"
+        },
+        {
+          "time": 41.7,
+          "chord": "G"
+        },
+        {
+          "time": 43.54,
+          "chord": "Am"
+        },
+        {
+          "time": 45.3,
+          "chord": "F"
+        },
+        {
+          "time": 46.72,
+          "chord": "C"
+        },
+        {
+          "time": 48.51,
+          "chord": "G"
+        }
+      ],
+      "spurious_changes": [
+        {
+          "time": 3.83,
+          "chord": "Am",
+          "from": "C"
+        },
+        {
+          "time": 7.15,
+          "chord": "C",
+          "from": "Am"
+        },
+        {
+          "time": 8.78,
+          "chord": "G",
+          "from": "C"
+        },
+        {
+          "time": 10.43,
+          "chord": "F",
+          "from": "G"
+        },
+        {
+          "time": 12.05,
+          "chord": "C",
+          "from": "F"
+        },
+        {
+          "time": 15.42,
+          "chord": "G",
+          "from": "C"
+        },
+        {
+          "time": 17.14,
+          "chord": "Am",
+          "from": "G"
+        },
+        {
+          "time": 18.83,
+          "chord": "F",
+          "from": "Am"
+        },
+        {
+          "time": 20.5,
+          "chord": "C5",
+          "from": "F"
+        },
+        {
+          "time": 22.15,
+          "chord": "G",
+          "from": "C5"
+        },
+        {
+          "time": 23.92,
+          "chord": "C",
+          "from": "G"
+        },
+        {
+          "time": 30.46,
+          "chord": "F",
+          "from": "G"
+        }
+      ],
+      "skipped": false,
+      "predicted_segment_count": 101,
+      "reference_source": "gold",
+      "id": "let-it-be",
+      "title": "Let It Be \u2014 The Beatles",
+      "eval_split": "gold"
+    },
+    {
+      "timeline_score": 0.415,
+      "boundary_score": 0.419,
+      "switch_mae_sec": 0.005,
+      "symbol_recall": 0.941,
+      "reference_offset_sec": 0.5,
+      "eval_window": {
+        "start": null,
+        "end": null
+      },
+      "segment_counts": {
+        "predicted": 102,
+        "reference": 32
+      },
+      "change_counts": {
+        "predicted": 101,
+        "reference": 31,
+        "missed_reference": 29,
+        "spurious_predicted": 99
+      },
+      "error_breakdown_sec": {
+        "match": 91.5,
+        "quality_mismatch": 0.0,
+        "root_mismatch": 125.2
+      },
+      "error_breakdown_pct": {
+        "match": 42.2,
+        "quality_mismatch": 0.0,
+        "root_mismatch": 57.8
+      },
+      "top_mismatches": [
+        {
+          "start": 211.51,
+          "end": 225.761,
+          "duration": 14.25,
+          "predicted": "E",
+          "expected": "F#m7",
+          "error_kind": "root_mismatch"
+        },
+        {
+          "start": 129.26,
+          "end": 135.761,
+          "duration": 6.5,
+          "predicted": "E",
+          "expected": "F#m7",
+          "error_kind": "root_mismatch"
+        },
+        {
+          "start": 203.76,
+          "end": 210.261,
+          "duration": 6.5,
+          "predicted": "E",
+          "expected": "F#m7",
+          "error_kind": "root_mismatch"
+        },
+        {
+          "start": 121.26,
+          "end": 127.511,
+          "duration": 6.25,
+          "predicted": "E",
+          "expected": "F#m7",
+          "error_kind": "root_mismatch"
+        },
+        {
+          "start": 145.51,
+          "end": 151.761,
+          "duration": 6.25,
+          "predicted": "E",
+          "expected": "F#m7",
+          "error_kind": "root_mismatch"
+        },
+        {
+          "start": 153.51,
+          "end": 159.761,
+          "duration": 6.25,
+          "predicted": "C#m7",
+          "expected": "F#m7",
+          "error_kind": "root_mismatch"
+        },
+        {
+          "start": 186.51,
+          "end": 192.761,
+          "duration": 6.25,
+          "predicted": "E",
+          "expected": "F#m7",
+          "error_kind": "root_mismatch"
+        },
+        {
+          "start": 194.51,
+          "end": 200.761,
+          "duration": 6.25,
+          "predicted": "E",
+          "expected": "F#m7",
+          "error_kind": "root_mismatch"
+        }
+      ],
+      "top_quality_errors": [],
+      "top_root_errors": [
+        {
+          "start": 211.51,
+          "end": 225.761,
+          "duration": 14.25,
+          "predicted": "E",
+          "expected": "F#m7",
+          "error_kind": "root_mismatch"
+        },
+        {
+          "start": 129.26,
+          "end": 135.761,
+          "duration": 6.5,
+          "predicted": "E",
+          "expected": "F#m7",
+          "error_kind": "root_mismatch"
+        },
+        {
+          "start": 203.76,
+          "end": 210.261,
+          "duration": 6.5,
+          "predicted": "E",
+          "expected": "F#m7",
+          "error_kind": "root_mismatch"
+        },
+        {
+          "start": 121.26,
+          "end": 127.511,
+          "duration": 6.25,
+          "predicted": "E",
+          "expected": "F#m7",
+          "error_kind": "root_mismatch"
+        },
+        {
+          "start": 145.51,
+          "end": 151.761,
+          "duration": 6.25,
+          "predicted": "E",
+          "expected": "F#m7",
+          "error_kind": "root_mismatch"
+        }
+      ],
+      "missed_changes": [
+        {
+          "time": 32.83,
+          "chord": "Bm7"
+        },
+        {
+          "time": 34.62,
+          "chord": "D"
+        },
+        {
+          "time": 36.92,
+          "chord": "F#m7"
+        },
+        {
+          "time": 38.73,
+          "chord": "E"
+        },
+        {
+          "time": 40.73,
+          "chord": "Bm7"
+        },
+        {
+          "time": 43.1,
+          "chord": "D"
+        },
+        {
+          "time": 45.23,
+          "chord": "F#m7"
+        },
+        {
+          "time": 47.04,
+          "chord": "E"
+        },
+        {
+          "time": 48.95,
+          "chord": "Bm7"
+        },
+        {
+          "time": 51.39,
+          "chord": "D"
+        },
+        {
+          "time": 53.43,
+          "chord": "F#m7"
+        },
+        {
+          "time": 57.45,
+          "chord": "Bm7"
+        }
+      ],
+      "spurious_changes": [
+        {
+          "time": 2.32,
+          "chord": "F#m7",
+          "from": "Bm7"
+        },
+        {
+          "time": 6.97,
+          "chord": "Bm7",
+          "from": "F#m7"
+        },
+        {
+          "time": 8.52,
+          "chord": "D",
+          "from": "Bm7"
+        },
+        {
+          "time": 11.63,
+          "chord": "F#m7",
+          "from": "D"
+        },
+        {
+          "time": 14.63,
+          "chord": "Bm7",
+          "from": "F#m7"
+        },
+        {
+          "time": 17.69,
+          "chord": "D",
+          "from": "Bm7"
+        },
+        {
+          "time": 19.32,
+          "chord": "F#m7",
+          "from": "D"
+        },
+        {
+          "time": 20.94,
+          "chord": "E",
+          "from": "F#m7"
+        },
+        {
+          "time": 24.17,
+          "chord": "Bm7",
+          "from": "E"
+        },
+        {
+          "time": 25.73,
+          "chord": "D",
+          "from": "Bm7"
+        },
+        {
+          "time": 27.26,
+          "chord": "F#m7",
+          "from": "D"
+        },
+        {
+          "time": 30.49,
+          "chord": "E",
+          "from": "F#m7"
+        }
+      ],
+      "skipped": false,
+      "predicted_segment_count": 102,
+      "reference_source": "gold",
+      "id": "get-lucky",
+      "title": "Get Lucky \u2014 Daft Punk",
+      "eval_split": "gold"
+    }
+  ]
+}

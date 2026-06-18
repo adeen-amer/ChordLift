@@ -33,10 +33,7 @@ pip install --upgrade pip
 pip install -r requirements.txt
 
 echo ""
-echo "Optional ML engine:"
+echo "Optional ML engine (ensemble: lv-chordia + stem bar vote):"
 echo "  pip install -r requirements-ml.txt"
-echo "  export PKG_CONFIG_PATH=\"/opt/homebrew/lib/pkgconfig:\$PKG_CONFIG_PATH\""
-echo "  pip install vamp --no-build-isolation"
-echo "  pip install autochord --no-deps"
 echo ""
 echo "Activate: source $VENV_DIR/bin/activate"

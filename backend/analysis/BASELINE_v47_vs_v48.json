@@ -1,0 +1,259 @@
+{
+  "note": "v48 pitch-only serving on v47 audio",
+  "dev": {
+    "split": "dev",
+    "v47_summary": {
+      "track_count": 14,
+      "avg_root_wcsr": 0.7773,
+      "avg_majmin_wcsr": 0.7618,
+      "avg_sevenths_wcsr": 0.6518,
+      "avg_seg_score": 0.7886
+    },
+    "v48_summary": {
+      "track_count": 14,
+      "avg_root_wcsr": 0.798,
+      "avg_majmin_wcsr": 0.7867,
+      "avg_sevenths_wcsr": 0.6796,
+      "avg_seg_score": 0.8201
+    },
+    "delta_majmin_agg": 0.0249,
+    "tracks": [
+      {
+        "id": "let-it-be",
+        "v47_majmin": 0.5853151536613401,
+        "v48_majmin": 0.8743769293332204,
+        "delta_majmin": 0.2891,
+        "v47_seg": 0.6609137379075959,
+        "v48_seg": 0.8837640877397425,
+        "delta_seg": 0.2229
+      },
+      {
+        "id": "youre-my-best-friend",
+        "v47_majmin": 0.7480275751771333,
+        "v48_majmin": 0.7951791453047249,
+        "delta_majmin": 0.0472,
+        "v47_seg": 0.6571703383348815,
+        "v48_seg": 0.6959394833227717,
+        "delta_seg": 0.0388
+      },
+      {
+        "id": "i-saw-her-standing-there",
+        "v47_majmin": 0.9171179616485429,
+        "v48_majmin": 0.9250673106289609,
+        "delta_majmin": 0.0079,
+        "v47_seg": 0.8849318129029563,
+        "v48_seg": 0.9182103519075284,
+        "delta_seg": 0.0333
+      },
+      {
+        "id": "play-the-game",
+        "v47_majmin": 0.5414898966091577,
+        "v48_majmin": 0.5463498947236103,
+        "delta_majmin": 0.0049,
+        "v47_seg": 0.6095533667437076,
+        "v48_seg": 0.6116536259944589,
+        "delta_seg": 0.0021
+      },
+      {
+        "id": "yellow-submarine",
+        "v47_majmin": 0.7215547543526597,
+        "v48_majmin": 0.7215547543526597,
+        "delta_majmin": 0.0,
+        "v47_seg": 0.8348580036478337,
+        "v48_seg": 0.8348580036478337,
+        "delta_seg": 0.0
+      },
+      {
+        "id": "come-together",
+        "v47_majmin": 0.9540015344317911,
+        "v48_majmin": 0.9540015344317911,
+        "delta_majmin": 0.0,
+        "v47_seg": 0.9702309006730754,
+        "v48_seg": 0.9751637160946279,
+        "delta_seg": 0.0049
+      },
+      {
+        "id": "help",
+        "v47_majmin": 0.9634606709274929,
+        "v48_majmin": 0.9634606709274929,
+        "delta_majmin": 0.0,
+        "v47_seg": 0.9547534407887053,
+        "v48_seg": 0.9547534407887053,
+        "delta_seg": 0.0
+      },
+      {
+        "id": "twist-and-shout",
+        "v47_majmin": 0.9403448843550396,
+        "v48_majmin": 0.9403448843550396,
+        "delta_majmin": 0.0,
+        "v47_seg": 0.8921430577694031,
+        "v48_seg": 0.8921430577694031,
+        "delta_seg": 0.0
+      },
+      {
+        "id": "something",
+        "v47_majmin": 0.7796171737487216,
+        "v48_majmin": 0.7796171737487216,
+        "delta_majmin": 0.0,
+        "v47_seg": 0.6590972006323295,
+        "v48_seg": 0.7109847957359097,
+        "delta_seg": 0.0519
+      },
+      {
+        "id": "ticket-to-ride",
+        "v47_majmin": 0.960131587341924,
+        "v48_majmin": 0.960131587341924,
+        "delta_majmin": 0.0,
+        "v47_seg": 0.9608459178548381,
+        "v48_seg": 0.9608459178548381,
+        "delta_seg": 0.0
+      },
+      {
+        "id": "cant-buy-me-love",
+        "v47_majmin": 0.9368414826218009,
+        "v48_majmin": 0.9368414826218008,
+        "delta_majmin": -0.0,
+        "v47_seg": 0.9372928693949145,
+        "v48_seg": 0.9093191015215223,
+        "delta_seg": -0.028
+      },
+      {
+        "id": "while-my-guitar-gently-weeps",
+        "v47_majmin": 0.816865897752826,
+        "v48_majmin": 0.8168658977528263,
+        "delta_majmin": 0.0,
+        "v47_seg": 0.7820147544531548,
+        "v48_seg": 0.7820147544531548,
+        "delta_seg": 0.0
+      },
+      {
+        "id": "another-one-bites-the-dust",
+        "v47_majmin": 0.01383319297964207,
+        "v48_majmin": 0.01383319297964207,
+        "delta_majmin": 0.0,
+        "v47_seg": 0.4501883295605953,
+        "v48_seg": 0.5420940771851533,
+        "delta_seg": 0.0919
+      },
+      {
+        "id": "dont-stop-me-now",
+        "v47_majmin": 0.7865406550431804,
+        "v48_majmin": 0.7865406550431806,
+        "delta_majmin": 0.0,
+        "v47_seg": 0.7866951931599389,
+        "v48_seg": 0.8098186552560693,
+        "delta_seg": 0.0231
+      }
+    ]
+  },
+  "test": {
+    "split": "test",
+    "v47_summary": {
+      "track_count": 10,
+      "avg_root_wcsr": 0.7192,
+      "avg_majmin_wcsr": 0.707,
+      "avg_sevenths_wcsr": 0.6479,
+      "avg_seg_score": 0.6276
+    },
+    "v48_summary": {
+      "track_count": 10,
+      "avg_root_wcsr": 0.7421,
+      "avg_majmin_wcsr": 0.7426,
+      "avg_sevenths_wcsr": 0.6792,
+      "avg_seg_score": 0.6616
+    },
+    "delta_majmin_agg": 0.0356,
+    "tracks": [
+      {
+        "id": "here-comes-the-sun",
+        "v47_majmin": 0.6109647567338694,
+        "v48_majmin": 0.8501020462591409,
+        "delta_majmin": 0.2391,
+        "v47_seg": 0.5922605122301552,
+        "v48_seg": 0.7917904803390481,
+        "delta_seg": 0.1995
+      },
+      {
+        "id": "penny-lane",
+        "v47_majmin": 0.8300330742782811,
+        "v48_majmin": 0.9121554878700628,
+        "delta_majmin": 0.0821,
+        "v47_seg": 0.6241131928500887,
+        "v48_seg": 0.6468089953361145,
+        "delta_seg": 0.0227
+      },
+      {
+        "id": "norwegian-wood",
+        "v47_majmin": 0.8257941539115647,
+        "v48_majmin": 0.8879300914115645,
+        "delta_majmin": 0.0621,
+        "v47_seg": 0.36505246067176866,
+        "v48_seg": 0.42832706207482985,
+        "delta_seg": 0.0633
+      },
+      {
+        "id": "somebody-to-love",
+        "v47_majmin": 0.4788152088163457,
+        "v48_majmin": 0.4850919287995342,
+        "delta_majmin": 0.0063,
+        "v47_seg": 0.6821884857911691,
+        "v48_seg": 0.7008939519664592,
+        "delta_seg": 0.0187
+      },
+      {
+        "id": "yesterday",
+        "v47_majmin": 0.8348428648865467,
+        "v48_majmin": 0.8348428648865467,
+        "delta_majmin": 0.0,
+        "v47_seg": 0.8024616289969824,
+        "v48_seg": 0.8024616289969824,
+        "delta_seg": 0.0
+      },
+      {
+        "id": "back-in-the-ussr",
+        "v47_majmin": 0.9001783156395244,
+        "v48_majmin": 0.9001783156395244,
+        "delta_majmin": 0.0,
+        "v47_seg": 0.8809524458274538,
+        "v48_seg": 0.8809524458274538,
+        "delta_seg": 0.0
+      },
+      {
+        "id": "crazy-little-thing-called-love",
+        "v47_majmin": 0.6180910350552713,
+        "v48_majmin": 0.6180910350552715,
+        "delta_majmin": 0.0,
+        "v47_seg": 0.7768845591182565,
+        "v48_seg": 0.8033759189063256,
+        "delta_seg": 0.0265
+      },
+      {
+        "id": "hammer-to-fall",
+        "v47_majmin": 0.6232690028356097,
+        "v48_majmin": 0.6232690028356097,
+        "delta_majmin": 0.0,
+        "v47_seg": 0.18161781712145197,
+        "v48_seg": 0.18161781712145197,
+        "delta_seg": 0.0
+      },
+      {
+        "id": "seven-seas-of-rhye",
+        "v47_majmin": 0.5821107115551202,
+        "v48_majmin": 0.5651748823330419,
+        "delta_majmin": -0.0169,
+        "v47_seg": 0.6491227041010872,
+        "v48_seg": 0.6574175646899401,
+        "delta_seg": 0.0083
+      },
+      {
+        "id": "get-back",
+        "v47_majmin": 0.7663141354401015,
+        "v48_majmin": 0.7492020967211527,
+        "delta_majmin": -0.0171,
+        "v47_seg": 0.7209507858111655,
+        "v48_seg": 0.7219339261775135,
+        "delta_seg": 0.001
+      }
+    ]
+  }
+}

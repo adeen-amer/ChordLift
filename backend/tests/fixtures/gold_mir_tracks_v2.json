@@ -1,0 +1,377 @@
+{
+  "description": "Phase 7 gold v2 \u2014 Isophonics Harte chord .lab. Classic-rock ruler (1960s\u201380s pop/rock only). Audio via Spotify\u2192YT; identity gated by verify_gold_audio.py.",
+  "scope_limit": "Classic-rock ruler: Beatles + Queen only. Does not generalize to jazz, metal, hip-hop, or post-2000 production.",
+  "label_provenance": {
+    "tier_a": "Isophonics Beatles \u2014 Harte syntax; community verified (high confidence)",
+    "tier_b": "Isophonics Queen \u2014 Harte syntax; single annotator review (moderate confidence)"
+  },
+  "archives": {
+    "beatles": "http://isophonics.net/files/annotations/The%20Beatles%20Annotations.tar.gz",
+    "queen": "http://isophonics.net/files/annotations/Queen%20Annotations.tar.gz"
+  },
+  "tracks": [
+    {
+      "id": "let-it-be",
+      "title": "Let It Be \u2014 The Beatles",
+      "artist": "The Beatles",
+      "label_tier": "tier_a",
+      "strata": [
+        "C",
+        "E"
+      ],
+      "lab": "tests/fixtures/gold/lab/let-it-be.lab",
+      "file": "downloads/spotify-5V1AHQugSTASVez5ffJtFo.mp3",
+      "url": "https://open.spotify.com/track/5V1AHQugSTASVez5ffJtFo",
+      "isophonics_path": "chordlab/The Beatles/12_-_Let_It_Be/06_-_Let_It_Be.lab",
+      "archive": "beatles"
+    },
+    {
+      "id": "yellow-submarine",
+      "title": "Yellow Submarine \u2014 The Beatles",
+      "artist": "The Beatles",
+      "label_tier": "tier_a",
+      "strata": [
+        "D",
+        "E"
+      ],
+      "lab": "tests/fixtures/gold/lab/yellow-submarine.lab",
+      "file": "downloads/spotify-0Dk6z7iOJzFYywJvxjNltW.mp3",
+      "url": "https://open.spotify.com/track/0Dk6z7iOJzFYywJvxjNltW",
+      "isophonics_path": "chordlab/The Beatles/07_-_Revolver/06_-_Yellow_Submarine.lab",
+      "archive": "beatles"
+    },
+    {
+      "id": "come-together",
+      "title": "Come Together \u2014 The Beatles",
+      "artist": "The Beatles",
+      "label_tier": "tier_a",
+      "strata": [
+        "A",
+        "B",
+        "C"
+      ],
+      "lab": "tests/fixtures/gold/lab/come-together.lab",
+      "file": "downloads/spotify-71JkCL6msHDScuCKaJXFXP.mp3",
+      "url": "https://open.spotify.com/track/71JkCL6msHDScuCKaJXFXP",
+      "isophonics_path": "chordlab/The Beatles/11_-_Abbey_Road/01_-_Come_Together.lab",
+      "archive": "beatles"
+    },
+    {
+      "id": "yesterday",
+      "title": "Yesterday \u2014 The Beatles",
+      "artist": "The Beatles",
+      "label_tier": "tier_a",
+      "strata": [
+        "D"
+      ],
+      "lab": "tests/fixtures/gold/lab/yesterday.lab",
+      "file": "downloads/spotify-3BQHpFgAp4l80e1XslIjNI.mp3",
+      "url": "https://open.spotify.com/track/3BQHpFgAp4l80e1XslIjNI",
+      "isophonics_path": "chordlab/The Beatles/05_-_Help!/13_-_Yesterday.lab",
+      "archive": "beatles",
+      "youtube_id": "NrgmdOz227I"
+    },
+    {
+      "id": "help",
+      "title": "Help! \u2014 The Beatles",
+      "artist": "The Beatles",
+      "label_tier": "tier_a",
+      "strata": [
+        "B"
+      ],
+      "lab": "tests/fixtures/gold/lab/help.lab",
+      "file": "downloads/spotify-7DD7eSuYSC5xk2ArU62esN.mp3",
+      "url": "https://open.spotify.com/track/7DD7eSuYSC5xk2ArU62esN",
+      "isophonics_path": "chordlab/The Beatles/05_-_Help!/01_-_Help!.lab",
+      "archive": "beatles"
+    },
+    {
+      "id": "twist-and-shout",
+      "title": "Twist And Shout \u2014 The Beatles",
+      "artist": "The Beatles",
+      "label_tier": "tier_a",
+      "strata": [
+        "A"
+      ],
+      "lab": "tests/fixtures/gold/lab/twist-and-shout.lab",
+      "file": "downloads/spotify-5ZBeML7Lf3FMEVviTyvi8l.mp3",
+      "url": "https://open.spotify.com/track/5ZBeML7Lf3FMEVviTyvi8l",
+      "isophonics_path": "chordlab/The Beatles/01_-_Please_Please_Me/14_-_Twist_And_Shout.lab",
+      "archive": "beatles",
+      "youtube_id": "xcdwr9RCg2A"
+    },
+    {
+      "id": "something",
+      "title": "Something \u2014 The Beatles",
+      "artist": "The Beatles",
+      "label_tier": "tier_a",
+      "strata": [
+        "C",
+        "E"
+      ],
+      "lab": "tests/fixtures/gold/lab/something.lab",
+      "file": "downloads/spotify-0pNeVovbiZHkulpGeOx1Gj.mp3",
+      "url": "https://open.spotify.com/track/0pNeVovbiZHkulpGeOx1Gj",
+      "isophonics_path": "chordlab/The Beatles/11_-_Abbey_Road/02_-_Something.lab",
+      "archive": "beatles"
+    },
+    {
+      "id": "ticket-to-ride",
+      "title": "Ticket To Ride \u2014 The Beatles",
+      "artist": "The Beatles",
+      "label_tier": "tier_a",
+      "strata": [
+        "E"
+      ],
+      "lab": "tests/fixtures/gold/lab/ticket-to-ride.lab",
+      "file": "downloads/spotify-7CZiDzGVjUssMSOXrDNYHL.mp3",
+      "url": "https://open.spotify.com/track/7CZiDzGVjUssMSOXrDNYHL",
+      "isophonics_path": "chordlab/The Beatles/05_-_Help!/07_-_Ticket_To_Ride.lab",
+      "archive": "beatles",
+      "youtube_id": "U0fN-g9Mb_I"
+    },
+    {
+      "id": "i-saw-her-standing-there",
+      "title": "I Saw Her Standing There \u2014 The Beatles",
+      "artist": "The Beatles",
+      "label_tier": "tier_a",
+      "strata": [
+        "A",
+        "E"
+      ],
+      "lab": "tests/fixtures/gold/lab/i-saw-her-standing-there.lab",
+      "file": "downloads/spotify-3KiexfmhxHvG5IgAElmTkd.mp3",
+      "url": "https://open.spotify.com/track/3KiexfmhxHvG5IgAElmTkd",
+      "isophonics_path": "chordlab/The Beatles/01_-_Please_Please_Me/01_-_I_Saw_Her_Standing_There.lab",
+      "archive": "beatles"
+    },
+    {
+      "id": "cant-buy-me-love",
+      "title": "Can't Buy Me Love \u2014 The Beatles",
+      "artist": "The Beatles",
+      "label_tier": "tier_a",
+      "strata": [
+        "A",
+        "E"
+      ],
+      "lab": "tests/fixtures/gold/lab/cant-buy-me-love.lab",
+      "file": "downloads/spotify-3SdingSsFcZDZAyvcJbgAw.mp3",
+      "url": "https://open.spotify.com/track/3SdingSsFcZDZAyvcJbgAw",
+      "isophonics_path": "chordlab/The Beatles/03_-_A_Hard_Day's_Night/07_-_Can't_Buy_Me_Love.lab",
+      "archive": "beatles",
+      "youtube_id": "srwxJUXPHvE"
+    },
+    {
+      "id": "back-in-the-ussr",
+      "title": "Back In The USSR \u2014 The Beatles",
+      "artist": "The Beatles",
+      "label_tier": "tier_a",
+      "strata": [
+        "A",
+        "E"
+      ],
+      "lab": "tests/fixtures/gold/lab/back-in-the-ussr.lab",
+      "file": "downloads/spotify-0j3p1p06deJ7f9xmJ9yG22.mp3",
+      "url": "https://open.spotify.com/track/0j3p1p06deJ7f9xmJ9yG22",
+      "isophonics_path": "chordlab/The Beatles/10CD1_-_The_Beatles/CD1_-_01_-_Back_in_the_USSR.lab",
+      "archive": "beatles",
+      "youtube_id": "nS5_EQgbuLc"
+    },
+    {
+      "id": "get-back",
+      "title": "Get Back \u2014 The Beatles",
+      "artist": "The Beatles",
+      "label_tier": "tier_a",
+      "strata": [
+        "A",
+        "E"
+      ],
+      "lab": "tests/fixtures/gold/lab/get-back.lab",
+      "file": "downloads/spotify-4MLBqAEzNN89o2M9h92Z26.mp3",
+      "url": "https://open.spotify.com/track/4MLBqAEzNN89o2M9h92Z26",
+      "isophonics_path": "chordlab/The Beatles/12_-_Let_It_Be/12_-_Get_Back.lab",
+      "archive": "beatles",
+      "youtube_id": "IKJqecxswCA",
+      "note": "Excluded from baselines: best YT match still Δ=2.4s vs .lab end (Spotify/YT masters ~3s shorter than Isophonics CD)."
+    },
+    {
+      "id": "norwegian-wood",
+      "title": "Norwegian Wood \u2014 The Beatles",
+      "artist": "The Beatles",
+      "label_tier": "tier_a",
+      "strata": [
+        "B"
+      ],
+      "lab": "tests/fixtures/gold/lab/norwegian-wood.lab",
+      "file": "downloads/spotify-1H7gMYGykdtwZOV6s1N0by.mp3",
+      "url": "https://open.spotify.com/track/1H7gMYGykdtwZOV6s1N0by",
+      "isophonics_path": "chordlab/The Beatles/06_-_Rubber_Soul/02_-_Norwegian_Wood_(This_Bird_Has_Flown).lab",
+      "archive": "beatles"
+    },
+    {
+      "id": "while-my-guitar-gently-weeps",
+      "title": "While My Guitar Gently Weeps \u2014 The Beatles",
+      "artist": "The Beatles",
+      "label_tier": "tier_a",
+      "strata": [
+        "B",
+        "C"
+      ],
+      "lab": "tests/fixtures/gold/lab/while-my-guitar-gently-weeps.lab",
+      "file": "downloads/spotify-389QX9Q1eUOEZ19vtzzI9O.mp3",
+      "url": "https://open.spotify.com/track/389QX9Q1eUOEZ19vtzzI9O",
+      "isophonics_path": "chordlab/The Beatles/10CD1_-_The_Beatles/CD1_-_07_-_While_My_Guitar_Gently_Weeps.lab",
+      "archive": "beatles"
+    },
+    {
+      "id": "penny-lane",
+      "title": "Penny Lane \u2014 The Beatles",
+      "artist": "The Beatles",
+      "label_tier": "tier_a",
+      "strata": [
+        "C"
+      ],
+      "lab": "tests/fixtures/gold/lab/penny-lane.lab",
+      "file": "downloads/spotify-1h04XMpzGzmAudoI6VHBgA.mp3",
+      "url": "https://open.spotify.com/track/1h04XMpzGzmAudoI6VHBgA",
+      "isophonics_path": "chordlab/The Beatles/09_-_Magical_Mystery_Tour/09_-_Penny_Lane.lab",
+      "archive": "beatles",
+      "youtube_id": "wj0nIMyqPcU"
+    },
+    {
+      "id": "here-comes-the-sun",
+      "title": "Here Comes The Sun \u2014 The Beatles",
+      "artist": "The Beatles",
+      "label_tier": "tier_a",
+      "strata": [
+        "E"
+      ],
+      "lab": "tests/fixtures/gold/lab/here-comes-the-sun.lab",
+      "file": "downloads/spotify-6dGnYIeXmHdcikdzNNDMm2.mp3",
+      "url": "https://open.spotify.com/track/6dGnYIeXmHdcikdzNNDMm2",
+      "isophonics_path": "chordlab/The Beatles/11_-_Abbey_Road/07_-_Here_Comes_The_Sun.lab",
+      "archive": "beatles"
+    },
+    {
+      "id": "another-one-bites-the-dust",
+      "title": "Another One Bites The Dust \u2014 Queen",
+      "artist": "Queen",
+      "label_tier": "tier_b",
+      "strata": [
+        "A",
+        "B"
+      ],
+      "lab": "tests/fixtures/gold/lab/another-one-bites-the-dust.lab",
+      "file": "downloads/spotify-5vdp5UmvTsnMEMESIF2Ym7.mp3",
+      "url": "https://open.spotify.com/track/5vdp5UmvTsnMEMESIF2Ym7",
+      "isophonics_path": "chordlab/Queen/Greatest Hits I/02 Another One Bites The Dust.lab",
+      "archive": "queen",
+      "youtube_id": "0UIZ2bTS2oM"
+    },
+    {
+      "id": "dont-stop-me-now",
+      "title": "Don't Stop Me Now \u2014 Queen",
+      "artist": "Queen",
+      "label_tier": "tier_b",
+      "strata": [
+        "E"
+      ],
+      "lab": "tests/fixtures/gold/lab/dont-stop-me-now.lab",
+      "file": "downloads/spotify-2X8XuQXjSnm5S0J4HJbnAx.mp3",
+      "url": "https://open.spotify.com/track/2X8XuQXjSnm5S0J4HJbnAx",
+      "isophonics_path": "chordlab/Queen/Greatest Hits I/07 Don't Stop Me Now.lab",
+      "archive": "queen",
+      "youtube_id": "HgzGwKwLmgM"
+    },
+    {
+      "id": "crazy-little-thing-called-love",
+      "title": "Crazy Little Thing Called Love \u2014 Queen",
+      "artist": "Queen",
+      "label_tier": "tier_b",
+      "strata": [
+        "E"
+      ],
+      "lab": "tests/fixtures/gold/lab/crazy-little-thing-called-love.lab",
+      "file": "downloads/spotify-6xdLJrVj4vIXwhuG8TMopk.mp3",
+      "url": "https://open.spotify.com/track/6xdLJrVj4vIXwhuG8TMopk",
+      "isophonics_path": "chordlab/Queen/Greatest Hits I/09 Crazy Little Thing Called Love.lab",
+      "archive": "queen"
+    },
+    {
+      "id": "somebody-to-love",
+      "title": "Somebody To Love \u2014 Queen",
+      "artist": "Queen",
+      "label_tier": "tier_b",
+      "strata": [
+        "B",
+        "C"
+      ],
+      "lab": "tests/fixtures/gold/lab/somebody-to-love.lab",
+      "file": "downloads/spotify-6cFZ4PLC19taNlpl9pbGMf.mp3",
+      "url": "https://open.spotify.com/track/6cFZ4PLC19taNlpl9pbGMf",
+      "isophonics_path": "chordlab/Queen/Greatest Hits I/10 Somebody To Love.lab",
+      "archive": "queen"
+    },
+    {
+      "id": "play-the-game",
+      "title": "Play The Game \u2014 Queen",
+      "artist": "Queen",
+      "label_tier": "tier_b",
+      "strata": [
+        "C",
+        "E"
+      ],
+      "lab": "tests/fixtures/gold/lab/play-the-game.lab",
+      "file": "downloads/spotify-4b0mX1GtrQLiUW9jpb6Xcx.mp3",
+      "url": "https://open.spotify.com/track/4b0mX1GtrQLiUW9jpb6Xcx",
+      "isophonics_path": "chordlab/Queen/Greatest Hits I/13 Play The Game.lab",
+      "archive": "queen"
+    },
+    {
+      "id": "youre-my-best-friend",
+      "title": "You're My Best Friend \u2014 Queen",
+      "artist": "Queen",
+      "label_tier": "tier_b",
+      "strata": [
+        "C",
+        "E"
+      ],
+      "lab": "tests/fixtures/gold/lab/youre-my-best-friend.lab",
+      "file": "downloads/spotify-4vEXJ6NvEwS8ptynkNswaa.mp3",
+      "url": "https://open.spotify.com/track/4vEXJ6NvEwS8ptynkNswaa",
+      "isophonics_path": "chordlab/Queen/Greatest Hits I/06 You're My Best Friend.lab",
+      "archive": "queen"
+    },
+    {
+      "id": "seven-seas-of-rhye",
+      "title": "Seven Seas Of Rhye \u2014 Queen",
+      "artist": "Queen",
+      "label_tier": "tier_b",
+      "strata": [
+        "C",
+        "E"
+      ],
+      "lab": "tests/fixtures/gold/lab/seven-seas-of-rhye.lab",
+      "file": "downloads/spotify-1e9Tt3nKBwRbuaU79kN3dn.mp3",
+      "url": "https://open.spotify.com/track/1e9Tt3nKBwRbuaU79kN3dn",
+      "isophonics_path": "chordlab/Queen/Greatest Hits I/15 Seven Seas Of Rhye.lab",
+      "archive": "queen",
+      "note": "Substitutes killer-queen \u2014 Isophonics has no Harte chord .lab for Killer Queen (segmentation only)."
+    },
+    {
+      "id": "hammer-to-fall",
+      "title": "Hammer To Fall \u2014 Queen",
+      "artist": "Queen",
+      "label_tier": "tier_b",
+      "strata": [
+        "E"
+      ],
+      "lab": "tests/fixtures/gold/lab/hammer-to-fall.lab",
+      "file": "downloads/spotify-30U2ANWm8iFBRiYX3USS5H.mp3",
+      "url": "https://open.spotify.com/track/30U2ANWm8iFBRiYX3USS5H",
+      "isophonics_path": "chordlab/Queen/Greatest Hits II/14 Hammer To Fall.lab",
+      "archive": "queen",
+      "youtube_id": "UiftBEVsuIY"
+    }
+  ]
+}

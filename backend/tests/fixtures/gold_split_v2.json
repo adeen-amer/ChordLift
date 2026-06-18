@@ -1,0 +1,32 @@
+{
+  "description": "Phase 7 stratified DEV/TEST split (~58/42). Report both for every accuracy change.",
+  "version": 2,
+  "dev": [
+    "twist-and-shout",
+    "i-saw-her-standing-there",
+    "cant-buy-me-love",
+    "another-one-bites-the-dust",
+    "come-together",
+    "help",
+    "while-my-guitar-gently-weeps",
+    "let-it-be",
+    "something",
+    "play-the-game",
+    "youre-my-best-friend",
+    "ticket-to-ride",
+    "dont-stop-me-now",
+    "yellow-submarine"
+  ],
+  "test": [
+    "back-in-the-ussr",
+    "get-back",
+    "yesterday",
+    "norwegian-wood",
+    "penny-lane",
+    "here-comes-the-sun",
+    "crazy-little-thing-called-love",
+    "somebody-to-love",
+    "seven-seas-of-rhye",
+    "hammer-to-fall"
+  ]
+}

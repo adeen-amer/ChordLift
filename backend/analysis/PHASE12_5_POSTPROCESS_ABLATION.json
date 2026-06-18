@@ -1,0 +1,1025 @@
+{
+  "note": "v47 identity-verified audio; chordia ensemble path",
+  "v47_serving_baseline": {
+    "dev": 0.7618,
+    "test": 0.707
+  },
+  "splits": {
+    "dev": {
+      "aggregate": {
+        "raw": {
+          "majmin": 0.7477,
+          "seg": 0.8268,
+          "n": 14
+        },
+        "pitch_only": {
+          "majmin": 0.7867,
+          "seg": 0.8201,
+          "n": 14
+        },
+        "merge_only": {
+          "majmin": 0.7225,
+          "seg": 0.7925,
+          "n": 14
+        },
+        "serving": {
+          "majmin": 0.7618,
+          "seg": 0.7886,
+          "n": 14
+        }
+      },
+      "tracks": [
+        {
+          "id": "let-it-be",
+          "skipped": false,
+          "pitch_shift_semitones": 0.0,
+          "scores": {
+            "raw": {
+              "root": 0.8743769293332204,
+              "majmin": 0.8743769293332204,
+              "sevenths": 0.8348219728803262,
+              "seg": 0.8837640877397425
+            },
+            "pitch_only": {
+              "root": 0.8743769293332204,
+              "majmin": 0.8743769293332204,
+              "sevenths": 0.8348219728803262,
+              "seg": 0.8837640877397425
+            },
+            "merge_only": {
+              "root": 0.5853151536613401,
+              "majmin": 0.5853151536613401,
+              "sevenths": 0.5693737145687192,
+              "seg": 0.6609137379075959
+            },
+            "serving": {
+              "root": 0.5853151536613401,
+              "majmin": 0.5853151536613401,
+              "sevenths": 0.5693737145687192,
+              "seg": 0.6609137379075959
+            }
+          },
+          "pitch_delta_majmin": 0.0,
+          "merge_delta_majmin": -0.2891,
+          "serving_delta_majmin": -0.2891
+        },
+        {
+          "id": "yellow-submarine",
+          "skipped": false,
+          "pitch_shift_semitones": 0.18,
+          "scores": {
+            "raw": {
+              "root": 0.19033862661224854,
+              "majmin": 0.19033862661224854,
+              "sevenths": 0.19033862661224854,
+              "seg": 0.789493369629519
+            },
+            "pitch_only": {
+              "root": 0.8356402040995923,
+              "majmin": 0.7215547543526597,
+              "sevenths": 0.7215547543526597,
+              "seg": 0.8348580036478337
+            },
+            "merge_only": {
+              "root": 0.19033862661224854,
+              "majmin": 0.19033862661224854,
+              "sevenths": 0.19033862661224854,
+              "seg": 0.789493369629519
+            },
+            "serving": {
+              "root": 0.8356402040995923,
+              "majmin": 0.7215547543526597,
+              "sevenths": 0.7215547543526597,
+              "seg": 0.8348580036478337
+            }
+          },
+          "pitch_delta_majmin": 0.5312,
+          "merge_delta_majmin": 0.0,
+          "serving_delta_majmin": 0.5312
+        },
+        {
+          "id": "come-together",
+          "skipped": false,
+          "pitch_shift_semitones": 0.0,
+          "scores": {
+            "raw": {
+              "root": 0.9702309006730754,
+              "majmin": 0.9540015344317911,
+              "sevenths": 0.8714578749692685,
+              "seg": 0.9751637160946279
+            },
+            "pitch_only": {
+              "root": 0.9702309006730754,
+              "majmin": 0.9540015344317911,
+              "sevenths": 0.8714578749692685,
+              "seg": 0.9751637160946279
+            },
+            "merge_only": {
+              "root": 0.9702309006730753,
+              "majmin": 0.9540015344317911,
+              "sevenths": 0.8714578749692684,
+              "seg": 0.9702309006730754
+            },
+            "serving": {
+              "root": 0.9702309006730753,
+              "majmin": 0.9540015344317911,
+              "sevenths": 0.8714578749692684,
+              "seg": 0.9702309006730754
+            }
+          },
+          "pitch_delta_majmin": 0.0,
+          "merge_delta_majmin": 0.0,
+          "serving_delta_majmin": 0.0
+        },
+        {
+          "id": "help",
+          "skipped": false,
+          "pitch_shift_semitones": 0.18,
+          "scores": {
+            "raw": {
+              "root": 0.9694684385836528,
+              "majmin": 0.9694684385836528,
+              "sevenths": 0.9687541635804913,
+              "seg": 0.9606194522886592
+            },
+            "pitch_only": {
+              "root": 0.9634606709274929,
+              "majmin": 0.9634606709274929,
+              "sevenths": 0.9626058463401459,
+              "seg": 0.9547534407887053
+            },
+            "merge_only": {
+              "root": 0.9694684385836528,
+              "majmin": 0.9694684385836528,
+              "sevenths": 0.9687541635804913,
+              "seg": 0.9606194522886592
+            },
+            "serving": {
+              "root": 0.9634606709274929,
+              "majmin": 0.9634606709274929,
+              "sevenths": 0.9626058463401459,
+              "seg": 0.9547534407887053
+            }
+          },
+          "pitch_delta_majmin": -0.006,
+          "merge_delta_majmin": 0.0,
+          "serving_delta_majmin": -0.006
+        },
+        {
+          "id": "twist-and-shout",
+          "skipped": false,
+          "pitch_shift_semitones": 0.23,
+          "scores": {
+            "raw": {
+              "root": 0.9410355922387541,
+              "majmin": 0.9410355922387541,
+              "sevenths": 0.8998479444979725,
+              "seg": 0.8926410861903491
+            },
+            "pitch_only": {
+              "root": 0.9403448843550396,
+              "majmin": 0.9403448843550396,
+              "sevenths": 0.8991572366142581,
+              "seg": 0.8921430577694031
+            },
+            "merge_only": {
+              "root": 0.9410355922387541,
+              "majmin": 0.9410355922387541,
+              "sevenths": 0.8998479444979725,
+              "seg": 0.8926410861903491
+            },
+            "serving": {
+              "root": 0.9403448843550396,
+              "majmin": 0.9403448843550396,
+              "sevenths": 0.8991572366142581,
+              "seg": 0.8921430577694031
+            }
+          },
+          "pitch_delta_majmin": -0.0007,
+          "merge_delta_majmin": 0.0,
+          "serving_delta_majmin": -0.0007
+        },
+        {
+          "id": "something",
+          "skipped": false,
+          "pitch_shift_semitones": 0.08,
+          "scores": {
+            "raw": {
+              "root": 0.7493709393266158,
+              "majmin": 0.7818463141605446,
+              "sevenths": 0.6667486772483664,
+              "seg": 0.78677025611504
+            },
+            "pitch_only": {
+              "root": 0.7499096744273495,
+              "majmin": 0.7796171737487216,
+              "sevenths": 0.6365207465109561,
+              "seg": 0.7109847957359097
+            },
+            "merge_only": {
+              "root": 0.7493709393266158,
+              "majmin": 0.7818463141605447,
+              "sevenths": 0.6143074444149739,
+              "seg": 0.703610048996758
+            },
+            "serving": {
+              "root": 0.7499096744273495,
+              "majmin": 0.7796171737487216,
+              "sevenths": 0.6210967501191709,
+              "seg": 0.6590972006323295
+            }
+          },
+          "pitch_delta_majmin": -0.0022,
+          "merge_delta_majmin": 0.0,
+          "serving_delta_majmin": -0.0022
+        },
+        {
+          "id": "ticket-to-ride",
+          "skipped": false,
+          "pitch_shift_semitones": 0.38,
+          "scores": {
+            "raw": {
+              "root": 0.8992794652128608,
+              "majmin": 0.8311587212778349,
+              "sevenths": 0.7117956125988834,
+              "seg": 0.9105532335689708
+            },
+            "pitch_only": {
+              "root": 0.960131587341924,
+              "majmin": 0.960131587341924,
+              "sevenths": 0.8023266542639023,
+              "seg": 0.9608459178548381
+            },
+            "merge_only": {
+              "root": 0.899279465212861,
+              "majmin": 0.8410668531872817,
+              "sevenths": 0.7217037445083302,
+              "seg": 0.9027050422629621
+            },
+            "serving": {
+              "root": 0.960131587341924,
+              "majmin": 0.960131587341924,
+              "sevenths": 0.8023266542639023,
+              "seg": 0.9608459178548381
+            }
+          },
+          "pitch_delta_majmin": 0.129,
+          "merge_delta_majmin": 0.0099,
+          "serving_delta_majmin": 0.129
+        },
+        {
+          "id": "i-saw-her-standing-there",
+          "skipped": false,
+          "pitch_shift_semitones": 0.17,
+          "scores": {
+            "raw": {
+              "root": 0.9353418502155902,
+              "majmin": 0.9329962846558554,
+              "sevenths": 0.7177563279408572,
+              "seg": 0.9322500259123677
+            },
+            "pitch_only": {
+              "root": 0.9291762027080422,
+              "majmin": 0.9250673106289609,
+              "sevenths": 0.7818205002391998,
+              "seg": 0.9182103519075284
+            },
+            "merge_only": {
+              "root": 0.9353418502155904,
+              "majmin": 0.9245350021698209,
+              "sevenths": 0.7092950454548225,
+              "seg": 0.9239268858387487
+            },
+            "serving": {
+              "root": 0.9291762027080421,
+              "majmin": 0.9171179616485429,
+              "sevenths": 0.7654120587105213,
+              "seg": 0.8849318129029563
+            }
+          },
+          "pitch_delta_majmin": -0.0079,
+          "merge_delta_majmin": -0.0085,
+          "serving_delta_majmin": -0.0159
+        },
+        {
+          "id": "cant-buy-me-love",
+          "skipped": false,
+          "pitch_shift_semitones": -0.15,
+          "scores": {
+            "raw": {
+              "root": 0.9274368480221505,
+              "majmin": 0.9274368480221505,
+              "sevenths": 0.4661101030357214,
+              "seg": 0.9136572059983752
+            },
+            "pitch_only": {
+              "root": 0.9368414826218008,
+              "majmin": 0.9368414826218008,
+              "sevenths": 0.5803001451073782,
+              "seg": 0.9093191015215223
+            },
+            "merge_only": {
+              "root": 0.9274368480221503,
+              "majmin": 0.9274368480221503,
+              "sevenths": 0.44699170866606175,
+              "seg": 0.9293702808704315
+            },
+            "serving": {
+              "root": 0.9368414826218009,
+              "majmin": 0.9368414826218009,
+              "sevenths": 0.5380213646970246,
+              "seg": 0.9372928693949145
+            }
+          },
+          "pitch_delta_majmin": 0.0094,
+          "merge_delta_majmin": -0.0,
+          "serving_delta_majmin": 0.0094
+        },
+        {
+          "id": "while-my-guitar-gently-weeps",
+          "skipped": false,
+          "pitch_shift_semitones": -0.07,
+          "scores": {
+            "raw": {
+              "root": 0.8263574137981047,
+              "majmin": 0.8057422696837516,
+              "sevenths": 0.7883509871877442,
+              "seg": 0.7844923841061968
+            },
+            "pitch_only": {
+              "root": 0.8220833378255324,
+              "majmin": 0.8168658977528263,
+              "sevenths": 0.7990841342053239,
+              "seg": 0.7820147544531548
+            },
+            "merge_only": {
+              "root": 0.8263574137981047,
+              "majmin": 0.8057422696837517,
+              "sevenths": 0.7940307601785773,
+              "seg": 0.7844923841061968
+            },
+            "serving": {
+              "root": 0.8220833378255324,
+              "majmin": 0.816865897752826,
+              "sevenths": 0.7990841342053239,
+              "seg": 0.7820147544531548
+            }
+          },
+          "pitch_delta_majmin": 0.0111,
+          "merge_delta_majmin": 0.0,
+          "serving_delta_majmin": 0.0111
+        },
+        {
+          "id": "another-one-bites-the-dust",
+          "skipped": false,
+          "pitch_shift_semitones": 0.36,
+          "scores": {
+            "raw": {
+              "root": 0.16056497331421604,
+              "majmin": 0.12807608506770396,
+              "sevenths": 0.12807608506770396,
+              "seg": 0.6898117626448202
+            },
+            "pitch_only": {
+              "root": 0.012722810543996618,
+              "majmin": 0.01383319297964207,
+              "sevenths": 0.01383319297964207,
+              "seg": 0.5420940771851533
+            },
+            "merge_only": {
+              "root": 0.16056497331421601,
+              "majmin": 0.11219606742323993,
+              "sevenths": 0.11219606742323993,
+              "seg": 0.5748731022972979
+            },
+            "serving": {
+              "root": 0.012722810543996618,
+              "majmin": 0.01383319297964207,
+              "sevenths": 0.01383319297964207,
+              "seg": 0.4501883295605953
+            }
+          },
+          "pitch_delta_majmin": -0.1142,
+          "merge_delta_majmin": -0.0159,
+          "serving_delta_majmin": -0.1142
+        },
+        {
+          "id": "dont-stop-me-now",
+          "skipped": false,
+          "pitch_shift_semitones": -0.11,
+          "scores": {
+            "raw": {
+              "root": 0.8084899377990207,
+              "majmin": 0.806170863326592,
+              "sevenths": 0.45315779888621543,
+              "seg": 0.8096911361636272
+            },
+            "pitch_only": {
+              "root": 0.7892392777696438,
+              "majmin": 0.7865406550431806,
+              "sevenths": 0.4379127567598649,
+              "seg": 0.8098186552560693
+            },
+            "merge_only": {
+              "root": 0.8084899377990207,
+              "majmin": 0.806170863326592,
+              "sevenths": 0.4422308274784572,
+              "seg": 0.7881026261061492
+            },
+            "serving": {
+              "root": 0.7892392777696438,
+              "majmin": 0.7865406550431804,
+              "sevenths": 0.417467818152191,
+              "seg": 0.7866951931599389
+            }
+          },
+          "pitch_delta_majmin": -0.0196,
+          "merge_delta_majmin": 0.0,
+          "serving_delta_majmin": -0.0196
+        },
+        {
+          "id": "play-the-game",
+          "skipped": false,
+          "pitch_shift_semitones": -0.12,
+          "scores": {
+            "raw": {
+              "root": 0.5954266229737732,
+              "majmin": 0.5745765375066781,
+              "sevenths": 0.46747273812890844,
+              "seg": 0.6277524881977623
+            },
+            "pitch_only": {
+              "root": 0.5744193423875761,
+              "majmin": 0.5463498947236103,
+              "sevenths": 0.4420791301341881,
+              "seg": 0.6116536259944589
+            },
+            "merge_only": {
+              "root": 0.5954266229737732,
+              "majmin": 0.5607837591527609,
+              "sevenths": 0.45367995977499115,
+              "seg": 0.6256147243175334
+            },
+            "serving": {
+              "root": 0.574419342387576,
+              "majmin": 0.5414898966091577,
+              "sevenths": 0.4372191320197354,
+              "seg": 0.6095533667437076
+            }
+          },
+          "pitch_delta_majmin": -0.0282,
+          "merge_delta_majmin": -0.0138,
+          "serving_delta_majmin": -0.0331
+        },
+        {
+          "id": "youre-my-best-friend",
+          "skipped": false,
+          "pitch_shift_semitones": 0.19,
+          "scores": {
+            "raw": {
+              "root": 0.7837581308459018,
+              "majmin": 0.7505758248220491,
+              "sevenths": 0.7096765266138678,
+              "seg": 0.6180294742040358
+            },
+            "pitch_only": {
+              "root": 0.8130484376884386,
+              "majmin": 0.7951791453047249,
+              "sevenths": 0.7315291675653101,
+              "seg": 0.6959394833227717
+            },
+            "merge_only": {
+              "root": 0.7837581308459018,
+              "majmin": 0.7157417892778457,
+              "sevenths": 0.6986484476238212,
+              "seg": 0.5882512859863711
+            },
+            "serving": {
+              "root": 0.8130484376884386,
+              "majmin": 0.7480275751771333,
+              "sevenths": 0.7061276984267595,
+              "seg": 0.6571703383348815
+            }
+          },
+          "pitch_delta_majmin": 0.0446,
+          "merge_delta_majmin": -0.0348,
+          "serving_delta_majmin": -0.0025
+        }
+      ]
+    },
+    "test": {
+      "aggregate": {
+        "raw": {
+          "majmin": 0.7096,
+          "seg": 0.6688,
+          "n": 10
+        },
+        "pitch_only": {
+          "majmin": 0.7426,
+          "seg": 0.6616,
+          "n": 10
+        },
+        "merge_only": {
+          "majmin": 0.707,
+          "seg": 0.6541,
+          "n": 10
+        },
+        "serving": {
+          "majmin": 0.707,
+          "seg": 0.6276,
+          "n": 10
+        }
+      },
+      "tracks": [
+        {
+          "id": "yesterday",
+          "skipped": false,
+          "pitch_shift_semitones": 0.13,
+          "scores": {
+            "raw": {
+              "root": 0.8272331441127527,
+              "majmin": 0.8595489519659112,
+              "sevenths": 0.7428037812115982,
+              "seg": 0.8219054753268656
+            },
+            "pitch_only": {
+              "root": 0.814285207687497,
+              "majmin": 0.8348428648865467,
+              "sevenths": 0.7132213905203666,
+              "seg": 0.8024616289969824
+            },
+            "merge_only": {
+              "root": 0.8272331441127527,
+              "majmin": 0.8595489519659112,
+              "sevenths": 0.7428037812115981,
+              "seg": 0.8219054753268656
+            },
+            "serving": {
+              "root": 0.8142852076874971,
+              "majmin": 0.8348428648865467,
+              "sevenths": 0.7132213905203666,
+              "seg": 0.8024616289969824
+            }
+          },
+          "pitch_delta_majmin": -0.0247,
+          "merge_delta_majmin": 0.0,
+          "serving_delta_majmin": -0.0247
+        },
+        {
+          "id": "back-in-the-ussr",
+          "skipped": false,
+          "pitch_shift_semitones": -0.15,
+          "scores": {
+            "raw": {
+              "root": 0.9205495556322658,
+              "majmin": 0.9189050107904033,
+              "sevenths": 0.8674888962476588,
+              "seg": 0.894104847310623
+            },
+            "pitch_only": {
+              "root": 0.907320983523687,
+              "majmin": 0.9001783156395244,
+              "sevenths": 0.8694343719668047,
+              "seg": 0.8809524458274538
+            },
+            "merge_only": {
+              "root": 0.9205495556322658,
+              "majmin": 0.9189050107904031,
+              "sevenths": 0.8498852055767168,
+              "seg": 0.894104847310623
+            },
+            "serving": {
+              "root": 0.907320983523687,
+              "majmin": 0.9001783156395244,
+              "sevenths": 0.8694343719668047,
+              "seg": 0.8809524458274538
+            }
+          },
+          "pitch_delta_majmin": -0.0187,
+          "merge_delta_majmin": -0.0,
+          "serving_delta_majmin": -0.0187
+        },
+        {
+          "id": "get-back",
+          "skipped": false,
+          "pitch_shift_semitones": -0.07,
+          "scores": {
+            "raw": {
+              "root": 0.7630199649179459,
+              "majmin": 0.7332732552906215,
+              "sevenths": 0.6800354959754646,
+              "seg": 0.7327749911235955
+            },
+            "pitch_only": {
+              "root": 0.7771373283420457,
+              "majmin": 0.7492020967211527,
+              "sevenths": 0.6395157965714893,
+              "seg": 0.7219339261775135
+            },
+            "merge_only": {
+              "root": 0.763019964917946,
+              "majmin": 0.7629724531514323,
+              "sevenths": 0.6846006894217022,
+              "seg": 0.7273038742411204
+            },
+            "serving": {
+              "root": 0.7771373283420456,
+              "majmin": 0.7663141354401015,
+              "sevenths": 0.64379860545373,
+              "seg": 0.7209507858111655
+            }
+          },
+          "pitch_delta_majmin": 0.0159,
+          "merge_delta_majmin": 0.0297,
+          "serving_delta_majmin": 0.033
+        },
+        {
+          "id": "norwegian-wood",
+          "skipped": false,
+          "pitch_shift_semitones": 0.0,
+          "scores": {
+            "raw": {
+              "root": 0.8890687553146258,
+              "majmin": 0.8879300914115645,
+              "sevenths": 0.8879300914115645,
+              "seg": 0.42832706207482985
+            },
+            "pitch_only": {
+              "root": 0.8890687553146258,
+              "majmin": 0.8879300914115645,
+              "sevenths": 0.8879300914115645,
+              "seg": 0.42832706207482985
+            },
+            "merge_only": {
+              "root": 0.8890687553146259,
+              "majmin": 0.8257941539115647,
+              "sevenths": 0.8257941539115647,
+              "seg": 0.36505246067176866
+            },
+            "serving": {
+              "root": 0.8890687553146259,
+              "majmin": 0.8257941539115647,
+              "sevenths": 0.8257941539115647,
+              "seg": 0.36505246067176866
+            }
+          },
+          "pitch_delta_majmin": 0.0,
+          "merge_delta_majmin": -0.0621,
+          "serving_delta_majmin": -0.0621
+        },
+        {
+          "id": "penny-lane",
+          "skipped": false,
+          "pitch_shift_semitones": 0.18,
+          "scores": {
+            "raw": {
+              "root": 0.8002167747579383,
+              "majmin": 0.7966482081341266,
+              "sevenths": 0.725544288171992,
+              "seg": 0.5921970786512964
+            },
+            "pitch_only": {
+              "root": 0.8968015354002232,
+              "majmin": 0.9121554878700628,
+              "sevenths": 0.8507099714762272,
+              "seg": 0.6468089953361145
+            },
+            "merge_only": {
+              "root": 0.8002167747579383,
+              "majmin": 0.7735174995482572,
+              "sevenths": 0.6915489383444613,
+              "seg": 0.5808924510349367
+            },
+            "serving": {
+              "root": 0.8968015354002232,
+              "majmin": 0.8300330742782811,
+              "sevenths": 0.7663507564374314,
+              "seg": 0.6241131928500887
+            }
+          },
+          "pitch_delta_majmin": 0.1155,
+          "merge_delta_majmin": -0.0231,
+          "serving_delta_majmin": 0.0334
+        },
+        {
+          "id": "here-comes-the-sun",
+          "skipped": false,
+          "pitch_shift_semitones": -0.33,
+          "scores": {
+            "raw": {
+              "root": 0.8210453305286854,
+              "majmin": 0.8325917268292102,
+              "sevenths": 0.8036454906141203,
+              "seg": 0.7779653071646211
+            },
+            "pitch_only": {
+              "root": 0.8349090005005984,
+              "majmin": 0.8501020462591409,
+              "sevenths": 0.7123540833094433,
+              "seg": 0.7917904803390481
+            },
+            "merge_only": {
+              "root": 0.8210453305286854,
+              "majmin": 0.8325917268292102,
+              "sevenths": 0.8073240064617809,
+              "seg": 0.7755333161707161
+            },
+            "serving": {
+              "root": 0.6064157002697241,
+              "majmin": 0.6109647567338694,
+              "sevenths": 0.5259396387699267,
+              "seg": 0.5922605122301552
+            }
+          },
+          "pitch_delta_majmin": 0.0175,
+          "merge_delta_majmin": 0.0,
+          "serving_delta_majmin": -0.2216
+        },
+        {
+          "id": "crazy-little-thing-called-love",
+          "skipped": false,
+          "pitch_shift_semitones": -0.14,
+          "scores": {
+            "raw": {
+              "root": 0.6562227227502176,
+              "majmin": 0.6400349148797204,
+              "sevenths": 0.6400349148797204,
+              "seg": 0.8041450229001725
+            },
+            "pitch_only": {
+              "root": 0.6351272989189813,
+              "majmin": 0.6180910350552715,
+              "sevenths": 0.6180910350552715,
+              "seg": 0.8033759189063256
+            },
+            "merge_only": {
+              "root": 0.6562227227502178,
+              "majmin": 0.6400349148797205,
+              "sevenths": 0.6400349148797205,
+              "seg": 0.7860710790447641
+            },
+            "serving": {
+              "root": 0.6351272989189812,
+              "majmin": 0.6180910350552713,
+              "sevenths": 0.6180910350552713,
+              "seg": 0.7768845591182565
+            }
+          },
+          "pitch_delta_majmin": -0.0219,
+          "merge_delta_majmin": 0.0,
+          "serving_delta_majmin": -0.0219
+        },
+        {
+          "id": "somebody-to-love",
+          "skipped": false,
+          "pitch_shift_semitones": 0.18,
+          "scores": {
+            "raw": {
+              "root": 0.4417688222073654,
+              "majmin": 0.44135814164992937,
+              "sevenths": 0.339008333362041,
+              "seg": 0.6977360607658891
+            },
+            "pitch_only": {
+              "root": 0.49582587253541704,
+              "majmin": 0.4850919287995342,
+              "sevenths": 0.40094874241677847,
+              "seg": 0.7008939519664592
+            },
+            "merge_only": {
+              "root": 0.4417688222073654,
+              "majmin": 0.43618380936960593,
+              "sevenths": 0.33383400108171757,
+              "seg": 0.6659723785303706
+            },
+            "serving": {
+              "root": 0.4958258725354171,
+              "majmin": 0.4788152088163457,
+              "sevenths": 0.3997257810589123,
+              "seg": 0.6821884857911691
+            }
+          },
+          "pitch_delta_majmin": 0.0437,
+          "merge_delta_majmin": -0.0052,
+          "serving_delta_majmin": 0.0375
+        },
+        {
+          "id": "seven-seas-of-rhye",
+          "skipped": false,
+          "pitch_shift_semitones": 0.15,
+          "scores": {
+            "raw": {
+              "root": 0.6172201462257603,
+              "majmin": 0.5664302572736464,
+              "sevenths": 0.4913248116448736,
+              "seg": 0.6720538286002571
+            },
+            "pitch_only": {
+              "root": 0.6048775813891643,
+              "majmin": 0.5651748823330419,
+              "sevenths": 0.4979653931063881,
+              "seg": 0.6574175646899401
+            },
+            "merge_only": {
+              "root": 0.6172201462257603,
+              "majmin": 0.6013754372791607,
+              "sevenths": 0.5262699916503879,
+              "seg": 0.6576170167833072
+            },
+            "serving": {
+              "root": 0.6048775813891643,
+              "majmin": 0.5821107115551202,
+              "sevenths": 0.5149012223284664,
+              "seg": 0.6491227041010872
+            }
+          },
+          "pitch_delta_majmin": -0.0013,
+          "merge_delta_majmin": 0.0349,
+          "serving_delta_majmin": 0.0157
+        },
+        {
+          "id": "hammer-to-fall",
+          "skipped": false,
+          "pitch_shift_semitones": 0.37,
+          "scores": {
+            "raw": {
+              "root": 0.38623717160906484,
+              "majmin": 0.418880059212731,
+              "sevenths": 0.41060828078036804,
+              "seg": 0.26659017627558323
+            },
+            "pitch_only": {
+              "root": 0.5651838717138232,
+              "majmin": 0.6232690028356097,
+              "sevenths": 0.6013642933230645,
+              "seg": 0.18161781712145197
+            },
+            "merge_only": {
+              "root": 0.38623717160906484,
+              "majmin": 0.418880059212731,
+              "sevenths": 0.41060828078036804,
+              "seg": 0.26659017627558323
+            },
+            "serving": {
+              "root": 0.5651838717138232,
+              "majmin": 0.6232690028356097,
+              "sevenths": 0.6013642933230645,
+              "seg": 0.18161781712145197
+            }
+          },
+          "pitch_delta_majmin": 0.2044,
+          "merge_delta_majmin": 0.0,
+          "serving_delta_majmin": 0.2044
+        }
+      ]
+    }
+  },
+  "pitch_per_track": [
+    {
+      "id": "let-it-be",
+      "pitch_shift_semitones": 0.0,
+      "pitch_delta_majmin": 0.0,
+      "pitch_delta_seg": 0.0
+    },
+    {
+      "id": "yellow-submarine",
+      "pitch_shift_semitones": 0.18,
+      "pitch_delta_majmin": 0.5312,
+      "pitch_delta_seg": 0.0454
+    },
+    {
+      "id": "come-together",
+      "pitch_shift_semitones": 0.0,
+      "pitch_delta_majmin": 0.0,
+      "pitch_delta_seg": 0.0
+    },
+    {
+      "id": "help",
+      "pitch_shift_semitones": 0.18,
+      "pitch_delta_majmin": -0.006,
+      "pitch_delta_seg": -0.0059
+    },
+    {
+      "id": "twist-and-shout",
+      "pitch_shift_semitones": 0.23,
+      "pitch_delta_majmin": -0.0007,
+      "pitch_delta_seg": -0.0005
+    },
+    {
+      "id": "something",
+      "pitch_shift_semitones": 0.08,
+      "pitch_delta_majmin": -0.0022,
+      "pitch_delta_seg": -0.0758
+    },
+    {
+      "id": "ticket-to-ride",
+      "pitch_shift_semitones": 0.38,
+      "pitch_delta_majmin": 0.129,
+      "pitch_delta_seg": 0.0503
+    },
+    {
+      "id": "i-saw-her-standing-there",
+      "pitch_shift_semitones": 0.17,
+      "pitch_delta_majmin": -0.0079,
+      "pitch_delta_seg": -0.014
+    },
+    {
+      "id": "cant-buy-me-love",
+      "pitch_shift_semitones": -0.15,
+      "pitch_delta_majmin": 0.0094,
+      "pitch_delta_seg": -0.0043
+    },
+    {
+      "id": "while-my-guitar-gently-weeps",
+      "pitch_shift_semitones": -0.07,
+      "pitch_delta_majmin": 0.0111,
+      "pitch_delta_seg": -0.0025
+    },
+    {
+      "id": "another-one-bites-the-dust",
+      "pitch_shift_semitones": 0.36,
+      "pitch_delta_majmin": -0.1142,
+      "pitch_delta_seg": -0.1477
+    },
+    {
+      "id": "dont-stop-me-now",
+      "pitch_shift_semitones": -0.11,
+      "pitch_delta_majmin": -0.0196,
+      "pitch_delta_seg": 0.0001
+    },
+    {
+      "id": "play-the-game",
+      "pitch_shift_semitones": -0.12,
+      "pitch_delta_majmin": -0.0282,
+      "pitch_delta_seg": -0.0161
+    },
+    {
+      "id": "youre-my-best-friend",
+      "pitch_shift_semitones": 0.19,
+      "pitch_delta_majmin": 0.0446,
+      "pitch_delta_seg": 0.0779
+    },
+    {
+      "id": "yesterday",
+      "pitch_shift_semitones": 0.13,
+      "pitch_delta_majmin": -0.0247,
+      "pitch_delta_seg": -0.0194
+    },
+    {
+      "id": "back-in-the-ussr",
+      "pitch_shift_semitones": -0.15,
+      "pitch_delta_majmin": -0.0187,
+      "pitch_delta_seg": -0.0132
+    },
+    {
+      "id": "get-back",
+      "pitch_shift_semitones": -0.07,
+      "pitch_delta_majmin": 0.0159,
+      "pitch_delta_seg": -0.0108
+    },
+    {
+      "id": "norwegian-wood",
+      "pitch_shift_semitones": 0.0,
+      "pitch_delta_majmin": 0.0,
+      "pitch_delta_seg": 0.0
+    },
+    {
+      "id": "penny-lane",
+      "pitch_shift_semitones": 0.18,
+      "pitch_delta_majmin": 0.1155,
+      "pitch_delta_seg": 0.0546
+    },
+    {
+      "id": "here-comes-the-sun",
+      "pitch_shift_semitones": -0.33,
+      "pitch_delta_majmin": 0.0175,
+      "pitch_delta_seg": 0.0138
+    },
+    {
+      "id": "crazy-little-thing-called-love",
+      "pitch_shift_semitones": -0.14,
+      "pitch_delta_majmin": -0.0219,
+      "pitch_delta_seg": -0.0008
+    },
+    {
+      "id": "somebody-to-love",
+      "pitch_shift_semitones": 0.18,
+      "pitch_delta_majmin": 0.0437,
+      "pitch_delta_seg": 0.0032
+    },
+    {
+      "id": "seven-seas-of-rhye",
+      "pitch_shift_semitones": 0.15,
+      "pitch_delta_majmin": -0.0013,
+      "pitch_delta_seg": -0.0146
+    },
+    {
+      "id": "hammer-to-fall",
+      "pitch_shift_semitones": 0.37,
+      "pitch_delta_majmin": 0.2044,
+      "pitch_delta_seg": -0.085
+    }
+  ],
+  "chosen_config": "pitch_only",
+  "decision_rationale": "Pitch correction alone improves TEST majmin; disable merge/chroma harm path."
+}

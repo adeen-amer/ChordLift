@@ -1,0 +1,17 @@
+{
+  "analyzer_version": "42",
+  "description": "Honest mir_eval gold baseline after Phase 4 single bar_decode path",
+  "summary": {
+    "track_count": 2,
+    "avg_root_wcsr": 0.601,
+    "avg_majmin_wcsr": 0.5335,
+    "avg_sevenths_wcsr": 0.5265,
+    "avg_seg_score": 0.6265
+  },
+  "previous_v38": {
+    "avg_root_wcsr": 0.4269,
+    "avg_majmin_wcsr": 0.3952,
+    "avg_sevenths_wcsr": 0.3861,
+    "avg_seg_score": 0.6095
+  }
+}

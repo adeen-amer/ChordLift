@@ -1,0 +1,191 @@
+{
+  "tracks": [
+    {
+      "id": "come-together",
+      "current_source": "yt-via-spotify-search",
+      "alt_source": "spotdl-direct",
+      "current_identity": {
+        "lab_end_sec": 260.65,
+        "audio_duration_sec": 258.693,
+        "duration_delta_sec": 1.956,
+        "duration_status": "pass",
+        "ear_check_sec": [
+          15.0,
+          117.29,
+          250.65
+        ],
+        "delta_improved": null
+      },
+      "alt_identity": {
+        "lab_end_sec": 260.65,
+        "audio_duration_sec": 259.947,
+        "duration_delta_sec": 0.703,
+        "duration_status": "pass",
+        "ear_check_sec": [
+          15.0,
+          117.29,
+          250.65
+        ],
+        "delta_improved": 1.253
+      },
+      "current_scores": {
+        "chordia": {
+          "root": 0.8894939156854995,
+          "majmin": 0.8662358886583079,
+          "sevenths": 0.7947755258042352,
+          "seg": 0.9048762603545897
+        },
+        "btc": {
+          "root": 0.7811739161648485,
+          "majmin": 0.7311152271717672,
+          "sevenths": 0.6457469000964718,
+          "seg": 0.5715433574270605
+        }
+      },
+      "alt_scores": {
+        "chordia": {
+          "root": 0.9702309006730753,
+          "majmin": 0.9540015344317911,
+          "sevenths": 0.8714578749692684,
+          "seg": 0.9702309006730754
+        },
+        "btc": {
+          "root": 0.8865713654943955,
+          "majmin": 0.8394030626328866,
+          "sevenths": 0.7752933558292026,
+          "seg": 0.6009968914310919
+        }
+      },
+      "v46_majmin": 0.8662358886583079,
+      "delta_majmin_chordia": 0.0878,
+      "delta_majmin_btc": 0.1083,
+      "alignment_improved": true
+    },
+    {
+      "id": "i-saw-her-standing-there",
+      "current_source": "yt-via-spotify-search",
+      "alt_source": "spotdl-direct",
+      "current_identity": {
+        "lab_end_sec": 175.804,
+        "audio_duration_sec": 173.947,
+        "duration_delta_sec": 1.857,
+        "duration_status": "pass",
+        "ear_check_sec": [
+          15.0,
+          79.11,
+          165.8
+        ],
+        "delta_improved": null
+      },
+      "alt_identity": {
+        "lab_end_sec": 175.804,
+        "audio_duration_sec": 173.947,
+        "duration_delta_sec": 1.857,
+        "duration_status": "pass",
+        "ear_check_sec": [
+          15.0,
+          79.11,
+          165.8
+        ],
+        "delta_improved": 0.0
+      },
+      "current_scores": {
+        "chordia": {
+          "root": 0.9291762027080421,
+          "majmin": 0.9171179616485429,
+          "sevenths": 0.7654120587105213,
+          "seg": 0.8849318129029563
+        },
+        "btc": {
+          "root": 0.925808348072036,
+          "majmin": 0.8952131862752051,
+          "sevenths": 0.8589772680822856,
+          "seg": 0.9026925147784046
+        }
+      },
+      "alt_scores": {
+        "chordia": {
+          "root": 0.9291762027080421,
+          "majmin": 0.9171179616485429,
+          "sevenths": 0.7654120587105213,
+          "seg": 0.8849318129029563
+        },
+        "btc": {
+          "root": 0.925808348072036,
+          "majmin": 0.8952131862752051,
+          "sevenths": 0.8589772680822856,
+          "seg": 0.9026925147784046
+        }
+      },
+      "v46_majmin": 0.9171179616485429,
+      "delta_majmin_chordia": 0.0,
+      "delta_majmin_btc": 0.0,
+      "alignment_improved": false
+    },
+    {
+      "id": "help",
+      "current_source": "yt-via-spotify-search",
+      "alt_source": "spotdl-direct",
+      "current_identity": {
+        "lab_end_sec": 141.087,
+        "audio_duration_sec": 139.24,
+        "duration_delta_sec": 1.847,
+        "duration_status": "pass",
+        "ear_check_sec": [
+          14.11,
+          63.49,
+          131.09
+        ],
+        "delta_improved": null
+      },
+      "alt_identity": {
+        "lab_end_sec": 141.087,
+        "audio_duration_sec": 139.56,
+        "duration_delta_sec": 1.527,
+        "duration_status": "pass",
+        "ear_check_sec": [
+          14.11,
+          63.49,
+          131.09
+        ],
+        "delta_improved": 0.32
+      },
+      "current_scores": {
+        "chordia": {
+          "root": 0.670056599760147,
+          "majmin": 0.670056599760147,
+          "sevenths": 0.6623376914463633,
+          "seg": 0.7189661309599931
+        },
+        "btc": {
+          "root": 0.6270436699887181,
+          "majmin": 0.6270436699887181,
+          "sevenths": 0.618318489505309,
+          "seg": 0.6819863991116133
+        }
+      },
+      "alt_scores": {
+        "chordia": {
+          "root": 0.9634606709274929,
+          "majmin": 0.9634606709274929,
+          "sevenths": 0.9626058463401459,
+          "seg": 0.9547534407887053
+        },
+        "btc": {
+          "root": 0.9372335092057065,
+          "majmin": 0.9195413131790846,
+          "sevenths": 0.9176590108624855,
+          "seg": 0.9279504222460297
+        }
+      },
+      "v46_majmin": 0.670056599760147,
+      "delta_majmin_chordia": 0.2934,
+      "delta_majmin_btc": 0.2925,
+      "alignment_improved": true
+    }
+  ],
+  "max_abs_majmin_delta": 0.2934,
+  "any_alignment_improved": true,
+  "any_alignment_worse": false,
+  "decision": "PROCEED \u2014 majmin moved >2pp with improved alignment; full re-download warranted"
+}

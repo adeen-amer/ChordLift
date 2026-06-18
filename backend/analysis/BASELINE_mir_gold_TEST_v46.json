@@ -1,0 +1,131 @@
+{
+  "analyzer_version": "44",
+  "chord_engine": "ml",
+  "chord_ml_model": "ensemble",
+  "summary": {
+    "track_count": 9,
+    "avg_root_wcsr": 0.6698,
+    "avg_majmin_wcsr": 0.6644,
+    "avg_sevenths_wcsr": 0.6091,
+    "avg_seg_score": 0.6127
+  },
+  "tracks": [
+    {
+      "id": "yesterday",
+      "title": "Yesterday \u2014 The Beatles",
+      "skipped": false,
+      "eval_start": null,
+      "eval_end": null,
+      "ref_segments": 97,
+      "est_segments": 69,
+      "root": 0.8142852076874971,
+      "majmin": 0.8348428648865467,
+      "sevenths": 0.7132213905203666,
+      "seg": 0.8024616289969824
+    },
+    {
+      "id": "back-in-the-ussr",
+      "title": "Back In The USSR \u2014 The Beatles",
+      "skipped": false,
+      "eval_start": null,
+      "eval_end": null,
+      "ref_segments": 98,
+      "est_segments": 71,
+      "root": 0.432549573315608,
+      "majmin": 0.4412072965323495,
+      "sevenths": 0.41906735823831676,
+      "seg": 0.6887380891475646
+    },
+    {
+      "id": "norwegian-wood",
+      "title": "Norwegian Wood \u2014 The Beatles",
+      "skipped": false,
+      "eval_start": null,
+      "eval_end": null,
+      "ref_segments": 45,
+      "est_segments": 12,
+      "root": 0.8890687553146259,
+      "majmin": 0.8257941539115647,
+      "sevenths": 0.8257941539115647,
+      "seg": 0.36505246067176866
+    },
+    {
+      "id": "penny-lane",
+      "title": "Penny Lane \u2014 The Beatles",
+      "skipped": false,
+      "eval_start": null,
+      "eval_end": null,
+      "ref_segments": 142,
+      "est_segments": 66,
+      "root": 0.7346202612464803,
+      "majmin": 0.6829875911999723,
+      "sevenths": 0.6267519250884678,
+      "seg": 0.5490319325299455
+    },
+    {
+      "id": "here-comes-the-sun",
+      "title": "Here Comes The Sun \u2014 The Beatles",
+      "skipped": false,
+      "eval_start": null,
+      "eval_end": null,
+      "ref_segments": 131,
+      "est_segments": 93,
+      "root": 0.8757015521333233,
+      "majmin": 0.8908753379511188,
+      "sevenths": 0.7902170114759706,
+      "seg": 0.8163045070384315
+    },
+    {
+      "id": "crazy-little-thing-called-love",
+      "title": "Crazy Little Thing Called Love \u2014 Queen",
+      "skipped": false,
+      "eval_start": null,
+      "eval_end": null,
+      "ref_segments": 100,
+      "est_segments": 76,
+      "root": 0.5655722194754217,
+      "majmin": 0.5554639955562874,
+      "sevenths": 0.5554639955562874,
+      "seg": 0.6882931384936544
+    },
+    {
+      "id": "somebody-to-love",
+      "title": "Somebody To Love \u2014 Queen",
+      "skipped": false,
+      "eval_start": null,
+      "eval_end": null,
+      "ref_segments": 168,
+      "est_segments": 131,
+      "root": 0.4958258725354171,
+      "majmin": 0.4788152088163457,
+      "sevenths": 0.3997257810589123,
+      "seg": 0.6821884857911691
+    },
+    {
+      "id": "seven-seas-of-rhye",
+      "title": "Seven Seas Of Rhye \u2014 Queen",
+      "skipped": false,
+      "eval_start": null,
+      "eval_end": null,
+      "ref_segments": 90,
+      "est_segments": 46,
+      "root": 0.6190925802371339,
+      "majmin": 0.6091199755687815,
+      "sevenths": 0.5192550750308474,
+      "seg": 0.6719599687916137
+    },
+    {
+      "id": "hammer-to-fall",
+      "title": "Hammer To Fall \u2014 Queen",
+      "skipped": false,
+      "eval_start": null,
+      "eval_end": null,
+      "ref_segments": 195,
+      "est_segments": 27,
+      "root": 0.6018062250212963,
+      "majmin": 0.660054337986522,
+      "sevenths": 0.6324984134627493,
+      "seg": 0.24986274930397212
+    }
+  ]
+}

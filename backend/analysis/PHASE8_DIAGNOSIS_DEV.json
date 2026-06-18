@@ -1,0 +1,1746 @@
+{
+  "description": "Phase 8 DEV accuracy leak diagnosis (measurement only)",
+  "n_tracks": 14,
+  "baseline_dev": {
+    "track_count": 14,
+    "avg_root_wcsr": 0.546,
+    "avg_majmin_wcsr": 0.4879,
+    "avg_sevenths_wcsr": 0.4212,
+    "avg_seg_score": 0.5905
+  },
+  "experiment1": {
+    "tracks": [
+      {
+        "id": "let-it-be",
+        "demucs_available": true,
+        "a_raw_mix": {
+          "root": 0.13083837145817093,
+          "majmin": 0.13083837145817093,
+          "sevenths": 0.13289961049372984,
+          "seg": 0.8174578749672484,
+          "n_segments": 130
+        },
+        "b_hpss_chord_stem": {
+          "root": 0.1329755665925012,
+          "majmin": 0.1329755665925012,
+          "sevenths": 0.13508750312599693,
+          "seg": 0.8140054116988784,
+          "n_segments": 131
+        },
+        "c_demucs_other_bass": {
+          "root": 0.1299675274724581,
+          "majmin": 0.1299675274724581,
+          "sevenths": 0.13187693492366032,
+          "seg": 0.8161389574773271,
+          "n_segments": 130
+        }
+      },
+      {
+        "id": "yellow-submarine",
+        "demucs_available": true,
+        "a_raw_mix": {
+          "root": 0.012950557487145097,
+          "majmin": 0.012950557487145097,
+          "sevenths": 0.012950557487145097,
+          "seg": 0.7419447656730254,
+          "n_segments": 54
+        },
+        "b_hpss_chord_stem": {
+          "root": 0.012950557487145097,
+          "majmin": 0.012950557487145097,
+          "sevenths": 0.012950557487145097,
+          "seg": 0.7440982963759064,
+          "n_segments": 53
+        },
+        "c_demucs_other_bass": {
+          "root": 0.4874496751326951,
+          "majmin": 0.47703936938881014,
+          "sevenths": 0.47703936938881014,
+          "seg": 0.6546575561405814,
+          "n_segments": 64
+        }
+      },
+      {
+        "id": "come-together",
+        "demucs_available": true,
+        "a_raw_mix": {
+          "root": 0.8899543035386329,
+          "majmin": 0.8345773486301394,
+          "sevenths": 0.7307747390934719,
+          "seg": 0.8677682269635592,
+          "n_segments": 27
+        },
+        "b_hpss_chord_stem": {
+          "root": 0.886654857257846,
+          "majmin": 0.8633501123732576,
+          "sevenths": 0.7916979212470462,
+          "seg": 0.9022780026780965,
+          "n_segments": 27
+        },
+        "c_demucs_other_bass": {
+          "root": 0.8901461318107715,
+          "majmin": 0.8851142268558181,
+          "sevenths": 0.8131167448397569,
+          "seg": 0.8964556539815336,
+          "n_segments": 26
+        }
+      },
+      {
+        "id": "help",
+        "demucs_available": true,
+        "a_raw_mix": {
+          "root": 0.6660874273863832,
+          "majmin": 0.6660874273863832,
+          "sevenths": 0.6582756616988426,
+          "seg": 0.7160763750132743,
+          "n_segments": 50
+        },
+        "b_hpss_chord_stem": {
+          "root": 0.6654495246834571,
+          "majmin": 0.6654495246834571,
+          "sevenths": 0.6576228354894199,
+          "seg": 0.719037009038096,
+          "n_segments": 51
+        },
+        "c_demucs_other_bass": {
+          "root": 0.6618260672234481,
+          "majmin": 0.6618260672234481,
+          "sevenths": 0.6539146085329082,
+          "seg": 0.7203737554155014,
+          "n_segments": 52
+        }
+      },
+      {
+        "id": "twist-and-shout",
+        "demucs_available": true,
+        "a_raw_mix": {
+          "root": 0.9275867648439873,
+          "majmin": 0.9275867648439873,
+          "sevenths": 0.8863991171032058,
+          "seg": 0.8796493093680586,
+          "n_segments": 102
+        },
+        "b_hpss_chord_stem": {
+          "root": 0.9260057942673232,
+          "majmin": 0.9260057942673232,
+          "sevenths": 0.8848181465265417,
+          "seg": 0.8781989246692448,
+          "n_segments": 102
+        },
+        "c_demucs_other_bass": {
+          "root": 0.8766005535243568,
+          "majmin": 0.8766005535243568,
+          "sevenths": 0.8354129057835752,
+          "seg": 0.8262092065833917,
+          "n_segments": 97
+        }
+      },
+      {
+        "id": "something",
+        "demucs_available": true,
+        "a_raw_mix": {
+          "root": 0.7081803253557994,
+          "majmin": 0.7133594894388093,
+          "sevenths": 0.6138416575288086,
+          "seg": 0.7353140654539141,
+          "n_segments": 77
+        },
+        "b_hpss_chord_stem": {
+          "root": 0.7150104084820637,
+          "majmin": 0.7437412597994357,
+          "sevenths": 0.6487062513443347,
+          "seg": 0.733656661090295,
+          "n_segments": 79
+        },
+        "c_demucs_other_bass": {
+          "root": 0.7043043679270411,
+          "majmin": 0.721971414657548,
+          "sevenths": 0.6408224710247357,
+          "seg": 0.7365385299723917,
+          "n_segments": 76
+        }
+      },
+      {
+        "id": "ticket-to-ride",
+        "demucs_available": true,
+        "a_raw_mix": {
+          "root": 0.6868126442891132,
+          "majmin": 0.6114622870846349,
+          "sevenths": 0.5106936422886229,
+          "seg": 0.7321514626240728,
+          "n_segments": 41
+        },
+        "b_hpss_chord_stem": {
+          "root": 0.7195300529698515,
+          "majmin": 0.6898030805689703,
+          "sevenths": 0.5900214675930512,
+          "seg": 0.7306276309511703,
+          "n_segments": 39
+        },
+        "c_demucs_other_bass": {
+          "root": 0.731061078182608,
+          "majmin": 0.7158969135177934,
+          "sevenths": 0.607232845345729,
+          "seg": 0.7661156431458133,
+          "n_segments": 45
+        }
+      },
+      {
+        "id": "i-saw-her-standing-there",
+        "demucs_available": true,
+        "a_raw_mix": {
+          "root": 0.9351310928794784,
+          "majmin": 0.9318185418091339,
+          "sevenths": 0.8955447026157982,
+          "seg": 0.9339314430708159,
+          "n_segments": 57
+        },
+        "b_hpss_chord_stem": {
+          "root": 0.9353418502155902,
+          "majmin": 0.9329962846558554,
+          "sevenths": 0.7177563279408572,
+          "seg": 0.9322500259123677,
+          "n_segments": 58
+        },
+        "c_demucs_other_bass": {
+          "root": 0.9425104209658416,
+          "majmin": 0.9086567701729095,
+          "sevenths": 0.43154251295105506,
+          "seg": 0.8811914390019682,
+          "n_segments": 51
+        }
+      },
+      {
+        "id": "cant-buy-me-love",
+        "demucs_available": true,
+        "a_raw_mix": {
+          "root": 0.540108578796466,
+          "majmin": 0.5400837100633247,
+          "sevenths": 0.28281313103659317,
+          "seg": 0.6291795108628748,
+          "n_segments": 40
+        },
+        "b_hpss_chord_stem": {
+          "root": 0.6081149973305313,
+          "majmin": 0.6081149973305313,
+          "sevenths": 0.44230112591132226,
+          "seg": 0.7630286347635649,
+          "n_segments": 55
+        },
+        "c_demucs_other_bass": {
+          "root": 0.6244092862118859,
+          "majmin": 0.6244092862118859,
+          "sevenths": 0.4768176751825258,
+          "seg": 0.763453767090457,
+          "n_segments": 53
+        }
+      },
+      {
+        "id": "while-my-guitar-gently-weeps",
+        "demucs_available": true,
+        "a_raw_mix": {
+          "root": 0.8384735941461556,
+          "majmin": 0.7600339592521259,
+          "sevenths": 0.8067679150999696,
+          "seg": 0.8434840847227921,
+          "n_segments": 120
+        },
+        "b_hpss_chord_stem": {
+          "root": 0.8263574137981047,
+          "majmin": 0.7485455504399037,
+          "sevenths": 0.7883509871877442,
+          "seg": 0.8311274706460061,
+          "n_segments": 124
+        },
+        "c_demucs_other_bass": {
+          "root": 0.828881259946483,
+          "majmin": 0.7564653967196766,
+          "sevenths": 0.7986459797174827,
+          "seg": 0.8386545696140922,
+          "n_segments": 124
+        }
+      },
+      {
+        "id": "another-one-bites-the-dust",
+        "demucs_available": true,
+        "a_raw_mix": {
+          "root": 0.5946850875105182,
+          "majmin": 0.5257466729991778,
+          "sevenths": 0.5257466729991778,
+          "seg": 0.7588459570230562,
+          "n_segments": 65
+        },
+        "b_hpss_chord_stem": {
+          "root": 0.3421160141288386,
+          "majmin": 0.30793779462567683,
+          "sevenths": 0.30793779462567683,
+          "seg": 0.7085110208522548,
+          "n_segments": 53
+        },
+        "c_demucs_other_bass": {
+          "root": 0.11531835430227703,
+          "majmin": 0.08645465711916034,
+          "sevenths": 0.08645465711916034,
+          "seg": 0.5535137178606503,
+          "n_segments": 49
+        }
+      },
+      {
+        "id": "dont-stop-me-now",
+        "demucs_available": true,
+        "a_raw_mix": {
+          "root": 0.6441272735001153,
+          "majmin": 0.6382932837466089,
+          "sevenths": 0.349279682542725,
+          "seg": 0.6502670816547255,
+          "n_segments": 92
+        },
+        "b_hpss_chord_stem": {
+          "root": 0.6317673673919506,
+          "majmin": 0.6254445072798545,
+          "sevenths": 0.3407010514813709,
+          "seg": 0.6193885695663872,
+          "n_segments": 87
+        },
+        "c_demucs_other_bass": {
+          "root": 0.6231999735515957,
+          "majmin": 0.5741692146958179,
+          "sevenths": 0.31542524130395155,
+          "seg": 0.6234266741603812,
+          "n_segments": 88
+        }
+      },
+      {
+        "id": "play-the-game",
+        "demucs_available": true,
+        "a_raw_mix": {
+          "root": 0.5879210089995481,
+          "majmin": 0.5497344520913863,
+          "sevenths": 0.45055937902642906,
+          "seg": 0.6241895483973806,
+          "n_segments": 105
+        },
+        "b_hpss_chord_stem": {
+          "root": 0.5954266229737732,
+          "majmin": 0.5546934414380442,
+          "sevenths": 0.4475896420602745,
+          "seg": 0.6277524881977623,
+          "n_segments": 104
+        },
+        "c_demucs_other_bass": {
+          "root": 0.573242634637713,
+          "majmin": 0.5457323779893783,
+          "sevenths": 0.41532792809779717,
+          "seg": 0.6250802833474759,
+          "n_segments": 103
+        }
+      },
+      {
+        "id": "youre-my-best-friend",
+        "demucs_available": true,
+        "a_raw_mix": {
+          "root": 0.2978244749951117,
+          "majmin": 0.26892289207436687,
+          "sevenths": 0.2809001388579728,
+          "seg": 0.5252759337023422,
+          "n_segments": 51
+        },
+        "b_hpss_chord_stem": {
+          "root": 0.7573274168036415,
+          "majmin": 0.6752821773709066,
+          "sevenths": 0.6724478222617952,
+          "seg": 0.6009498198517385,
+          "n_segments": 62
+        },
+        "c_demucs_other_bass": {
+          "root": 0.7192436289855748,
+          "majmin": 0.676750255620671,
+          "sevenths": 0.6573048833487033,
+          "seg": 0.5157796712221624,
+          "n_segments": 57
+        }
+      }
+    ],
+    "summary": {
+      "a_raw_mix": {
+        "majmin": 0.5794,
+        "sevenths": 0.5098,
+        "seg": 0.7468,
+        "root": 0.6043,
+        "n_tracks": 14
+      },
+      "b_hpss_chord_stem": {
+        "majmin": 0.6062,
+        "sevenths": 0.5313,
+        "seg": 0.7575,
+        "root": 0.6254,
+        "n_tracks": 14
+      },
+      "c_demucs_other_bass": {
+        "majmin": 0.6172,
+        "sevenths": 0.5244,
+        "seg": 0.7298,
+        "root": 0.6363,
+        "n_tracks": 14
+      }
+    }
+  },
+  "experiment2": {
+    "tracks": [
+      {
+        "id": "let-it-be",
+        "0_raw": {
+          "root": 0.1329755665925012,
+          "majmin": 0.1329755665925012,
+          "sevenths": 0.13508750312599693,
+          "seg": 0.8140054116988784
+        },
+        "1_align": {
+          "root": 0.1235163577203342,
+          "majmin": 0.1235163577203342,
+          "sevenths": 0.125926339167042,
+          "seg": 0.7981271594799093
+        },
+        "2_polish": {
+          "root": 0.16080230954373442,
+          "majmin": 0.16077612627635257,
+          "sevenths": 0.16240550333721007,
+          "seg": 0.7400840583990227
+        },
+        "3_bar_finalize": {
+          "root": 0.44822313084675347,
+          "majmin": 0.4339954130124603,
+          "sevenths": 0.40936468316277475,
+          "seg": 0.5759095781911479
+        },
+        "4_final": {
+          "root": 0.44822313084675347,
+          "majmin": 0.4339954130124603,
+          "sevenths": 0.40936468316277475,
+          "seg": 0.5759095781911479
+        }
+      },
+      {
+        "id": "yellow-submarine",
+        "0_raw": {
+          "root": 0.012950557487145097,
+          "majmin": 0.012950557487145097,
+          "sevenths": 0.012950557487145097,
+          "seg": 0.7440982963759064
+        },
+        "1_align": {
+          "root": 0.7762924443669779,
+          "majmin": 0.6683044292479263,
+          "sevenths": 0.6683044292479263,
+          "seg": 0.7377827836038342
+        },
+        "2_polish": {
+          "root": 0.7420130872994901,
+          "majmin": 0.591832685591415,
+          "sevenths": 0.591832685591415,
+          "seg": 0.6962987604008378
+        },
+        "3_bar_finalize": {
+          "root": 0.6477328158284135,
+          "majmin": 0.5338101991826145,
+          "sevenths": 0.5338101991826145,
+          "seg": 0.601792279941982
+        },
+        "4_final": {
+          "root": 0.6477328158284135,
+          "majmin": 0.5338101991826145,
+          "sevenths": 0.5338101991826145,
+          "seg": 0.601792279941982
+        }
+      },
+      {
+        "id": "come-together",
+        "0_raw": {
+          "root": 0.886654857257846,
+          "majmin": 0.8633501123732576,
+          "sevenths": 0.7916979212470462,
+          "seg": 0.9022780026780965
+        },
+        "1_align": {
+          "root": 0.8907227475875221,
+          "majmin": 0.8674272243795083,
+          "sevenths": 0.7947993624723282,
+          "seg": 0.9034181044954885
+        },
+        "2_polish": {
+          "root": 0.8949097367401275,
+          "majmin": 0.7793716542621427,
+          "sevenths": 0.7244065400819423,
+          "seg": 0.9041307835001873
+        },
+        "3_bar_finalize": {
+          "root": 0.8393415413195813,
+          "majmin": 0.741377038767497,
+          "sevenths": 0.6993292315474612,
+          "seg": 0.8647434803083209
+        },
+        "4_final": {
+          "root": 0.8393415413195813,
+          "majmin": 0.741377038767497,
+          "sevenths": 0.6993292315474612,
+          "seg": 0.8647434803083209
+        }
+      },
+      {
+        "id": "help",
+        "0_raw": {
+          "root": 0.6654495246834571,
+          "majmin": 0.6654495246834571,
+          "sevenths": 0.6576228354894199,
+          "seg": 0.719037009038096
+        },
+        "1_align": {
+          "root": 0.6162971245416226,
+          "majmin": 0.6162971245416226,
+          "sevenths": 0.6307151762284486,
+          "seg": 0.7119749643162896
+        },
+        "2_polish": {
+          "root": 0.6578401701626488,
+          "majmin": 0.6367821401998423,
+          "sevenths": 0.6516794315306718,
+          "seg": 0.6950183483934707
+        },
+        "3_bar_finalize": {
+          "root": 0.4752563061104953,
+          "majmin": 0.46452156751543433,
+          "sevenths": 0.47538888411222086,
+          "seg": 0.5999481513968831
+        },
+        "4_final": {
+          "root": 0.4752563061104953,
+          "majmin": 0.46452156751543433,
+          "sevenths": 0.47538888411222086,
+          "seg": 0.5999481513968831
+        }
+      },
+      {
+        "id": "twist-and-shout",
+        "0_raw": {
+          "root": 0.9260057942673232,
+          "majmin": 0.9260057942673232,
+          "sevenths": 0.8848181465265417,
+          "seg": 0.8781989246692448
+        },
+        "1_align": {
+          "root": 0.9041958675859161,
+          "majmin": 0.9041958675859161,
+          "sevenths": 0.8630082198451345,
+          "seg": 0.8564251906781949
+        },
+        "2_polish": {
+          "root": 0.584799333963721,
+          "majmin": 0.5657722962601968,
+          "sevenths": 0.5245846485194151,
+          "seg": 0.21392520742213272
+        },
+        "3_bar_finalize": {
+          "root": 0.5603825360899978,
+          "majmin": 0.5545341879280985,
+          "sevenths": 0.513346540187317,
+          "seg": 0.18244341374219197
+        },
+        "4_final": {
+          "root": 0.5603825360899978,
+          "majmin": 0.5545341879280985,
+          "sevenths": 0.513346540187317,
+          "seg": 0.18244341374219197
+        }
+      },
+      {
+        "id": "something",
+        "0_raw": {
+          "root": 0.7150104084820637,
+          "majmin": 0.7437412597994357,
+          "sevenths": 0.6487062513443347,
+          "seg": 0.733656661090295
+        },
+        "1_align": {
+          "root": 0.730939576670814,
+          "majmin": 0.7606066538299668,
+          "sevenths": 0.6257786721985489,
+          "seg": 0.6568712930947513
+        },
+        "2_polish": {
+          "root": 0.7076464708682979,
+          "majmin": 0.6977533310301209,
+          "sevenths": 0.5737172418127862,
+          "seg": 0.5946468369282172
+        },
+        "3_bar_finalize": {
+          "root": 0.5396791152987859,
+          "majmin": 0.5272770266152134,
+          "sevenths": 0.45680845538202297,
+          "seg": 0.5164928543606275
+        },
+        "4_final": {
+          "root": 0.5396791152987859,
+          "majmin": 0.5272770266152134,
+          "sevenths": 0.45680845538202297,
+          "seg": 0.5164928543606275
+        }
+      },
+      {
+        "id": "ticket-to-ride",
+        "0_raw": {
+          "root": 0.7195300529698515,
+          "majmin": 0.6898030805689703,
+          "sevenths": 0.5900214675930512,
+          "seg": 0.7306276309511703
+        },
+        "1_align": {
+          "root": 0.7097516174302989,
+          "majmin": 0.6825991265222128,
+          "sevenths": 0.5831919942905442,
+          "seg": 0.7305341603689282
+        },
+        "2_polish": {
+          "root": 0.7276041829391555,
+          "majmin": 0.6682932435812099,
+          "sevenths": 0.5662323516117382,
+          "seg": 0.7387837610361885
+        },
+        "3_bar_finalize": {
+          "root": 0.7989114725942922,
+          "majmin": 0.7190809707138184,
+          "sevenths": 0.6128820340433913,
+          "seg": 0.7934609325495696
+        },
+        "4_final": {
+          "root": 0.7989114725942922,
+          "majmin": 0.7190809707138184,
+          "sevenths": 0.6128820340433913,
+          "seg": 0.7934609325495696
+        }
+      },
+      {
+        "id": "i-saw-her-standing-there",
+        "0_raw": {
+          "root": 0.9353418502155902,
+          "majmin": 0.9329962846558554,
+          "sevenths": 0.7177563279408572,
+          "seg": 0.9322500259123677
+        },
+        "1_align": {
+          "root": 0.9201153696516081,
+          "majmin": 0.9096815404262578,
+          "sevenths": 0.6939706732599774,
+          "seg": 0.9103893146168291
+        },
+        "2_polish": {
+          "root": 0.9302841548427176,
+          "majmin": 0.9209067012316986,
+          "sevenths": 0.7180738788110865,
+          "seg": 0.91765211946586
+        },
+        "3_bar_finalize": {
+          "root": 0.6708202189786499,
+          "majmin": 0.6622030811809052,
+          "sevenths": 0.5052479515198046,
+          "seg": 0.7307969089046104
+        },
+        "4_final": {
+          "root": 0.6708202189786499,
+          "majmin": 0.6622030811809052,
+          "sevenths": 0.5052479515198046,
+          "seg": 0.7307969089046104
+        }
+      },
+      {
+        "id": "cant-buy-me-love",
+        "0_raw": {
+          "root": 0.6081149973305313,
+          "majmin": 0.6081149973305313,
+          "sevenths": 0.44230112591132226,
+          "seg": 0.7630286347635649
+        },
+        "1_align": {
+          "root": 0.6147090820216722,
+          "majmin": 0.6147090820216722,
+          "sevenths": 0.4468233706810557,
+          "seg": 0.7543604754372557
+        },
+        "2_polish": {
+          "root": 0.6087172238798209,
+          "majmin": 0.6073879145998055,
+          "sevenths": 0.4482387072746803,
+          "seg": 0.7305378261857647
+        },
+        "3_bar_finalize": {
+          "root": 0.5343262955298612,
+          "majmin": 0.5328249210365837,
+          "sevenths": 0.38801273310021184,
+          "seg": 0.6779234253702009
+        },
+        "4_final": {
+          "root": 0.5343262955298612,
+          "majmin": 0.5328249210365837,
+          "sevenths": 0.38801273310021184,
+          "seg": 0.6779234253702009
+        }
+      },
+      {
+        "id": "while-my-guitar-gently-weeps",
+        "0_raw": {
+          "root": 0.8263574137981047,
+          "majmin": 0.7485455504399037,
+          "sevenths": 0.7883509871877442,
+          "seg": 0.8311274706460061
+        },
+        "1_align": {
+          "root": 0.793807507490526,
+          "majmin": 0.7719453230827856,
+          "sevenths": 0.7531401146500926,
+          "seg": 0.7507561023933462
+        },
+        "2_polish": {
+          "root": 0.8160298219116613,
+          "majmin": 0.7748678122004264,
+          "sevenths": 0.7512369171842093,
+          "seg": 0.7576780035673631
+        },
+        "3_bar_finalize": {
+          "root": 0.3774231157999647,
+          "majmin": 0.3510867775464711,
+          "sevenths": 0.34883402202856495,
+          "seg": 0.6251656039740299
+        },
+        "4_final": {
+          "root": 0.3774231157999647,
+          "majmin": 0.3510867775464711,
+          "sevenths": 0.34883402202856495,
+          "seg": 0.6251656039740299
+        }
+      },
+      {
+        "id": "another-one-bites-the-dust",
+        "0_raw": {
+          "root": 0.3421160141288386,
+          "majmin": 0.30793779462567683,
+          "sevenths": 0.30793779462567683,
+          "seg": 0.7085110208522548
+        },
+        "1_align": {
+          "root": 0.3541976729590386,
+          "majmin": 0.3308564794165656,
+          "sevenths": 0.3308564794165656,
+          "seg": 0.542400581784808
+        },
+        "2_polish": {
+          "root": 0.19865210318722665,
+          "majmin": 0.1774177048611481,
+          "sevenths": 0.1774177048611481,
+          "seg": 0.4642810282225204
+        },
+        "3_bar_finalize": {
+          "root": 0.08826194015435777,
+          "majmin": 0.06306709233799807,
+          "sevenths": 0.06306709233799807,
+          "seg": 0.4399956586094296
+        },
+        "4_final": {
+          "root": 0.08826194015435777,
+          "majmin": 0.06306709233799807,
+          "sevenths": 0.06306709233799807,
+          "seg": 0.4399956586094296
+        }
+      },
+      {
+        "id": "dont-stop-me-now",
+        "0_raw": {
+          "root": 0.6317673673919506,
+          "majmin": 0.6254445072798545,
+          "sevenths": 0.3407010514813709,
+          "seg": 0.6193885695663872
+        },
+        "1_align": {
+          "root": 0.6310540551258813,
+          "majmin": 0.6281435609385786,
+          "sevenths": 0.33820712033659217,
+          "seg": 0.5899555844371789
+        },
+        "2_polish": {
+          "root": 0.5297403664369877,
+          "majmin": 0.5000706708189766,
+          "sevenths": 0.3040700066893303,
+          "seg": 0.5085990674538513
+        },
+        "3_bar_finalize": {
+          "root": 0.4623932787981718,
+          "majmin": 0.4456418708920755,
+          "sevenths": 0.2785183488418994,
+          "seg": 0.45760894065733504
+        },
+        "4_final": {
+          "root": 0.4623932787981718,
+          "majmin": 0.4456418708920755,
+          "sevenths": 0.2785183488418994,
+          "seg": 0.45760894065733504
+        }
+      },
+      {
+        "id": "play-the-game",
+        "0_raw": {
+          "root": 0.5954266229737732,
+          "majmin": 0.5546934414380442,
+          "sevenths": 0.4475896420602745,
+          "seg": 0.6277524881977623
+        },
+        "1_align": {
+          "root": 0.5850047476629945,
+          "majmin": 0.514523951688088,
+          "sevenths": 0.409764451960979,
+          "seg": 0.6195619682518846
+        },
+        "2_polish": {
+          "root": 0.5567633895965491,
+          "majmin": 0.3431553137266341,
+          "sevenths": 0.2713808876053483,
+          "seg": 0.5748875124222128
+        },
+        "3_bar_finalize": {
+          "root": 0.6002980363636934,
+          "majmin": 0.36472324890485397,
+          "sevenths": 0.30646165508722567,
+          "seg": 0.5866784236451298
+        },
+        "4_final": {
+          "root": 0.6002980363636934,
+          "majmin": 0.36472324890485397,
+          "sevenths": 0.30646165508722567,
+          "seg": 0.5866784236451298
+        }
+      },
+      {
+        "id": "youre-my-best-friend",
+        "0_raw": {
+          "root": 0.7573274168036415,
+          "majmin": 0.6752821773709066,
+          "sevenths": 0.6724478222617952,
+          "seg": 0.6009498198517385
+        },
+        "1_align": {
+          "root": 0.759359913438328,
+          "majmin": 0.6458603931011391,
+          "sevenths": 0.6667403896719435,
+          "seg": 0.5750448123468284
+        },
+        "2_polish": {
+          "root": 0.654923560575766,
+          "majmin": 0.4596663614023089,
+          "sevenths": 0.4532489354907123,
+          "seg": 0.4201989895914032
+        },
+        "3_bar_finalize": {
+          "root": 0.4300817614851421,
+          "majmin": 0.3447403795513963,
+          "sevenths": 0.3416175955123571,
+          "seg": 0.3499114355171923
+        },
+        "4_final": {
+          "root": 0.4300817614851421,
+          "majmin": 0.3447403795513963,
+          "sevenths": 0.3416175955123571,
+          "seg": 0.3499114355171923
+        }
+      }
+    ],
+    "summary": {
+      "0_raw": {
+        "majmin": 0.6062,
+        "sevenths": 0.5313,
+        "seg": 0.7575,
+        "root": 0.6254
+      },
+      "1_align": {
+        "majmin": 0.6456,
+        "sevenths": 0.5665,
+        "seg": 0.7241,
+        "root": 0.6721
+      },
+      "2_polish": {
+        "majmin": 0.5631,
+        "sevenths": 0.4942,
+        "seg": 0.6398,
+        "root": 0.6265
+      },
+      "3_bar_finalize": {
+        "majmin": 0.4813,
+        "sevenths": 0.4238,
+        "seg": 0.5716,
+        "root": 0.5338
+      },
+      "4_final": {
+        "majmin": 0.4813,
+        "sevenths": 0.4238,
+        "seg": 0.5716,
+        "root": 0.5338
+      }
+    }
+  },
+  "experiment3": {
+    "unique_ref_labels": 96,
+    "quality_preserved_count": 27,
+    "quality_preserved_pct": 28.1,
+    "quality_loss_examples": {
+      "G -> G:maj": 120,
+      "C -> C:maj": 112,
+      "A -> A:maj": 105,
+      "F -> F:maj": 64,
+      "D -> D:maj": 58,
+      "E -> E:maj": 57,
+      "dropped_to_N": 35,
+      "C# -> C#:maj": 32,
+      "B -> B:maj": 32,
+      "F# -> F#:maj": 28,
+      "A:min/b7 -> A:maj": 21,
+      "G/3 -> G:maj": 16,
+      "Bb -> A#:maj": 14,
+      "A:min/6 -> A:maj": 13,
+      "D:min7/b7 -> D:maj": 12,
+      "E/3 -> E:maj": 11,
+      "Ab -> G#:maj": 8,
+      "E:min/b3 -> E:maj": 7,
+      "C/5 -> C:maj": 7,
+      "F/3 -> F:maj": 7,
+      "C/b7 -> C:maj": 7,
+      "F:maj6 -> F:maj": 6,
+      "Eb -> D#:maj": 6,
+      "G/5 -> G:maj": 6,
+      "F#:(1,5) -> F#:maj": 6,
+      "C/3 -> C:maj": 5,
+      "A:(1,5) -> A:maj": 5,
+      "G:min9 -> G:maj": 5,
+      "C/7 -> C:maj": 4,
+      "E:min/5 -> E:maj": 4
+    },
+    "mapping_table": [
+      {
+        "ref": "A",
+        "internal": "A",
+        "roundtrip": "A:maj",
+        "quality_preserved": false
+      },
+      {
+        "ref": "A/5",
+        "internal": "A/5",
+        "roundtrip": "A:maj",
+        "quality_preserved": false
+      },
+      {
+        "ref": "A/6",
+        "internal": "A/6",
+        "roundtrip": "A:maj",
+        "quality_preserved": false
+      },
+      {
+        "ref": "A/7",
+        "internal": "A/7",
+        "roundtrip": "A:maj",
+        "quality_preserved": false
+      },
+      {
+        "ref": "A/b6",
+        "internal": "A/b6",
+        "roundtrip": "A:maj",
+        "quality_preserved": false
+      },
+      {
+        "ref": "A/b7",
+        "internal": "A/b7",
+        "roundtrip": "A:maj",
+        "quality_preserved": false
+      },
+      {
+        "ref": "A:(1)",
+        "internal": "A",
+        "roundtrip": "A:maj",
+        "quality_preserved": false
+      },
+      {
+        "ref": "A:(1,5)",
+        "internal": "A",
+        "roundtrip": "A:maj",
+        "quality_preserved": false
+      },
+      {
+        "ref": "A:7",
+        "internal": "A7",
+        "roundtrip": "A:7",
+        "quality_preserved": true
+      },
+      {
+        "ref": "A:maj6",
+        "internal": "A",
+        "roundtrip": "A:maj",
+        "quality_preserved": false
+      },
+      {
+        "ref": "A:min",
+        "internal": "Am",
+        "roundtrip": "A:min",
+        "quality_preserved": true
+      },
+      {
+        "ref": "A:min/6",
+        "internal": "A",
+        "roundtrip": "A:maj",
+        "quality_preserved": false
+      },
+      {
+        "ref": "A:min/b3",
+        "internal": "A",
+        "roundtrip": "A:maj",
+        "quality_preserved": false
+      },
+      {
+        "ref": "A:min/b7",
+        "internal": "A",
+        "roundtrip": "A:maj",
+        "quality_preserved": false
+      },
+      {
+        "ref": "A:min7",
+        "internal": "Am7",
+        "roundtrip": "A:min7",
+        "quality_preserved": true
+      },
+      {
+        "ref": "Ab",
+        "internal": "Ab",
+        "roundtrip": "G#:maj",
+        "quality_preserved": false
+      },
+      {
+        "ref": "Ab:aug",
+        "internal": "G#aug",
+        "roundtrip": "G#:aug",
+        "quality_preserved": false
+      },
+      {
+        "ref": "B",
+        "internal": "B",
+        "roundtrip": "B:maj",
+        "quality_preserved": false
+      },
+      {
+        "ref": "B:(1)",
+        "internal": "B",
+        "roundtrip": "B:maj",
+        "quality_preserved": false
+      },
+      {
+        "ref": "B:(1,5)",
+        "internal": "B",
+        "roundtrip": "B:maj",
+        "quality_preserved": false
+      },
+      {
+        "ref": "B:maj",
+        "internal": "B",
+        "roundtrip": "B:maj",
+        "quality_preserved": true
+      },
+      {
+        "ref": "B:min",
+        "internal": "Bm",
+        "roundtrip": "B:min",
+        "quality_preserved": true
+      },
+      {
+        "ref": "Bb",
+        "internal": "Bb",
+        "roundtrip": "A#:maj",
+        "quality_preserved": false
+      },
+      {
+        "ref": "Bb/5",
+        "internal": "Bb/5",
+        "roundtrip": "A#:maj",
+        "quality_preserved": false
+      },
+      {
+        "ref": "Bb:maj",
+        "internal": "A#",
+        "roundtrip": "A#:maj",
+        "quality_preserved": false
+      },
+      {
+        "ref": "Bb:maj7",
+        "internal": "A#maj7",
+        "roundtrip": "A#:maj7",
+        "quality_preserved": false
+      },
+      {
+        "ref": "Bb:sus4",
+        "internal": "A#sus4",
+        "roundtrip": "A#:sus4",
+        "quality_preserved": false
+      },
+      {
+        "ref": "C",
+        "internal": "C",
+        "roundtrip": "C:maj",
+        "quality_preserved": false
+      },
+      {
+        "ref": "C#",
+        "internal": "C#",
+        "roundtrip": "C#:maj",
+        "quality_preserved": false
+      },
+      {
+        "ref": "C#:min",
+        "internal": "C#m",
+        "roundtrip": "C#:min",
+        "quality_preserved": true
+      },
+      {
+        "ref": "C#:min/5",
+        "internal": "C#",
+        "roundtrip": "C#:maj",
+        "quality_preserved": false
+      },
+      {
+        "ref": "C/2",
+        "internal": "C/2",
+        "roundtrip": "C:maj",
+        "quality_preserved": false
+      },
+      {
+        "ref": "C/3",
+        "internal": "C/3",
+        "roundtrip": "C:maj",
+        "quality_preserved": false
+      },
+      {
+        "ref": "C/5",
+        "internal": "C/5",
+        "roundtrip": "C:maj",
+        "quality_preserved": false
+      },
+      {
+        "ref": "C/6",
+        "internal": "C/6",
+        "roundtrip": "C:maj",
+        "quality_preserved": false
+      },
+      {
+        "ref": "C/7",
+        "internal": "C/7",
+        "roundtrip": "C:maj",
+        "quality_preserved": false
+      },
+      {
+        "ref": "C/b7",
+        "internal": "C/b7",
+        "roundtrip": "C:maj",
+        "quality_preserved": false
+      },
+      {
+        "ref": "C:(1)",
+        "internal": "C",
+        "roundtrip": "C:maj",
+        "quality_preserved": false
+      },
+      {
+        "ref": "C:7",
+        "internal": "C7",
+        "roundtrip": "C:7",
+        "quality_preserved": true
+      },
+      {
+        "ref": "C:7/3",
+        "internal": "C",
+        "roundtrip": "C:maj",
+        "quality_preserved": false
+      },
+      {
+        "ref": "C:7/b7",
+        "internal": "C",
+        "roundtrip": "C:maj",
+        "quality_preserved": false
+      },
+      {
+        "ref": "C:maj",
+        "internal": "C",
+        "roundtrip": "C:maj",
+        "quality_preserved": true
+      },
+      {
+        "ref": "C:maj/3",
+        "internal": "C",
+        "roundtrip": "C:maj",
+        "quality_preserved": false
+      },
+      {
+        "ref": "D",
+        "internal": "D",
+        "roundtrip": "D:maj",
+        "quality_preserved": false
+      },
+      {
+        "ref": "D#:min",
+        "internal": "D#m",
+        "roundtrip": "D#:min",
+        "quality_preserved": true
+      },
+      {
+        "ref": "D:7",
+        "internal": "D7",
+        "roundtrip": "D:7",
+        "quality_preserved": true
+      },
+      {
+        "ref": "D:9",
+        "internal": "D",
+        "roundtrip": "D:maj",
+        "quality_preserved": false
+      },
+      {
+        "ref": "D:maj",
+        "internal": "D",
+        "roundtrip": "D:maj",
+        "quality_preserved": true
+      },
+      {
+        "ref": "D:min",
+        "internal": "Dm",
+        "roundtrip": "D:min",
+        "quality_preserved": true
+      },
+      {
+        "ref": "D:min7",
+        "internal": "Dm7",
+        "roundtrip": "D:min7",
+        "quality_preserved": true
+      },
+      {
+        "ref": "D:min7/b7",
+        "internal": "D",
+        "roundtrip": "D:maj",
+        "quality_preserved": false
+      },
+      {
+        "ref": "E",
+        "internal": "E",
+        "roundtrip": "E:maj",
+        "quality_preserved": false
+      },
+      {
+        "ref": "E/2",
+        "internal": "E/2",
+        "roundtrip": "E:maj",
+        "quality_preserved": false
+      },
+      {
+        "ref": "E/3",
+        "internal": "E/3",
+        "roundtrip": "E:maj",
+        "quality_preserved": false
+      },
+      {
+        "ref": "E/4",
+        "internal": "E/4",
+        "roundtrip": "E:maj",
+        "quality_preserved": false
+      },
+      {
+        "ref": "E:(1,b7)",
+        "internal": "E",
+        "roundtrip": "E:maj",
+        "quality_preserved": false
+      },
+      {
+        "ref": "E:7/3",
+        "internal": "E",
+        "roundtrip": "E:maj",
+        "quality_preserved": false
+      },
+      {
+        "ref": "E:9",
+        "internal": "E",
+        "roundtrip": "E:maj",
+        "quality_preserved": false
+      },
+      {
+        "ref": "E:maj",
+        "internal": "E",
+        "roundtrip": "E:maj",
+        "quality_preserved": true
+      },
+      {
+        "ref": "E:min",
+        "internal": "Em",
+        "roundtrip": "E:min",
+        "quality_preserved": true
+      },
+      {
+        "ref": "E:min/5",
+        "internal": "E",
+        "roundtrip": "E:maj",
+        "quality_preserved": false
+      },
+      {
+        "ref": "E:min/b3",
+        "internal": "E",
+        "roundtrip": "E:maj",
+        "quality_preserved": false
+      },
+      {
+        "ref": "Eb",
+        "internal": "Eb",
+        "roundtrip": "D#:maj",
+        "quality_preserved": false
+      },
+      {
+        "ref": "F",
+        "internal": "F",
+        "roundtrip": "F:maj",
+        "quality_preserved": false
+      },
+      {
+        "ref": "F#",
+        "internal": "F#",
+        "roundtrip": "F#:maj",
+        "quality_preserved": false
+      },
+      {
+        "ref": "F#:(1,5)",
+        "internal": "F#",
+        "roundtrip": "F#:maj",
+        "quality_preserved": false
+      },
+      {
+        "ref": "F#:min",
+        "internal": "F#m",
+        "roundtrip": "F#:min",
+        "quality_preserved": true
+      },
+      {
+        "ref": "F/3",
+        "internal": "F/3",
+        "roundtrip": "F:maj",
+        "quality_preserved": false
+      },
+      {
+        "ref": "F/5",
+        "internal": "F/5",
+        "roundtrip": "F:maj",
+        "quality_preserved": false
+      },
+      {
+        "ref": "F:7",
+        "internal": "F7",
+        "roundtrip": "F:7",
+        "quality_preserved": true
+      },
+      {
+        "ref": "F:7/b7",
+        "internal": "F",
+        "roundtrip": "F:maj",
+        "quality_preserved": false
+      },
+      {
+        "ref": "F:maj",
+        "internal": "F",
+        "roundtrip": "F:maj",
+        "quality_preserved": true
+      },
+      {
+        "ref": "F:maj6",
+        "internal": "F",
+        "roundtrip": "F:maj",
+        "quality_preserved": false
+      },
+      {
+        "ref": "F:maj6/5",
+        "internal": "F",
+        "roundtrip": "F:maj",
+        "quality_preserved": false
+      },
+      {
+        "ref": "F:maj7",
+        "internal": "Fmaj7",
+        "roundtrip": "F:maj7",
+        "quality_preserved": true
+      },
+      {
+        "ref": "F:min",
+        "internal": "Fm",
+        "roundtrip": "F:min",
+        "quality_preserved": true
+      },
+      {
+        "ref": "F:min(6)",
+        "internal": "F",
+        "roundtrip": "F:maj",
+        "quality_preserved": false
+      },
+      {
+        "ref": "F:min/b3",
+        "internal": "F",
+        "roundtrip": "F:maj",
+        "quality_preserved": false
+      },
+      {
+        "ref": "G",
+        "internal": "G",
+        "roundtrip": "G:maj",
+        "quality_preserved": false
+      },
+      {
+        "ref": "G#:min",
+        "internal": "G#m",
+        "roundtrip": "G#:min",
+        "quality_preserved": true
+      },
+      {
+        "ref": "G/3",
+        "internal": "G/3",
+        "roundtrip": "G:maj",
+        "quality_preserved": false
+      },
+      {
+        "ref": "G/4",
+        "internal": "G/4",
+        "roundtrip": "G:maj",
+        "quality_preserved": false
+      },
+      {
+        "ref": "G/5",
+        "internal": "G/5",
+        "roundtrip": "G:maj",
+        "quality_preserved": false
+      },
+      {
+        "ref": "G:(1)",
+        "internal": "G",
+        "roundtrip": "G:maj",
+        "quality_preserved": false
+      },
+      {
+        "ref": "G:(1,5)",
+        "internal": "G",
+        "roundtrip": "G:maj",
+        "quality_preserved": false
+      },
+      {
+        "ref": "G:7",
+        "internal": "G7",
+        "roundtrip": "G:7",
+        "quality_preserved": true
+      },
+      {
+        "ref": "G:maj",
+        "internal": "G",
+        "roundtrip": "G:maj",
+        "quality_preserved": true
+      },
+      {
+        "ref": "G:maj/5",
+        "internal": "G",
+        "roundtrip": "G:maj",
+        "quality_preserved": false
+      },
+      {
+        "ref": "G:maj6",
+        "internal": "G",
+        "roundtrip": "G:maj",
+        "quality_preserved": false
+      },
+      {
+        "ref": "G:maj7",
+        "internal": "Gmaj7",
+        "roundtrip": "G:maj7",
+        "quality_preserved": true
+      },
+      {
+        "ref": "G:min",
+        "internal": "Gm",
+        "roundtrip": "G:min",
+        "quality_preserved": true
+      },
+      {
+        "ref": "G:min7",
+        "internal": "Gm7",
+        "roundtrip": "G:min7",
+        "quality_preserved": true
+      },
+      {
+        "ref": "G:min9",
+        "internal": "G",
+        "roundtrip": "G:maj",
+        "quality_preserved": false
+      },
+      {
+        "ref": "G:sus4(2)",
+        "internal": "G",
+        "roundtrip": "G:maj",
+        "quality_preserved": false
+      },
+      {
+        "ref": "G:sus4(2)/2",
+        "internal": "G",
+        "roundtrip": "G:maj",
+        "quality_preserved": false
+      },
+      {
+        "ref": "N",
+        "internal": null,
+        "roundtrip": "N",
+        "quality_preserved": true
+      }
+    ],
+    "per_track_oracle_loss": [
+      {
+        "id": "let-it-be",
+        "perfect": {
+          "root": 0.9999999999999999,
+          "majmin": 0.9999999999999999,
+          "sevenths": 1.0,
+          "seg": 1.0
+        },
+        "after_mapping": {
+          "root": 0.9999999999999999,
+          "majmin": 0.9367234690553441,
+          "sevenths": 0.9318521751707166,
+          "seg": 0.9967078166063216
+        },
+        "majmin_loss": 0.0633,
+        "sevenths_loss": 0.0681
+      },
+      {
+        "id": "yellow-submarine",
+        "perfect": {
+          "root": 1.0,
+          "majmin": 1.0,
+          "sevenths": 1.0,
+          "seg": 1.0
+        },
+        "after_mapping": {
+          "root": 1.0,
+          "majmin": 1.0,
+          "sevenths": 1.0,
+          "seg": 1.0
+        },
+        "majmin_loss": 0.0,
+        "sevenths_loss": 0.0
+      },
+      {
+        "id": "come-together",
+        "perfect": {
+          "root": 1.0,
+          "majmin": 1.0,
+          "sevenths": 1.0,
+          "seg": 1.0
+        },
+        "after_mapping": {
+          "root": 1.0,
+          "majmin": 1.0,
+          "sevenths": 1.0,
+          "seg": 1.0
+        },
+        "majmin_loss": 0.0,
+        "sevenths_loss": 0.0
+      },
+      {
+        "id": "help",
+        "perfect": {
+          "root": 1.0,
+          "majmin": 1.0,
+          "sevenths": 1.0000000000000002,
+          "seg": 1.0
+        },
+        "after_mapping": {
+          "root": 1.0,
+          "majmin": 1.0,
+          "sevenths": 1.0000000000000002,
+          "seg": 0.9911127608062544
+        },
+        "majmin_loss": 0.0,
+        "sevenths_loss": 0.0
+      },
+      {
+        "id": "twist-and-shout",
+        "perfect": {
+          "root": 0.9999999999999999,
+          "majmin": 0.9999999999999999,
+          "sevenths": 0.9999999999999999,
+          "seg": 1.0
+        },
+        "after_mapping": {
+          "root": 0.9999999999999999,
+          "majmin": 0.9999999999999999,
+          "sevenths": 0.9716234406299596,
+          "seg": 0.9937616775605106
+        },
+        "majmin_loss": 0.0,
+        "sevenths_loss": 0.0284
+      },
+      {
+        "id": "something",
+        "perfect": {
+          "root": 0.9999999999999998,
+          "majmin": 1.0,
+          "sevenths": 1.0,
+          "seg": 1.0
+        },
+        "after_mapping": {
+          "root": 0.9999999999999998,
+          "majmin": 0.8962248733491212,
+          "sevenths": 0.883568314646116,
+          "seg": 0.9220353715470694
+        },
+        "majmin_loss": 0.1038,
+        "sevenths_loss": 0.1164
+      },
+      {
+        "id": "ticket-to-ride",
+        "perfect": {
+          "root": 0.9999999999999998,
+          "majmin": 0.9999999999999998,
+          "sevenths": 0.9999999999999998,
+          "seg": 1.0
+        },
+        "after_mapping": {
+          "root": 0.9999999999999998,
+          "majmin": 0.9999999999999998,
+          "sevenths": 0.9999999999999998,
+          "seg": 1.0
+        },
+        "majmin_loss": 0.0,
+        "sevenths_loss": 0.0
+      },
+      {
+        "id": "i-saw-her-standing-there",
+        "perfect": {
+          "root": 1.0,
+          "majmin": 1.0,
+          "sevenths": 1.0,
+          "seg": 1.0
+        },
+        "after_mapping": {
+          "root": 1.0,
+          "majmin": 0.9659897658121499,
+          "sevenths": 0.9295401229648353,
+          "seg": 0.9348559665412093
+        },
+        "majmin_loss": 0.034,
+        "sevenths_loss": 0.0705
+      },
+      {
+        "id": "cant-buy-me-love",
+        "perfect": {
+          "root": 0.9999999999999999,
+          "majmin": 0.9999999999999999,
+          "sevenths": 0.9999999999999999,
+          "seg": 1.0
+        },
+        "after_mapping": {
+          "root": 0.9999999999999999,
+          "majmin": 0.9999999999999999,
+          "sevenths": 0.9999999999999999,
+          "seg": 1.0
+        },
+        "majmin_loss": 0.0,
+        "sevenths_loss": 0.0
+      },
+      {
+        "id": "while-my-guitar-gently-weeps",
+        "perfect": {
+          "root": 1.0,
+          "majmin": 1.0,
+          "sevenths": 0.9999999999999999,
+          "seg": 1.0
+        },
+        "after_mapping": {
+          "root": 1.0,
+          "majmin": 0.805575745624322,
+          "sevenths": 0.8923455747320691,
+          "seg": 0.8634581312830827
+        },
+        "majmin_loss": 0.1944,
+        "sevenths_loss": 0.1077
+      },
+      {
+        "id": "another-one-bites-the-dust",
+        "perfect": {
+          "root": 0.9999999999999999,
+          "majmin": 1.0,
+          "sevenths": 1.0,
+          "seg": 1.0
+        },
+        "after_mapping": {
+          "root": 0.9999999999999999,
+          "majmin": 1.0,
+          "sevenths": 1.0,
+          "seg": 0.9949932459533348
+        },
+        "majmin_loss": 0.0,
+        "sevenths_loss": 0.0
+      },
+      {
+        "id": "dont-stop-me-now",
+        "perfect": {
+          "root": 1.0,
+          "majmin": 1.0,
+          "sevenths": 1.0,
+          "seg": 1.0
+        },
+        "after_mapping": {
+          "root": 1.0,
+          "majmin": 1.0,
+          "sevenths": 0.9925476137986562,
+          "seg": 0.9926558448612167
+        },
+        "majmin_loss": 0.0,
+        "sevenths_loss": 0.0075
+      },
+      {
+        "id": "play-the-game",
+        "perfect": {
+          "root": 1.0,
+          "majmin": 1.0,
+          "sevenths": 1.0,
+          "seg": 1.0
+        },
+        "after_mapping": {
+          "root": 1.0,
+          "majmin": 0.8981050249835016,
+          "sevenths": 0.834943904968417,
+          "seg": 0.9336543104539465
+        },
+        "majmin_loss": 0.1019,
+        "sevenths_loss": 0.1651
+      },
+      {
+        "id": "youre-my-best-friend",
+        "perfect": {
+          "root": 1.0,
+          "majmin": 1.0000000000000002,
+          "sevenths": 1.0,
+          "seg": 1.0
+        },
+        "after_mapping": {
+          "root": 1.0,
+          "majmin": 0.8100927395772413,
+          "sevenths": 0.8374026139218368,
+          "seg": 0.9674513425449983
+        },
+        "majmin_loss": 0.1899,
+        "sevenths_loss": 0.1626
+      }
+    ],
+    "summary": {
+      "avg_majmin_loss_from_mapping": 0.0491,
+      "avg_sevenths_loss_from_mapping": 0.0519
+    }
+  },
+  "verdict": "- **DEV gap vs chordia raw ceiling:** baseline final 0.488 vs raw chordia 0.606 \u2192 pipeline throws away ~0.118 majmin.\n\n- **Input signal:** raw mix 0.579 vs HPSS stem 0.606 (HPSS neutral/helpful; \u0394=+0.027).\n\n- **Demucs other+bass:** 0.617 (\u0394 vs HPSS +0.011).\n\n- **Largest post-process drop:** stage `2_polish` \u0394 majmin +0.082 (total raw\u2192final post loss 0.125).\n\n- **Label mapping:** oracle majmin loss 0.0491 (0.0519 sevenths) \u2014 negligible vs pipeline.\n\n- **Phase 10 target:** Mixed: model + post-processing both contribute."
+}

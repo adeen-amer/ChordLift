@@ -1,0 +1,464 @@
+{
+  "description": "Gold audio identity gate (Phase 11.5). Requires Spotify official duration within 1s (independent wrong-version anchor) plus lab sanity check; manual ear-check for lab drift >1.0s or outlier v46 majmin.",
+  "max_lab_duration_delta_sec": 1.99,
+  "max_lab_gross_drift_sec": 5.0,
+  "max_spotify_duration_delta_sec": 1.0,
+  "tracks": {
+    "let-it-be": {
+      "lab_end_sec": 243.330612,
+      "audio_duration_sec": 243.027,
+      "duration_delta_sec": 0.304,
+      "duration_status": "pass",
+      "ear_check_sec": [
+        15.0,
+        109.5,
+        233.33
+      ],
+      "ear_check_status": "approved",
+      "spotify_track_id": "5V1AHQugSTASVez5ffJtFo",
+      "spotify_duration_sec": 243.026,
+      "spotify_delta_sec": 0.001,
+      "spotify_duration_status": "pass",
+      "needs_manual_review": false,
+      "manual_review_reason": "",
+      "lab_drift_note": null
+    },
+    "yellow-submarine": {
+      "lab_end_sec": 160.417959,
+      "audio_duration_sec": 158.88,
+      "duration_delta_sec": 1.538,
+      "duration_status": "pass",
+      "ear_check_sec": [
+        15.0,
+        72.19,
+        150.42
+      ],
+      "ear_check_status": "approved",
+      "spotify_track_id": "0Dk6z7iOJzFYywJvxjNltW",
+      "spotify_duration_sec": 158.88,
+      "spotify_delta_sec": 0.0,
+      "spotify_duration_status": "pass",
+      "needs_manual_review": false,
+      "manual_review_reason": "",
+      "lab_drift_note": null
+    },
+    "come-together": {
+      "lab_end_sec": 260.649796,
+      "audio_duration_sec": 259.947,
+      "duration_delta_sec": 0.703,
+      "duration_status": "pass",
+      "ear_check_sec": [
+        15.0,
+        117.29,
+        250.65
+      ],
+      "ear_check_status": "approved",
+      "spotify_track_id": "71JkCL6msHDScuCKaJXFXP",
+      "spotify_duration_sec": 259.665,
+      "spotify_delta_sec": 0.282,
+      "spotify_duration_status": "pass",
+      "needs_manual_review": false,
+      "manual_review_reason": "",
+      "lab_drift_note": null
+    },
+    "yesterday": {
+      "lab_end_sec": 127.451429,
+      "audio_duration_sec": 125.667,
+      "duration_delta_sec": 1.785,
+      "duration_status": "pass",
+      "ear_check_sec": [
+        12.75,
+        57.35,
+        117.45
+      ],
+      "ear_check_status": "approved",
+      "spotify_track_id": "3BQHpFgAp4l80e1XslIjNI",
+      "spotify_duration_sec": 125.666,
+      "spotify_delta_sec": 0.001,
+      "spotify_duration_status": "pass",
+      "needs_manual_review": false,
+      "manual_review_reason": "",
+      "lab_drift_note": null
+    },
+    "help": {
+      "lab_end_sec": 141.087347,
+      "audio_duration_sec": 139.56,
+      "duration_delta_sec": 1.527,
+      "duration_status": "pass",
+      "ear_check_sec": [
+        14.11,
+        63.49,
+        131.09
+      ],
+      "ear_check_status": "approved",
+      "spotify_track_id": "7DD7eSuYSC5xk2ArU62esN",
+      "spotify_duration_sec": 139.56,
+      "spotify_delta_sec": 0.0,
+      "spotify_duration_status": "pass",
+      "needs_manual_review": false,
+      "manual_review_reason": "",
+      "lab_drift_note": null
+    },
+    "twist-and-shout": {
+      "lab_end_sec": 153.155918,
+      "audio_duration_sec": 155.227,
+      "duration_delta_sec": 2.071,
+      "duration_status": "pass",
+      "ear_check_sec": [
+        15.0,
+        68.92,
+        143.16
+      ],
+      "ear_check_status": "approved",
+      "spotify_track_id": "5ZBeML7Lf3FMEVviTyvi8l",
+      "spotify_duration_sec": 155.226,
+      "spotify_delta_sec": 0.001,
+      "spotify_duration_status": "pass",
+      "needs_manual_review": false,
+      "manual_review_reason": "",
+      "lab_drift_note": "Spotify-verified remaster; lab drift 2.07s > 1.99s (1987 annotation vs 2009 remaster \u2014 ear-check required)"
+    },
+    "something": {
+      "lab_end_sec": 183.013878,
+      "audio_duration_sec": 182.293,
+      "duration_delta_sec": 0.721,
+      "duration_status": "pass",
+      "ear_check_sec": [
+        15.0,
+        82.36,
+        173.01
+      ],
+      "ear_check_status": "approved",
+      "spotify_track_id": "0pNeVovbiZHkulpGeOx1Gj",
+      "spotify_duration_sec": 182.293,
+      "spotify_delta_sec": 0.0,
+      "spotify_duration_status": "pass",
+      "needs_manual_review": false,
+      "manual_review_reason": "",
+      "lab_drift_note": null
+    },
+    "ticket-to-ride": {
+      "lab_end_sec": 192.496327,
+      "audio_duration_sec": 189.68,
+      "duration_delta_sec": 2.816,
+      "duration_status": "pass",
+      "ear_check_sec": [
+        15.0,
+        86.62,
+        182.5
+      ],
+      "ear_check_status": "approved",
+      "spotify_track_id": "7CZiDzGVjUssMSOXrDNYHL",
+      "spotify_duration_sec": 189.68,
+      "spotify_delta_sec": 0.0,
+      "spotify_duration_status": "pass",
+      "needs_manual_review": false,
+      "manual_review_reason": "",
+      "lab_drift_note": "Spotify-verified remaster; lab drift 2.82s > 1.99s (1987 annotation vs 2009 remaster \u2014 ear-check required)"
+    },
+    "i-saw-her-standing-there": {
+      "lab_end_sec": 175.804082,
+      "audio_duration_sec": 173.947,
+      "duration_delta_sec": 1.857,
+      "duration_status": "pass",
+      "ear_check_sec": [
+        15.0,
+        79.11,
+        165.8
+      ],
+      "ear_check_status": "approved",
+      "spotify_track_id": "3KiexfmhxHvG5IgAElmTkd",
+      "spotify_duration_sec": 173.946,
+      "spotify_delta_sec": 0.001,
+      "spotify_duration_status": "pass",
+      "needs_manual_review": false,
+      "manual_review_reason": "",
+      "lab_drift_note": null
+    },
+    "cant-buy-me-love": {
+      "lab_end_sec": 134.948571,
+      "audio_duration_sec": 131.867,
+      "duration_delta_sec": 3.082,
+      "duration_status": "pass",
+      "ear_check_sec": [
+        13.49,
+        60.73,
+        124.95
+      ],
+      "ear_check_status": "approved",
+      "spotify_track_id": "3SdingSsFcZDZAyvcJbgAw",
+      "spotify_duration_sec": 131.866,
+      "spotify_delta_sec": 0.001,
+      "spotify_duration_status": "pass",
+      "needs_manual_review": false,
+      "manual_review_reason": "",
+      "lab_drift_note": "Spotify-verified remaster; lab drift 3.08s > 1.99s (1987 annotation vs 2009 remaster \u2014 ear-check required)"
+    },
+    "back-in-the-ussr": {
+      "lab_end_sec": 163.317551,
+      "audio_duration_sec": 163.453,
+      "duration_delta_sec": 0.136,
+      "duration_status": "pass",
+      "ear_check_sec": [
+        15.0,
+        73.49,
+        153.32
+      ],
+      "ear_check_status": "approved",
+      "spotify_track_id": "0j3p1p06deJ7f9xmJ9yG22",
+      "spotify_duration_sec": 163.453,
+      "spotify_delta_sec": 0.0,
+      "spotify_duration_status": "pass",
+      "needs_manual_review": false,
+      "manual_review_reason": "",
+      "lab_drift_note": null
+    },
+    "get-back": {
+      "lab_end_sec": 186.98449,
+      "audio_duration_sec": 189.387,
+      "duration_delta_sec": 2.402,
+      "duration_status": "pass",
+      "ear_check_sec": [
+        15.0,
+        84.14,
+        176.98
+      ],
+      "ear_check_status": "approved",
+      "spotify_track_id": "4MLBqAEzNN89o2M9h92Z26",
+      "spotify_duration_sec": 189.386,
+      "spotify_delta_sec": 0.001,
+      "spotify_duration_status": "pass",
+      "needs_manual_review": false,
+      "manual_review_reason": "",
+      "lab_drift_note": "Spotify-verified remaster; lab drift 2.40s > 1.99s (1987 annotation vs 2009 remaster \u2014 ear-check required)"
+    },
+    "norwegian-wood": {
+      "lab_end_sec": 125.44,
+      "audio_duration_sec": 124.693,
+      "duration_delta_sec": 0.747,
+      "duration_status": "pass",
+      "ear_check_sec": [
+        12.54,
+        56.45,
+        115.44
+      ],
+      "ear_check_status": "approved",
+      "spotify_track_id": "1H7gMYGykdtwZOV6s1N0by",
+      "spotify_duration_sec": 124.693,
+      "spotify_delta_sec": 0.0,
+      "spotify_duration_status": "pass",
+      "needs_manual_review": false,
+      "manual_review_reason": "",
+      "lab_drift_note": null
+    },
+    "while-my-guitar-gently-weeps": {
+      "lab_end_sec": 285.309388,
+      "audio_duration_sec": 285.28,
+      "duration_delta_sec": 0.029,
+      "duration_status": "pass",
+      "ear_check_sec": [
+        15.0,
+        128.39,
+        275.31
+      ],
+      "ear_check_status": "approved",
+      "spotify_track_id": "389QX9Q1eUOEZ19vtzzI9O",
+      "spotify_duration_sec": 285.0,
+      "spotify_delta_sec": 0.28,
+      "spotify_duration_status": "pass",
+      "needs_manual_review": false,
+      "manual_review_reason": "",
+      "lab_drift_note": null
+    },
+    "penny-lane": {
+      "lab_end_sec": 183.379592,
+      "audio_duration_sec": 180.893,
+      "duration_delta_sec": 2.486,
+      "duration_status": "pass",
+      "ear_check_sec": [
+        15.0,
+        82.52,
+        173.38
+      ],
+      "ear_check_status": "approved",
+      "spotify_track_id": "1h04XMpzGzmAudoI6VHBgA",
+      "spotify_duration_sec": 180.893,
+      "spotify_delta_sec": 0.0,
+      "spotify_duration_status": "pass",
+      "needs_manual_review": false,
+      "manual_review_reason": "",
+      "lab_drift_note": "Spotify-verified remaster; lab drift 2.49s > 1.99s (1987 annotation vs 2009 remaster \u2014 ear-check required)"
+    },
+    "here-comes-the-sun": {
+      "lab_end_sec": 185.573878,
+      "audio_duration_sec": 185.733,
+      "duration_delta_sec": 0.159,
+      "duration_status": "pass",
+      "ear_check_sec": [
+        15.0,
+        83.51,
+        175.57
+      ],
+      "ear_check_status": "approved",
+      "spotify_track_id": "6dGnYIeXmHdcikdzNNDMm2",
+      "spotify_duration_sec": 185.733,
+      "spotify_delta_sec": 0.0,
+      "spotify_duration_status": "pass",
+      "needs_manual_review": false,
+      "manual_review_reason": "",
+      "lab_drift_note": null
+    },
+    "another-one-bites-the-dust": {
+      "lab_end_sec": 216.907,
+      "audio_duration_sec": 214.653,
+      "duration_delta_sec": 2.254,
+      "duration_status": "pass",
+      "ear_check_sec": [
+        15.0,
+        97.61,
+        206.91
+      ],
+      "ear_check_status": "approved",
+      "spotify_track_id": "5vdp5UmvTsnMEMESIF2Ym7",
+      "spotify_duration_sec": 214.653,
+      "spotify_delta_sec": 0.0,
+      "spotify_duration_status": "pass",
+      "needs_manual_review": false,
+      "manual_review_reason": "",
+      "lab_drift_note": "Spotify-verified remaster; lab drift 2.25s > 1.99s (1987 annotation vs 2009 remaster \u2014 ear-check required)"
+    },
+    "dont-stop-me-now": {
+      "lab_end_sec": 211.733,
+      "audio_duration_sec": 209.413,
+      "duration_delta_sec": 2.32,
+      "duration_status": "pass",
+      "ear_check_sec": [
+        15.0,
+        95.28,
+        201.73
+      ],
+      "ear_check_status": "approved",
+      "spotify_track_id": "2X8XuQXjSnm5S0J4HJbnAx",
+      "spotify_duration_sec": 209.413,
+      "spotify_delta_sec": 0.0,
+      "spotify_duration_status": "pass",
+      "needs_manual_review": false,
+      "manual_review_reason": "",
+      "lab_drift_note": "Spotify-verified remaster; lab drift 2.32s > 1.99s (1987 annotation vs 2009 remaster \u2014 ear-check required)"
+    },
+    "crazy-little-thing-called-love": {
+      "lab_end_sec": 163.827,
+      "audio_duration_sec": 163.373,
+      "duration_delta_sec": 0.454,
+      "duration_status": "pass",
+      "ear_check_sec": [
+        15.0,
+        73.72,
+        153.83
+      ],
+      "ear_check_status": "approved",
+      "spotify_track_id": "6xdLJrVj4vIXwhuG8TMopk",
+      "spotify_duration_sec": 163.373,
+      "spotify_delta_sec": 0.0,
+      "spotify_duration_status": "pass",
+      "needs_manual_review": false,
+      "manual_review_reason": "",
+      "lab_drift_note": null
+    },
+    "somebody-to-love": {
+      "lab_end_sec": 297.667,
+      "audio_duration_sec": 296.48,
+      "duration_delta_sec": 1.187,
+      "duration_status": "pass",
+      "ear_check_sec": [
+        15.0,
+        133.95,
+        287.67
+      ],
+      "ear_check_status": "approved",
+      "spotify_track_id": "6cFZ4PLC19taNlpl9pbGMf",
+      "spotify_duration_sec": 296.493,
+      "spotify_delta_sec": 0.013,
+      "spotify_duration_status": "pass",
+      "needs_manual_review": false,
+      "manual_review_reason": "",
+      "lab_drift_note": null
+    },
+    "play-the-game": {
+      "lab_end_sec": 213.307,
+      "audio_duration_sec": 212.533,
+      "duration_delta_sec": 0.774,
+      "duration_status": "pass",
+      "ear_check_sec": [
+        15.0,
+        95.99,
+        203.31
+      ],
+      "ear_check_status": "approved",
+      "spotify_track_id": "4b0mX1GtrQLiUW9jpb6Xcx",
+      "spotify_duration_sec": 212.533,
+      "spotify_delta_sec": 0.0,
+      "spotify_duration_status": "pass",
+      "needs_manual_review": false,
+      "manual_review_reason": "",
+      "lab_drift_note": null
+    },
+    "youre-my-best-friend": {
+      "lab_end_sec": 172.173,
+      "audio_duration_sec": 171.015,
+      "duration_delta_sec": 1.158,
+      "duration_status": "pass",
+      "ear_check_sec": [
+        15.0,
+        77.48,
+        162.17
+      ],
+      "ear_check_status": "approved",
+      "spotify_track_id": "4vEXJ6NvEwS8ptynkNswaa",
+      "spotify_duration_sec": 170.8,
+      "spotify_delta_sec": 0.215,
+      "spotify_duration_status": "pass",
+      "needs_manual_review": false,
+      "manual_review_reason": "",
+      "lab_drift_note": null
+    },
+    "seven-seas-of-rhye": {
+      "lab_end_sec": 170.467,
+      "audio_duration_sec": 168.973,
+      "duration_delta_sec": 1.494,
+      "duration_status": "pass",
+      "ear_check_sec": [
+        15.0,
+        76.71,
+        160.47
+      ],
+      "ear_check_status": "approved",
+      "spotify_track_id": "1e9Tt3nKBwRbuaU79kN3dn",
+      "spotify_duration_sec": 168.973,
+      "spotify_delta_sec": 0.0,
+      "spotify_duration_status": "pass",
+      "needs_manual_review": false,
+      "manual_review_reason": "",
+      "lab_drift_note": null
+    },
+    "hammer-to-fall": {
+      "lab_end_sec": 220.507,
+      "audio_duration_sec": 218.32,
+      "duration_delta_sec": 2.187,
+      "duration_status": "pass",
+      "ear_check_sec": [
+        15.0,
+        99.23,
+        210.51
+      ],
+      "ear_check_status": "approved",
+      "spotify_track_id": "30U2ANWm8iFBRiYX3USS5H",
+      "spotify_duration_sec": 218.32,
+      "spotify_delta_sec": 0.0,
+      "spotify_duration_status": "pass",
+      "needs_manual_review": false,
+      "manual_review_reason": "",
+      "lab_drift_note": "Spotify-verified remaster; lab drift 2.19s > 1.99s (1987 annotation vs 2009 remaster \u2014 ear-check required)"
+    }
+  }
+}

@@ -11,4 +11,7 @@ uploads/
 .env
 eval-results.json
 training_labels/
+training_labels/teacher_cache/
+models/*.pt
+!models/.gitkeep
 *.egg-info/

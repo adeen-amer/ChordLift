@@ -1,0 +1,259 @@
+{
+  "note": "v47 corrected ruler \u2014 not comparable to v46 as model improvement",
+  "dev": {
+    "split": "dev",
+    "v46_summary": {
+      "track_count": 14,
+      "avg_root_wcsr": 0.683,
+      "avg_majmin_wcsr": 0.6693,
+      "avg_sevenths_wcsr": 0.583,
+      "avg_seg_score": 0.7203
+    },
+    "v47_summary": {
+      "track_count": 14,
+      "avg_root_wcsr": 0.7773,
+      "avg_majmin_wcsr": 0.7618,
+      "avg_sevenths_wcsr": 0.6518,
+      "avg_seg_score": 0.7886
+    },
+    "delta_majmin_agg": 0.0925,
+    "tracks": [
+      {
+        "id": "cant-buy-me-love",
+        "v46_majmin": 0.5762826113469854,
+        "v47_majmin": 0.9368414826218009,
+        "delta_majmin": 0.3606,
+        "v46_seg": 0.6965662488817606,
+        "v47_seg": 0.9372928693949145,
+        "delta_seg": 0.2407
+      },
+      {
+        "id": "help",
+        "v46_majmin": 0.670056599760147,
+        "v47_majmin": 0.9634606709274929,
+        "delta_majmin": 0.2934,
+        "v46_seg": 0.7189661309599931,
+        "v47_seg": 0.9547534407887053,
+        "delta_seg": 0.2358
+      },
+      {
+        "id": "ticket-to-ride",
+        "v46_majmin": 0.7353535237210624,
+        "v47_majmin": 0.960131587341924,
+        "delta_majmin": 0.2248,
+        "v46_seg": 0.7578265239461521,
+        "v47_seg": 0.9608459178548381,
+        "delta_seg": 0.203
+      },
+      {
+        "id": "dont-stop-me-now",
+        "v46_majmin": 0.6440682839862364,
+        "v47_majmin": 0.7865406550431804,
+        "delta_majmin": 0.1425,
+        "v46_seg": 0.6577765393207486,
+        "v47_seg": 0.7866951931599389,
+        "delta_seg": 0.1289
+      },
+      {
+        "id": "let-it-be",
+        "v46_majmin": 0.495281347843703,
+        "v47_majmin": 0.5853151536613401,
+        "delta_majmin": 0.09,
+        "v46_seg": 0.6305295617423476,
+        "v47_seg": 0.6609137379075959,
+        "delta_seg": 0.0304
+      },
+      {
+        "id": "come-together",
+        "v46_majmin": 0.8662358886583079,
+        "v47_majmin": 0.9540015344317911,
+        "delta_majmin": 0.0878,
+        "v46_seg": 0.9048762603545897,
+        "v47_seg": 0.9702309006730754,
+        "delta_seg": 0.0654
+      },
+      {
+        "id": "something",
+        "v46_majmin": 0.7215726004240101,
+        "v47_majmin": 0.7796171737487216,
+        "delta_majmin": 0.058,
+        "v46_seg": 0.6262745531607533,
+        "v47_seg": 0.6590972006323295,
+        "delta_seg": 0.0328
+      },
+      {
+        "id": "youre-my-best-friend",
+        "v46_majmin": 0.7086958770474523,
+        "v47_majmin": 0.7480275751771333,
+        "delta_majmin": 0.0393,
+        "v46_seg": 0.6159463640253314,
+        "v47_seg": 0.6571703383348815,
+        "delta_seg": 0.0412
+      },
+      {
+        "id": "twist-and-shout",
+        "v46_majmin": 0.9273116856922957,
+        "v47_majmin": 0.9403448843550396,
+        "delta_majmin": 0.013,
+        "v46_seg": 0.8819980987893068,
+        "v47_seg": 0.8921430577694031,
+        "delta_seg": 0.0101
+      },
+      {
+        "id": "another-one-bites-the-dust",
+        "v46_majmin": 0.002352720238220354,
+        "v47_majmin": 0.01383319297964207,
+        "delta_majmin": 0.0115,
+        "v46_seg": 0.5132891054691644,
+        "v47_seg": 0.4501883295605953,
+        "delta_seg": -0.0631
+      },
+      {
+        "id": "i-saw-her-standing-there",
+        "v46_majmin": 0.9171179616485429,
+        "v47_majmin": 0.9171179616485429,
+        "delta_majmin": 0.0,
+        "v46_seg": 0.8849318129029563,
+        "v47_seg": 0.8849318129029563,
+        "delta_seg": 0.0
+      },
+      {
+        "id": "while-my-guitar-gently-weeps",
+        "v46_majmin": 0.816865897752826,
+        "v47_majmin": 0.816865897752826,
+        "delta_majmin": 0.0,
+        "v46_seg": 0.7820147544531548,
+        "v47_seg": 0.7820147544531548,
+        "delta_seg": 0.0
+      },
+      {
+        "id": "play-the-game",
+        "v46_majmin": 0.5414898966091577,
+        "v47_majmin": 0.5414898966091577,
+        "delta_majmin": 0.0,
+        "v46_seg": 0.6095533667437076,
+        "v47_seg": 0.6095533667437076,
+        "delta_seg": 0.0
+      },
+      {
+        "id": "yellow-submarine",
+        "v46_majmin": 0.7479745456679195,
+        "v47_majmin": 0.7215547543526597,
+        "delta_majmin": -0.0264,
+        "v46_seg": 0.8039523243155087,
+        "v47_seg": 0.8348580036478337,
+        "delta_seg": 0.0309
+      }
+    ]
+  },
+  "test": {
+    "split": "test",
+    "v46_summary": {
+      "track_count": 9,
+      "avg_root_wcsr": 0.6698,
+      "avg_majmin_wcsr": 0.6644,
+      "avg_sevenths_wcsr": 0.6091,
+      "avg_seg_score": 0.6127
+    },
+    "v47_summary": {
+      "track_count": 10,
+      "avg_root_wcsr": 0.7192,
+      "avg_majmin_wcsr": 0.707,
+      "avg_sevenths_wcsr": 0.6479,
+      "avg_seg_score": 0.6276
+    },
+    "delta_majmin_agg": 0.0426,
+    "tracks": [
+      {
+        "id": "back-in-the-ussr",
+        "v46_majmin": 0.4412072965323495,
+        "v47_majmin": 0.9001783156395244,
+        "delta_majmin": 0.459,
+        "v46_seg": 0.6887380891475646,
+        "v47_seg": 0.8809524458274538,
+        "delta_seg": 0.1922
+      },
+      {
+        "id": "penny-lane",
+        "v46_majmin": 0.6829875911999723,
+        "v47_majmin": 0.8300330742782811,
+        "delta_majmin": 0.147,
+        "v46_seg": 0.5490319325299455,
+        "v47_seg": 0.6241131928500887,
+        "delta_seg": 0.0751
+      },
+      {
+        "id": "crazy-little-thing-called-love",
+        "v46_majmin": 0.5554639955562874,
+        "v47_majmin": 0.6180910350552713,
+        "delta_majmin": 0.0626,
+        "v46_seg": 0.6882931384936544,
+        "v47_seg": 0.7768845591182565,
+        "delta_seg": 0.0886
+      },
+      {
+        "id": "yesterday",
+        "v46_majmin": 0.8348428648865467,
+        "v47_majmin": 0.8348428648865467,
+        "delta_majmin": 0.0,
+        "v46_seg": 0.8024616289969824,
+        "v47_seg": 0.8024616289969824,
+        "delta_seg": 0.0
+      },
+      {
+        "id": "get-back",
+        "v46_majmin": null,
+        "v47_majmin": 0.7663141354401015,
+        "delta_majmin": null,
+        "v46_seg": null,
+        "v47_seg": 0.7209507858111655,
+        "delta_seg": null
+      },
+      {
+        "id": "norwegian-wood",
+        "v46_majmin": 0.8257941539115647,
+        "v47_majmin": 0.8257941539115647,
+        "delta_majmin": 0.0,
+        "v46_seg": 0.36505246067176866,
+        "v47_seg": 0.36505246067176866,
+        "delta_seg": 0.0
+      },
+      {
+        "id": "somebody-to-love",
+        "v46_majmin": 0.4788152088163457,
+        "v47_majmin": 0.4788152088163457,
+        "delta_majmin": 0.0,
+        "v46_seg": 0.6821884857911691,
+        "v47_seg": 0.6821884857911691,
+        "delta_seg": 0.0
+      },
+      {
+        "id": "seven-seas-of-rhye",
+        "v46_majmin": 0.6091199755687815,
+        "v47_majmin": 0.5821107115551202,
+        "delta_majmin": -0.027,
+        "v46_seg": 0.6719599687916137,
+        "v47_seg": 0.6491227041010872,
+        "delta_seg": -0.0228
+      },
+      {
+        "id": "hammer-to-fall",
+        "v46_majmin": 0.660054337986522,
+        "v47_majmin": 0.6232690028356097,
+        "delta_majmin": -0.0368,
+        "v46_seg": 0.24986274930397212,
+        "v47_seg": 0.18161781712145197,
+        "delta_seg": -0.0682
+      },
+      {
+        "id": "here-comes-the-sun",
+        "v46_majmin": 0.8908753379511188,
+        "v47_majmin": 0.6109647567338694,
+        "delta_majmin": -0.2799,
+        "v46_seg": 0.8163045070384315,
+        "v47_seg": 0.5922605122301552,
+        "delta_seg": -0.224
+      }
+    ]
+  }
+}

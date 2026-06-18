@@ -1,0 +1,783 @@
+{
+  "note": "v47 corrected ruler \u2014 compares to stale Phase 11 on v46 audio",
+  "stale_v46_phase11": {
+    "dev": {
+      "raw_chordia_majmin": 0.6153,
+      "raw_btc_majmin": 0.6631,
+      "raw_delta_btc_minus_chordia": 0.0478,
+      "bypass_chordia_majmin": 0.6693,
+      "bypass_btc_majmin": 0.6261,
+      "bypass_delta_btc_minus_chordia": -0.0432,
+      "raw_track_count": 14
+    },
+    "test": {
+      "raw_chordia_majmin": 0.629,
+      "raw_btc_majmin": 0.6565,
+      "raw_delta_btc_minus_chordia": 0.0275,
+      "bypass_chordia_majmin": 0.6644,
+      "bypass_btc_majmin": 0.5596,
+      "bypass_delta_btc_minus_chordia": -0.1048,
+      "raw_track_count": 9
+    }
+  },
+  "v47_serving_baseline": {
+    "dev": 0.7618,
+    "test": 0.707
+  },
+  "splits": {
+    "dev": {
+      "n": 14,
+      "chordia_raw": {
+        "majmin": 0.7867,
+        "seg": 0.8201
+      },
+      "btc_raw": {
+        "majmin": 0.7672,
+        "seg": 0.818
+      },
+      "chordia_bypass": {
+        "majmin": 0.7618,
+        "seg": 0.7886
+      },
+      "btc_bypass": {
+        "majmin": 0.7307,
+        "seg": 0.8063
+      },
+      "delta_raw_btc_minus_chordia": {
+        "majmin": -0.0195,
+        "seg": -0.0021
+      },
+      "delta_bypass_btc_minus_chordia": {
+        "majmin": -0.0311
+      },
+      "tracks": [
+        {
+          "id": "let-it-be",
+          "title": "Let It Be \u2014 The Beatles",
+          "skipped": false,
+          "chordia_raw": {
+            "root": 0.8743769293332204,
+            "majmin": 0.8743769293332204,
+            "sevenths": 0.8348219728803262,
+            "seg": 0.8837640877397425
+          },
+          "btc_raw": {
+            "root": 0.8483411786478617,
+            "majmin": 0.8471996133696804,
+            "sevenths": 0.8074857745238814,
+            "seg": 0.8794820625302949
+          },
+          "chordia_bypass": {
+            "root": 0.5853151536613401,
+            "majmin": 0.5853151536613401,
+            "sevenths": 0.5693737145687192,
+            "seg": 0.6609137379075959
+          },
+          "btc_bypass": {
+            "root": 0.5394125563165046,
+            "majmin": 0.5394125563165046,
+            "sevenths": 0.5223822382549941,
+            "seg": 0.6462490381291641
+          }
+        },
+        {
+          "id": "yellow-submarine",
+          "title": "Yellow Submarine \u2014 The Beatles",
+          "skipped": false,
+          "chordia_raw": {
+            "root": 0.8356402040995923,
+            "majmin": 0.7215547543526597,
+            "sevenths": 0.7215547543526597,
+            "seg": 0.8348580036478337
+          },
+          "btc_raw": {
+            "root": 0.8323635930359947,
+            "majmin": 0.7827330881603136,
+            "sevenths": 0.7752295411060608,
+            "seg": 0.8760850345200331
+          },
+          "chordia_bypass": {
+            "root": 0.8356402040995923,
+            "majmin": 0.7215547543526597,
+            "sevenths": 0.7215547543526597,
+            "seg": 0.8348580036478337
+          },
+          "btc_bypass": {
+            "root": 0.8323635930359948,
+            "majmin": 0.7873506555783155,
+            "sevenths": 0.7873506555783155,
+            "seg": 0.8935763256430066
+          }
+        },
+        {
+          "id": "come-together",
+          "title": "Come Together \u2014 The Beatles",
+          "skipped": false,
+          "chordia_raw": {
+            "root": 0.9702309006730754,
+            "majmin": 0.9540015344317911,
+            "sevenths": 0.8714578749692685,
+            "seg": 0.9751637160946279
+          },
+          "btc_raw": {
+            "root": 0.8865713654943952,
+            "majmin": 0.8287459364029552,
+            "sevenths": 0.7920398318385508,
+            "seg": 0.5525171618339519
+          },
+          "chordia_bypass": {
+            "root": 0.9702309006730753,
+            "majmin": 0.9540015344317911,
+            "sevenths": 0.8714578749692684,
+            "seg": 0.9702309006730754
+          },
+          "btc_bypass": {
+            "root": 0.8865713654943955,
+            "majmin": 0.8394030626328866,
+            "sevenths": 0.7752933558292026,
+            "seg": 0.6009968914310919
+          }
+        },
+        {
+          "id": "help",
+          "title": "Help! \u2014 The Beatles",
+          "skipped": false,
+          "chordia_raw": {
+            "root": 0.9634606709274929,
+            "majmin": 0.9634606709274929,
+            "sevenths": 0.9626058463401459,
+            "seg": 0.9547534407887053
+          },
+          "btc_raw": {
+            "root": 0.9372335092057064,
+            "majmin": 0.9195413131790846,
+            "sevenths": 0.8620253060993011,
+            "seg": 0.8968241218262752
+          },
+          "chordia_bypass": {
+            "root": 0.9634606709274929,
+            "majmin": 0.9634606709274929,
+            "sevenths": 0.9626058463401459,
+            "seg": 0.9547534407887053
+          },
+          "btc_bypass": {
+            "root": 0.9372335092057065,
+            "majmin": 0.9195413131790846,
+            "sevenths": 0.9176590108624855,
+            "seg": 0.9279504222460297
+          }
+        },
+        {
+          "id": "twist-and-shout",
+          "title": "Twist And Shout \u2014 The Beatles",
+          "skipped": false,
+          "chordia_raw": {
+            "root": 0.9403448843550396,
+            "majmin": 0.9403448843550396,
+            "sevenths": 0.8991572366142581,
+            "seg": 0.8921430577694031
+          },
+          "btc_raw": {
+            "root": 0.8970601420413639,
+            "majmin": 0.8864944139982741,
+            "sevenths": 0.7317102552436259,
+            "seg": 0.8357598660896569
+          },
+          "chordia_bypass": {
+            "root": 0.9403448843550396,
+            "majmin": 0.9403448843550396,
+            "sevenths": 0.8991572366142581,
+            "seg": 0.8921430577694031
+          },
+          "btc_bypass": {
+            "root": 0.897060142041364,
+            "majmin": 0.89585101354275,
+            "sevenths": 0.87276233293379,
+            "seg": 0.8782639198368345
+          }
+        },
+        {
+          "id": "something",
+          "title": "Something \u2014 The Beatles",
+          "skipped": false,
+          "chordia_raw": {
+            "root": 0.7499096744273495,
+            "majmin": 0.7796171737487216,
+            "sevenths": 0.6365207465109561,
+            "seg": 0.7109847957359097
+          },
+          "btc_raw": {
+            "root": 0.7826228713852182,
+            "majmin": 0.8086469614679205,
+            "sevenths": 0.6713743297190743,
+            "seg": 0.8205448568951347
+          },
+          "chordia_bypass": {
+            "root": 0.7499096744273495,
+            "majmin": 0.7796171737487216,
+            "sevenths": 0.6210967501191709,
+            "seg": 0.6590972006323295
+          },
+          "btc_bypass": {
+            "root": 0.6029231655186077,
+            "majmin": 0.6036889994330203,
+            "sevenths": 0.5220911007087273,
+            "seg": 0.6582786626797668
+          }
+        },
+        {
+          "id": "ticket-to-ride",
+          "title": "Ticket To Ride \u2014 The Beatles",
+          "skipped": false,
+          "chordia_raw": {
+            "root": 0.960131587341924,
+            "majmin": 0.960131587341924,
+            "sevenths": 0.8023266542639023,
+            "seg": 0.9608459178548381
+          },
+          "btc_raw": {
+            "root": 0.9435424590763265,
+            "majmin": 0.9233600362747775,
+            "sevenths": 0.7491875350989979,
+            "seg": 0.8197538804833245
+          },
+          "chordia_bypass": {
+            "root": 0.960131587341924,
+            "majmin": 0.960131587341924,
+            "sevenths": 0.8023266542639023,
+            "seg": 0.9608459178548381
+          },
+          "btc_bypass": {
+            "root": 0.9435424590763267,
+            "majmin": 0.9435424590763267,
+            "sevenths": 0.7980491256045856,
+            "seg": 0.8818753101407176
+          }
+        },
+        {
+          "id": "i-saw-her-standing-there",
+          "title": "I Saw Her Standing There \u2014 The Beatles",
+          "skipped": false,
+          "chordia_raw": {
+            "root": 0.9291762027080422,
+            "majmin": 0.9250673106289609,
+            "sevenths": 0.7818205002391998,
+            "seg": 0.9182103519075284
+          },
+          "btc_raw": {
+            "root": 0.925808348072036,
+            "majmin": 0.8887223933658067,
+            "sevenths": 0.8293376421820051,
+            "seg": 0.8783955632476703
+          },
+          "chordia_bypass": {
+            "root": 0.9291762027080421,
+            "majmin": 0.9171179616485429,
+            "sevenths": 0.7654120587105213,
+            "seg": 0.8849318129029563
+          },
+          "btc_bypass": {
+            "root": 0.925808348072036,
+            "majmin": 0.8952131862752051,
+            "sevenths": 0.8589772680822856,
+            "seg": 0.9026925147784046
+          }
+        },
+        {
+          "id": "cant-buy-me-love",
+          "title": "Can't Buy Me Love \u2014 The Beatles",
+          "skipped": false,
+          "chordia_raw": {
+            "root": 0.9368414826218008,
+            "majmin": 0.9368414826218008,
+            "sevenths": 0.5803001451073782,
+            "seg": 0.9093191015215223
+          },
+          "btc_raw": {
+            "root": 0.9280523862185481,
+            "majmin": 0.9280523862185481,
+            "sevenths": 0.8294889078727453,
+            "seg": 0.890115517496743
+          },
+          "chordia_bypass": {
+            "root": 0.9368414826218009,
+            "majmin": 0.9368414826218009,
+            "sevenths": 0.5380213646970246,
+            "seg": 0.9372928693949145
+          },
+          "btc_bypass": {
+            "root": 0.9280523862185481,
+            "majmin": 0.9280523862185481,
+            "sevenths": 0.6345184827375341,
+            "seg": 0.9246217240075125
+          }
+        },
+        {
+          "id": "while-my-guitar-gently-weeps",
+          "title": "While My Guitar Gently Weeps \u2014 The Beatles",
+          "skipped": false,
+          "chordia_raw": {
+            "root": 0.8220833378255324,
+            "majmin": 0.8168658977528263,
+            "sevenths": 0.7990841342053239,
+            "seg": 0.7820147544531548
+          },
+          "btc_raw": {
+            "root": 0.7824310349743593,
+            "majmin": 0.7722036002754449,
+            "sevenths": 0.8047606409563334,
+            "seg": 0.8782322382164582
+          },
+          "chordia_bypass": {
+            "root": 0.8220833378255324,
+            "majmin": 0.816865897752826,
+            "sevenths": 0.7990841342053239,
+            "seg": 0.7820147544531548
+          },
+          "btc_bypass": {
+            "root": 0.7824310349743593,
+            "majmin": 0.7668412345229424,
+            "sevenths": 0.7988206863644385,
+            "seg": 0.8778383767625535
+          }
+        },
+        {
+          "id": "another-one-bites-the-dust",
+          "title": "Another One Bites The Dust \u2014 Queen",
+          "skipped": false,
+          "chordia_raw": {
+            "root": 0.012722810543996618,
+            "majmin": 0.01383319297964207,
+            "sevenths": 0.01383319297964207,
+            "seg": 0.5420940771851533
+          },
+          "btc_raw": {
+            "root": 0.012722810543996618,
+            "majmin": 0.013833192979642066,
+            "sevenths": 0.013833192979642066,
+            "seg": 0.753124611008403
+          },
+          "chordia_bypass": {
+            "root": 0.012722810543996618,
+            "majmin": 0.01383319297964207,
+            "sevenths": 0.01383319297964207,
+            "seg": 0.4501883295605953
+          },
+          "btc_bypass": {
+            "root": 0.012722810543996618,
+            "majmin": 0.013833192979642066,
+            "sevenths": 0.013833192979642066,
+            "seg": 0.7444298111035457
+          }
+        },
+        {
+          "id": "dont-stop-me-now",
+          "title": "Don't Stop Me Now \u2014 Queen",
+          "skipped": false,
+          "chordia_raw": {
+            "root": 0.7892392777696438,
+            "majmin": 0.7865406550431806,
+            "sevenths": 0.4379127567598649,
+            "seg": 0.8098186552560693
+          },
+          "btc_raw": {
+            "root": 0.784673429551646,
+            "majmin": 0.7582290425267901,
+            "sevenths": 0.43619330302323306,
+            "seg": 0.8656571492643313
+          },
+          "chordia_bypass": {
+            "root": 0.7892392777696438,
+            "majmin": 0.7865406550431804,
+            "sevenths": 0.417467818152191,
+            "seg": 0.7866951931599389
+          },
+          "btc_bypass": {
+            "root": 0.784673429551646,
+            "majmin": 0.7651340151507862,
+            "sevenths": 0.42786512609859695,
+            "seg": 0.842518993610224
+          }
+        },
+        {
+          "id": "play-the-game",
+          "title": "Play The Game \u2014 Queen",
+          "skipped": false,
+          "chordia_raw": {
+            "root": 0.5744193423875761,
+            "majmin": 0.5463498947236103,
+            "sevenths": 0.4420791301341881,
+            "seg": 0.6116536259944589
+          },
+          "btc_raw": {
+            "root": 0.600865315145674,
+            "majmin": 0.5797303667389488,
+            "sevenths": 0.4545523745674617,
+            "seg": 0.6756709031271062
+          },
+          "chordia_bypass": {
+            "root": 0.574419342387576,
+            "majmin": 0.5414898966091577,
+            "sevenths": 0.4372191320197354,
+            "seg": 0.6095533667437076
+          },
+          "btc_bypass": {
+            "root": 0.600865315145674,
+            "majmin": 0.5642271525791868,
+            "sevenths": 0.4188259674778033,
+            "seg": 0.6636918202924019
+          }
+        },
+        {
+          "id": "youre-my-best-friend",
+          "title": "You're My Best Friend \u2014 Queen",
+          "skipped": false,
+          "chordia_raw": {
+            "root": 0.8130484376884386,
+            "majmin": 0.7951791453047249,
+            "sevenths": 0.7315291675653101,
+            "seg": 0.6959394833227717
+          },
+          "btc_raw": {
+            "root": 0.8142915886879383,
+            "majmin": 0.8036304310557005,
+            "sevenths": 0.7251683182114872,
+            "seg": 0.8298112097247676
+          },
+          "chordia_bypass": {
+            "root": 0.8130484376884386,
+            "majmin": 0.7480275751771333,
+            "sevenths": 0.7061276984267595,
+            "seg": 0.6571703383348815
+          },
+          "btc_bypass": {
+            "root": 0.8142915886879383,
+            "majmin": 0.7674297698237084,
+            "sevenths": 0.7276199446399637,
+            "seg": 0.8454379098623122
+          }
+        }
+      ]
+    },
+    "test": {
+      "n": 10,
+      "chordia_raw": {
+        "majmin": 0.7426,
+        "seg": 0.6616
+      },
+      "btc_raw": {
+        "majmin": 0.7074,
+        "seg": 0.7659
+      },
+      "chordia_bypass": {
+        "majmin": 0.707,
+        "seg": 0.6276
+      },
+      "btc_bypass": {
+        "majmin": 0.619,
+        "seg": 0.7053
+      },
+      "delta_raw_btc_minus_chordia": {
+        "majmin": -0.0352,
+        "seg": 0.1043
+      },
+      "delta_bypass_btc_minus_chordia": {
+        "majmin": -0.088
+      },
+      "tracks": [
+        {
+          "id": "yesterday",
+          "title": "Yesterday \u2014 The Beatles",
+          "skipped": false,
+          "chordia_raw": {
+            "root": 0.814285207687497,
+            "majmin": 0.8348428648865467,
+            "sevenths": 0.7132213905203666,
+            "seg": 0.8024616289969824
+          },
+          "btc_raw": {
+            "root": 0.8011703992684072,
+            "majmin": 0.8260375234734163,
+            "sevenths": 0.6327852648965311,
+            "seg": 0.8423008760168247
+          },
+          "chordia_bypass": {
+            "root": 0.8142852076874971,
+            "majmin": 0.8348428648865467,
+            "sevenths": 0.7132213905203666,
+            "seg": 0.8024616289969824
+          },
+          "btc_bypass": {
+            "root": 0.8011703992684072,
+            "majmin": 0.7844469334325717,
+            "sevenths": 0.6186463511944933,
+            "seg": 0.8478854098302099
+          }
+        },
+        {
+          "id": "back-in-the-ussr",
+          "title": "Back In The USSR \u2014 The Beatles",
+          "skipped": false,
+          "chordia_raw": {
+            "root": 0.907320983523687,
+            "majmin": 0.9001783156395244,
+            "sevenths": 0.8694343719668047,
+            "seg": 0.8809524458274538
+          },
+          "btc_raw": {
+            "root": 0.9085512212181499,
+            "majmin": 0.8917420409695793,
+            "sevenths": 0.8624055950691626,
+            "seg": 0.898727087138901
+          },
+          "chordia_bypass": {
+            "root": 0.907320983523687,
+            "majmin": 0.9001783156395244,
+            "sevenths": 0.8694343719668047,
+            "seg": 0.8809524458274538
+          },
+          "btc_bypass": {
+            "root": 0.9085512212181499,
+            "majmin": 0.8917420409695793,
+            "sevenths": 0.8624055950691626,
+            "seg": 0.898727087138901
+          }
+        },
+        {
+          "id": "get-back",
+          "title": "Get Back \u2014 The Beatles",
+          "skipped": false,
+          "chordia_raw": {
+            "root": 0.7771373283420457,
+            "majmin": 0.7492020967211527,
+            "sevenths": 0.6395157965714893,
+            "seg": 0.7219339261775135
+          },
+          "btc_raw": {
+            "root": 0.7069122471067,
+            "majmin": 0.6259558965833845,
+            "sevenths": 0.5225403685749997,
+            "seg": 0.7825968251282359
+          },
+          "chordia_bypass": {
+            "root": 0.7771373283420456,
+            "majmin": 0.7663141354401015,
+            "sevenths": 0.64379860545373,
+            "seg": 0.7209507858111655
+          },
+          "btc_bypass": {
+            "root": 0.7069122471067,
+            "majmin": 0.6853381376779646,
+            "sevenths": 0.5071323247558757,
+            "seg": 0.7880204209371523
+          }
+        },
+        {
+          "id": "norwegian-wood",
+          "title": "Norwegian Wood \u2014 The Beatles",
+          "skipped": false,
+          "chordia_raw": {
+            "root": 0.8890687553146258,
+            "majmin": 0.8879300914115645,
+            "sevenths": 0.8879300914115645,
+            "seg": 0.42832706207482985
+          },
+          "btc_raw": {
+            "root": 0.8995664685492247,
+            "majmin": 0.8818285820578226,
+            "sevenths": 0.8754884495464846,
+            "seg": 0.8967046083711256
+          },
+          "chordia_bypass": {
+            "root": 0.8890687553146259,
+            "majmin": 0.8257941539115647,
+            "sevenths": 0.8257941539115647,
+            "seg": 0.36505246067176866
+          },
+          "btc_bypass": {
+            "root": 0.8995664685492246,
+            "majmin": 0.7763226308578983,
+            "sevenths": 0.7618629310752074,
+            "seg": 0.853804529537509
+          }
+        },
+        {
+          "id": "penny-lane",
+          "title": "Penny Lane \u2014 The Beatles",
+          "skipped": false,
+          "chordia_raw": {
+            "root": 0.8968015354002232,
+            "majmin": 0.9121554878700628,
+            "sevenths": 0.8507099714762272,
+            "seg": 0.6468089953361145
+          },
+          "btc_raw": {
+            "root": 0.7885436070003147,
+            "majmin": 0.8295203046157309,
+            "sevenths": 0.7681280408354457,
+            "seg": 0.7596212279273251
+          },
+          "chordia_bypass": {
+            "root": 0.8968015354002232,
+            "majmin": 0.8300330742782811,
+            "sevenths": 0.7663507564374314,
+            "seg": 0.6241131928500887
+          },
+          "btc_bypass": {
+            "root": 0.42089912363108484,
+            "majmin": 0.4334450150275628,
+            "sevenths": 0.365013810194064,
+            "seg": 0.5360621284351692
+          }
+        },
+        {
+          "id": "here-comes-the-sun",
+          "title": "Here Comes The Sun \u2014 The Beatles",
+          "skipped": false,
+          "chordia_raw": {
+            "root": 0.8349090005005984,
+            "majmin": 0.8501020462591409,
+            "sevenths": 0.7123540833094433,
+            "seg": 0.7917904803390481
+          },
+          "btc_raw": {
+            "root": 0.8641941353245706,
+            "majmin": 0.8678620835343109,
+            "sevenths": 0.7325469301696166,
+            "seg": 0.8461000046409404
+          },
+          "chordia_bypass": {
+            "root": 0.6064157002697241,
+            "majmin": 0.6109647567338694,
+            "sevenths": 0.5259396387699267,
+            "seg": 0.5922605122301552
+          },
+          "btc_bypass": {
+            "root": 0.5846317117928834,
+            "majmin": 0.5426717512478552,
+            "sevenths": 0.5346959801108453,
+            "seg": 0.5634939602007795
+          }
+        },
+        {
+          "id": "crazy-little-thing-called-love",
+          "title": "Crazy Little Thing Called Love \u2014 Queen",
+          "skipped": false,
+          "chordia_raw": {
+            "root": 0.6351272989189813,
+            "majmin": 0.6180910350552715,
+            "sevenths": 0.6180910350552715,
+            "seg": 0.8033759189063256
+          },
+          "btc_raw": {
+            "root": 0.6247183964837322,
+            "majmin": 0.5989880020229088,
+            "sevenths": 0.5989880020229088,
+            "seg": 0.7361796963327827
+          },
+          "chordia_bypass": {
+            "root": 0.6351272989189812,
+            "majmin": 0.6180910350552713,
+            "sevenths": 0.6180910350552713,
+            "seg": 0.7768845591182565
+          },
+          "btc_bypass": {
+            "root": 0.6247183964837322,
+            "majmin": 0.6123033127312011,
+            "sevenths": 0.6123033127312011,
+            "seg": 0.7522886043520595
+          }
+        },
+        {
+          "id": "somebody-to-love",
+          "title": "Somebody To Love \u2014 Queen",
+          "skipped": false,
+          "chordia_raw": {
+            "root": 0.49582587253541704,
+            "majmin": 0.4850919287995342,
+            "sevenths": 0.40094874241677847,
+            "seg": 0.7008939519664592
+          },
+          "btc_raw": {
+            "root": 0.44617493896049976,
+            "majmin": 0.44110627668170427,
+            "sevenths": 0.3708064769870816,
+            "seg": 0.6941051080072196
+          },
+          "chordia_bypass": {
+            "root": 0.4958258725354171,
+            "majmin": 0.4788152088163457,
+            "sevenths": 0.3997257810589123,
+            "seg": 0.6821884857911691
+          },
+          "btc_bypass": {
+            "root": 0.34030171915843743,
+            "majmin": 0.3335068234728805,
+            "sevenths": 0.26704978076491076,
+            "seg": 0.6178825267672872
+          }
+        },
+        {
+          "id": "seven-seas-of-rhye",
+          "title": "Seven Seas Of Rhye \u2014 Queen",
+          "skipped": false,
+          "chordia_raw": {
+            "root": 0.6048775813891643,
+            "majmin": 0.5651748823330419,
+            "sevenths": 0.4979653931063881,
+            "seg": 0.6574175646899401
+          },
+          "btc_raw": {
+            "root": 0.576913441919572,
+            "majmin": 0.5146407179058659,
+            "sevenths": 0.45223307041723493,
+            "seg": 0.7140537030193093
+          },
+          "chordia_bypass": {
+            "root": 0.6048775813891643,
+            "majmin": 0.5821107115551202,
+            "sevenths": 0.5149012223284664,
+            "seg": 0.6491227041010872
+          },
+          "btc_bypass": {
+            "root": 0.5769134419195721,
+            "majmin": 0.5342139642972061,
+            "sevenths": 0.4684658201467906,
+            "seg": 0.7102213114344498
+          }
+        },
+        {
+          "id": "hammer-to-fall",
+          "title": "Hammer To Fall \u2014 Queen",
+          "skipped": false,
+          "chordia_raw": {
+            "root": 0.5651838717138232,
+            "majmin": 0.6232690028356097,
+            "sevenths": 0.6013642933230645,
+            "seg": 0.18161781712145197
+          },
+          "btc_raw": {
+            "root": 0.5614015108951764,
+            "majmin": 0.5961926258590027,
+            "sevenths": 0.5741452930898648,
+            "seg": 0.48868659414356364
+          },
+          "chordia_bypass": {
+            "root": 0.5651838717138232,
+            "majmin": 0.6232690028356097,
+            "sevenths": 0.6013642933230645,
+            "seg": 0.18161781712145197
+          },
+          "btc_bypass": {
+            "root": 0.5614015108951764,
+            "majmin": 0.5961926258590027,
+            "sevenths": 0.5741452930898647,
+            "seg": 0.48448751689918623
+          }
+        }
+      ]
+    }
+  },
+  "decision": "RAW chordia leads BTC on v47 TEST \u2014 chordia is sufficient; fine-tune chordia or skip fine-tune. Do not adopt BTC out of momentum.",
+  "test_raw_delta_btc_minus_chordia": -0.0352
+}

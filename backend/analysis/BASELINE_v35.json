@@ -1,0 +1,16 @@
+{
+  "analyzer_version": "35",
+  "chord_ml_model": "ensemble",
+  "description": "Verified baseline: chordia + stem bar vote only. Re-run verify_baseline.py after each change.",
+  "held_out": {
+    "avg_timeline_score": 0.277,
+    "avg_boundary_score": 0.291,
+    "avg_symbol_recall": 0.773,
+    "avg_overseg_ratio": 2.72
+  },
+  "reference_2track": {
+    "avg_timeline_score": 0.39,
+    "avg_boundary_score": 0.693,
+    "avg_symbol_recall": 0.926
+  }
+}

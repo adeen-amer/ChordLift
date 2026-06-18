@@ -1,5 +1,5 @@
 {
-  "description": "Reference timelines for eval. Override chord_stamp_refs when present. review_status=pending_human means not yet ear-verified.",
+  "description": "Reference timelines for eval. Override chord_stamp_refs when present. review_status=pending_human means not yet ear-verified — see tests/fixtures/README.md for verification steps.",
   "tracks": {
     "let-it-be": {
       "title": "Let It Be \u2014 The Beatles",

@@ -1,0 +1,40 @@
+{
+  "analyzer_version": "44",
+  "chord_engine": "ml",
+  "chord_ml_model": "ensemble",
+  "summary": {
+    "track_count": 2,
+    "avg_root_wcsr": 0.6014,
+    "avg_majmin_wcsr": 0.5333,
+    "avg_sevenths_wcsr": 0.5265,
+    "avg_seg_score": 0.6265
+  },
+  "tracks": [
+    {
+      "id": "let-it-be",
+      "title": "Let It Be \u2014 The Beatles",
+      "skipped": false,
+      "eval_start": null,
+      "eval_end": null,
+      "ref_segments": 161,
+      "est_segments": 107,
+      "root": 0.46525202684446376,
+      "majmin": 0.4467732171662666,
+      "sevenths": 0.4331987302945389,
+      "seg": 0.576346147550298
+    },
+    {
+      "id": "yellow-submarine",
+      "title": "Yellow Submarine \u2014 The Beatles",
+      "skipped": false,
+      "eval_start": null,
+      "eval_end": null,
+      "ref_segments": 107,
+      "est_segments": 47,
+      "root": 0.7374707497469073,
+      "majmin": 0.6198032504829231,
+      "sevenths": 0.6198032504829231,
+      "seg": 0.6765584824025623
+    }
+  ]
+}

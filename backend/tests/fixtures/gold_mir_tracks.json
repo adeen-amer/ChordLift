@@ -1,0 +1,70 @@
+{
+  "description": "Isophonics Harte v1.2 chord labs (ear-verified, MIR community). Audio is Spotify/YT — not the original Isophonics CD mastering; scores are honest (no offset search).",
+  "source_archive": "http://isophonics.net/files/annotations/The%20Beatles%20Annotations.tar.gz",
+  "tracks": [
+    {
+      "id": "let-it-be",
+      "title": "Let It Be — The Beatles",
+      "lab": "tests/fixtures/gold/lab/let-it-be.lab",
+      "file": "downloads/spotify-5V1AHQugSTASVez5ffJtFo.mp3",
+      "url": "https://open.spotify.com/track/5V1AHQugSTASVez5ffJtFo",
+      "isophonics_path": "chordlab/The Beatles/12_-_Let_It_Be/06_-_Let_It_Be.lab"
+    },
+    {
+      "id": "yellow-submarine",
+      "title": "Yellow Submarine — The Beatles",
+      "lab": "tests/fixtures/gold/lab/yellow-submarine.lab",
+      "file": "downloads/spotify-0Dk6z7iOJzFYywJvxjNltW.mp3",
+      "url": "https://open.spotify.com/track/0Dk6z7iOJzFYywJvxjNltW",
+      "isophonics_path": "chordlab/The Beatles/07_-_Revolver/06_-_Yellow_Submarine.lab"
+    },
+    {
+      "id": "come-together",
+      "title": "Come Together — The Beatles",
+      "lab": "tests/fixtures/gold/lab/come-together.lab",
+      "file": "downloads/spotify-71JkCL6msHDScuCKaJXFXP.mp3",
+      "url": "https://open.spotify.com/track/71JkCL6msHDScuCKaJXFXP",
+      "isophonics_path": "chordlab/The Beatles/11_-_Abbey_Road/01_-_Come_Together.lab"
+    },
+    {
+      "id": "yesterday",
+      "title": "Yesterday — The Beatles",
+      "lab": "tests/fixtures/gold/lab/yesterday.lab",
+      "file": "downloads/spotify-3BQHpFgAp4l80e1XslIjNI.mp3",
+      "url": "https://open.spotify.com/track/3BQHpFgAp4l80e1XslIjNI",
+      "isophonics_path": "chordlab/The Beatles/05_-_Help!/13_-_Yesterday.lab"
+    },
+    {
+      "id": "help",
+      "title": "Help! — The Beatles",
+      "lab": "tests/fixtures/gold/lab/help.lab",
+      "file": "downloads/spotify-7DD7eSuYSC5xk2ArU62esN.mp3",
+      "url": "https://open.spotify.com/track/7DD7eSuYSC5xk2ArU62esN",
+      "isophonics_path": "chordlab/The Beatles/05_-_Help!/01_-_Help!.lab"
+    },
+    {
+      "id": "twist-and-shout",
+      "title": "Twist And Shout — The Beatles",
+      "lab": "tests/fixtures/gold/lab/twist-and-shout.lab",
+      "file": "downloads/spotify-5ZBeML7Lf3FMEVviTyvi8l.mp3",
+      "url": "https://open.spotify.com/track/5ZBeML7Lf3FMEVviTyvi8l",
+      "isophonics_path": "chordlab/The Beatles/01_-_Please_Please_Me/14_-_Twist_And_Shout.lab"
+    },
+    {
+      "id": "something",
+      "title": "Something — The Beatles",
+      "lab": "tests/fixtures/gold/lab/something.lab",
+      "file": "downloads/spotify-0pNeVovbiZHkulpGeOx1Gj.mp3",
+      "url": "https://open.spotify.com/track/0pNeVovbiZHkulpGeOx1Gj",
+      "isophonics_path": "chordlab/The Beatles/11_-_Abbey_Road/02_-_Something.lab"
+    },
+    {
+      "id": "ticket-to-ride",
+      "title": "Ticket To Ride — The Beatles",
+      "lab": "tests/fixtures/gold/lab/ticket-to-ride.lab",
+      "file": "downloads/spotify-7CZiDzGVjUssMSOXrDNYHL.mp3",
+      "url": "https://open.spotify.com/track/7CZiDzGVjUssMSOXrDNYHL",
+      "isophonics_path": "chordlab/The Beatles/05_-_Help!/07_-_Ticket_To_Ride.lab"
+    }
+  ]
+}

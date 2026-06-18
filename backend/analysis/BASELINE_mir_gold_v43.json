@@ -1,0 +1,29 @@
+{
+  "analyzer_version": "43",
+  "chord_engine": "ml",
+  "chord_ml_model": "ensemble",
+  "note": "Phase 4 complete: duplicate bar-quantizer deleted from chord_engine_ml.py; single bar_decode.py path. 2-track gold.",
+  "summary": {
+    "track_count": 2,
+    "avg_root_wcsr": 0.6014,
+    "avg_majmin_wcsr": 0.5333,
+    "avg_sevenths_wcsr": 0.5265,
+    "avg_seg_score": 0.6265
+  },
+  "tracks": [
+    {
+      "id": "let-it-be",
+      "root": 0.4653,
+      "majmin": 0.4468,
+      "sevenths": 0.4332,
+      "seg": 0.5763
+    },
+    {
+      "id": "yellow-submarine",
+      "root": 0.7375,
+      "majmin": 0.6198,
+      "sevenths": 0.6198,
+      "seg": 0.6766
+    }
+  ]
+}

@@ -1,0 +1,12 @@
+{
+  "phase": 5,
+  "analyzer_version": "44",
+  "winner": "ensemble",
+  "note": "8-track mir_eval gold, --no-cache. conformer/autochord/stem/chordia-only removed.",
+  "comparison": [
+    {"model": "ensemble", "root": 0.588, "majmin": 0.510, "sevenths": 0.468, "seg": 0.588},
+    {"model": "chordia", "root": 0.588, "majmin": 0.510, "sevenths": 0.468, "seg": 0.588},
+    {"model": "stem", "root": 0.470, "majmin": 0.342, "sevenths": 0.318, "seg": 0.578},
+    {"model": "conformer", "root": 0.436, "majmin": 0.391, "sevenths": 0.374, "seg": 0.395}
+  ]
+}

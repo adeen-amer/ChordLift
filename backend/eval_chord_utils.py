@@ -20,11 +20,14 @@ def normalize_chord_symbol(chord: str) -> str:
     root = FLAT_TO_SHARP.get(match.group(1), match.group(1))
     suffix = match.group(2) or ""
 
-    suffix = suffix.replace("min", "m").replace("maj", "")
+    suffix = suffix.replace("min", "m")
     if suffix == "major":
         suffix = ""
-    if suffix == "minor":
+    elif suffix == "minor":
         suffix = "m"
+    elif suffix == "maj":
+        suffix = ""
+    # Do not strip "maj" from maj7 / maj9 (Phase 1 — honest sevenths eval).
 
     return f"{root}{suffix}"
 
