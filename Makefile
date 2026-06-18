@@ -1,4 +1,4 @@
-.PHONY: eval test eval-gold-dev eval-gold-test eval-gold-all phase13-v49
+.PHONY: eval test eval-gold-dev eval-gold-test eval-gold-all phase13-v49 build-gold-bundle verify-gold-audio
 
 PYTHON ?= $(shell if [ -x backend/.venv/bin/python ]; then echo .venv/bin/python; else echo python3; fi)
 BACKEND = backend
@@ -27,6 +27,9 @@ phase13-v49:
 
 verify-gold-audio:
 	cd $(BACKEND) && $(PYTHON) scripts/verify_gold_audio.py
+
+build-gold-bundle:
+	cd $(BACKEND) && $(PYTHON) scripts/build_gold_audio_bundle.py --print-sha256
 
 test:
 	cd $(BACKEND) && $(PYTHON) -m pytest tests/ -q --ignore=tests/fixtures

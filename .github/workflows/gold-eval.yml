@@ -1,0 +1,65 @@
+name: Gold eval
+
+on:
+  schedule:
+    - cron: "0 6 * * *"
+  workflow_dispatch:
+
+jobs:
+  gold-eval:
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    defaults:
+      run:
+        working-directory: backend
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install system dependencies
+        run: sudo apt-get update && sudo apt-get install -y --no-install-recommends ffmpeg
+
+      - name: Install Python dependencies
+        run: |
+          pip install --upgrade pip
+          pip install -r requirements.txt -r requirements-ml.txt soundfile
+
+      - name: Gold audio cache key
+        id: gold-cache-key
+        run: echo "hash=$(python -c 'from gold_audio_bundle import manifest_fingerprint; print(manifest_fingerprint())')" >> "$GITHUB_OUTPUT"
+
+      - uses: actions/cache@v4
+        id: gold-audio-cache
+        with:
+          path: |
+            gold_audio_v2
+            backend/downloads
+          key: gold-audio-v2-${{ steps.gold-cache-key.outputs.hash }}
+
+      - name: Fetch gold audio bundle
+        if: steps.gold-audio-cache.outputs.cache-hit != 'true'
+        run: python scripts/fetch_gold_audio_bundle.py
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Verify cached gold audio
+        if: steps.gold-audio-cache.outputs.cache-hit == 'true'
+        run: python scripts/fetch_gold_audio_bundle.py --verify-only
+
+      - name: Gold v2 DEV — mir_eval vs v49 baseline
+        run: python eval_gold_mir.py --no-cache --split dev --require-audio-identity --check-baseline
+        env:
+          CHORD_ENGINE: ml
+          CHORD_ML_MODEL: chordia
+          CHORD_ENGINE_STRICT: "1"
+
+      - name: Gold v2 TEST — mir_eval vs v49 baseline
+        run: python eval_gold_mir.py --no-cache --split test --require-audio-identity --check-baseline
+        env:
+          CHORD_ENGINE: ml
+          CHORD_ML_MODEL: chordia
+          CHORD_ENGINE_STRICT: "1"

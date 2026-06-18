@@ -24,6 +24,8 @@ dist-ssr/
 
 # Backend runtime / caches
 backend/downloads/
+gold_audio_v2/
+backend/gold_audio_v2.tar.gz
 backend/cache/
 backend/uploads/
 backend/training_labels/

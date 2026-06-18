@@ -1,6 +1,7 @@
 fastapi
 uvicorn
-yt-dlp>=2025.10.14
+yt-dlp==2025.12.23
+spotipy==2.25.1
 librosa
 scipy
 httpx

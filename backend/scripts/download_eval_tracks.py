@@ -1,5 +1,8 @@
 #!/usr/bin/env python3
-"""Download audio for all eval fixture tracks that are missing locally."""
+"""Download audio for eval fixture JSON files (local dev / non-gold fixtures).
+
+Gold v2 CI uses scripts/fetch_gold_audio_bundle.py — not this script.
+"""
 import asyncio
 import json
 import os

@@ -385,7 +385,21 @@ def _download_spotify_via_spotdl(url: str, expected_path: str) -> None:
 
 
 def _resolve_spotify_to_youtube_search(url: str) -> str:
+    from spotify_metadata import extract_spotify_track_id, fetch_spotify_track
+
     spotify_id = extract_spotify_id(url)
+    if spotify_id:
+        meta = fetch_spotify_track(spotify_id)
+        if meta:
+            title = (meta.get("name") or "").strip()
+            artists = meta.get("artists") or []
+            if artists and artists[0].get("name"):
+                title = f"{artists[0]['name']} {title}"
+            if title:
+                query = _spotify_youtube_query(title)
+                logger.info("Spotify API resolved to search: %s", query)
+                return query
+
     if spotify_id and spotify_id in SPOTIFY_ID_SEARCH:
         query = f"ytsearch1:{SPOTIFY_ID_SEARCH[spotify_id]}"
         logger.info(f"Spotify ID fallback search: {query}")
@@ -443,6 +457,11 @@ def fetch_track_metadata(url: str) -> dict:
 
     spotify_id = extract_spotify_id(url)
     if spotify_id:
+        from spotify_metadata import fetch_spotify_display_meta
+
+        official = fetch_spotify_display_meta(url)
+        if official:
+            return official
         try:
             return _fetch_oembed_metadata(
                 "https://open.spotify.com/oembed",

@@ -1,9 +1,14 @@
 #!/usr/bin/env python3
-"""Re-download gold audio via spotdl (YT Music metadata match) for Phase 11.5 Step 2."""
+"""Re-download gold audio via spotdl (local bootstrap only — not CI).
+
+Requires SPOTIFY_CLIENT_ID/SECRET for official metadata verification.
+Install Deno if spotdl prompts for it: https://docs.deno.com/runtime/getting_started/
+"""
 from __future__ import annotations
 
 import argparse
 import json
+import os
 import shutil
 import subprocess
 import sys
@@ -76,6 +81,13 @@ def main() -> int:
     parser.add_argument("--ids", help="Comma-separated track ids (default: all with spotify url)")
     parser.add_argument("--dry-run", action="store_true")
     args = parser.parse_args()
+
+    if not os.getenv("SPOTIFY_CLIENT_ID") or not os.getenv("SPOTIFY_CLIENT_SECRET"):
+        print(
+            "ERROR: set SPOTIFY_CLIENT_ID and SPOTIFY_CLIENT_SECRET for official metadata verification.",
+            file=sys.stderr,
+        )
+        return 2
 
     catalog = json.loads(CATALOG.read_text())
     overrides = _load_overrides()

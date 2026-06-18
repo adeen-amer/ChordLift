@@ -5,6 +5,7 @@ import logging
 import os
 import re
 from functools import lru_cache
+from typing import Any
 
 import httpx
 
@@ -20,56 +21,75 @@ def extract_spotify_track_id(url: str) -> str | None:
     return match.group(1) if match else None
 
 
+def _spotify_credentials() -> tuple[str, str] | None:
+    client_id = os.getenv("SPOTIFY_CLIENT_ID", "").strip()
+    client_secret = os.getenv("SPOTIFY_CLIENT_SECRET", "").strip()
+    if client_id and client_secret:
+        return client_id, client_secret
+    return None
+
+
+@lru_cache(maxsize=1)
+def _spotipy_client():
+    creds = _spotify_credentials()
+    if not creds:
+        return None
+    import spotipy
+    from spotipy.oauth2 import SpotifyClientCredentials
+
+    client_id, client_secret = creds
+    return spotipy.Spotify(
+        client_credentials_manager=SpotifyClientCredentials(
+            client_id=client_id,
+            client_secret=client_secret,
+        ),
+    )
+
+
+@lru_cache(maxsize=256)
+def fetch_spotify_track(track_id: str) -> dict[str, Any] | None:
+    """Official Spotify Web API track payload (requires client-credentials)."""
+    sp = _spotipy_client()
+    if sp is None:
+        return None
+    try:
+        return sp.track(track_id)
+    except Exception as exc:
+        logger.warning("Spotify API track lookup failed for %s: %s", track_id, exc)
+        return None
+
+
 @lru_cache(maxsize=256)
 def fetch_spotify_duration_sec(track_id: str) -> float | None:
     """Official Spotify track duration in seconds (duration_ms precision when available)."""
-    duration = _duration_via_spotipy(track_id)
-    if duration is not None:
-        return duration
-    duration = _duration_via_spotipy_free(track_id)
-    if duration is not None:
-        return duration
-    return _duration_via_ytmusic_search(track_id)
-
-
-def _duration_via_spotipy(track_id: str) -> float | None:
-    client_id = os.getenv("SPOTIFY_CLIENT_ID", "").strip()
-    client_secret = os.getenv("SPOTIFY_CLIENT_SECRET", "").strip()
-    if not client_id or not client_secret:
-        return None
-    try:
-        import spotipy
-        from spotipy.oauth2 import SpotifyClientCredentials
-
-        sp = spotipy.Spotify(
-            client_credentials_manager=SpotifyClientCredentials(
-                client_id=client_id,
-                client_secret=client_secret,
-            ),
-        )
-        meta = sp.track(track_id)
+    meta = fetch_spotify_track(track_id)
+    if meta:
         ms = meta.get("duration_ms")
-        return float(ms) / 1000.0 if ms else None
-    except Exception as exc:
-        logger.warning("Spotify API duration failed for %s: %s", track_id, exc)
+        if ms:
+            return float(ms) / 1000.0
+    return _duration_via_oembed(track_id)
+
+
+def fetch_spotify_display_meta(url: str) -> dict[str, str | None] | None:
+    """Title/artist from official API; None when credentials are missing."""
+    track_id = extract_spotify_track_id(url)
+    if not track_id:
         return None
-
-
-def _duration_via_spotipy_free(track_id: str) -> float | None:
-    """Tokenless Spotify metadata (bundled with spotdl)."""
-    try:
-        from SpotipyFree import Spotify as FreeSpotify
-
-        meta = FreeSpotify().track(track_id)
-        ms = meta.get("duration_ms")
-        return float(ms) / 1000.0 if ms else None
-    except Exception as exc:
-        logger.warning("SpotipyFree duration failed for %s: %s", track_id, exc)
+    meta = fetch_spotify_track(track_id)
+    if not meta:
         return None
+    artists = ", ".join(a["name"] for a in meta.get("artists", []) if a.get("name"))
+    images = meta.get("album", {}).get("images") or []
+    art = images[0]["url"] if images else None
+    return {
+        "title": (meta.get("name") or "").strip() or "Unknown track",
+        "artist": artists,
+        "album_art_url": art,
+    }
 
 
-def _duration_via_ytmusic_search(track_id: str) -> float | None:
-    """Last resort: YT Music search using Spotify oembed title (second precision)."""
+def _duration_via_oembed(track_id: str) -> float | None:
+    """Second-precision fallback when Spotify API credentials are not configured."""
     url = f"https://open.spotify.com/track/{track_id}"
     try:
         with httpx.Client(timeout=20.0) as client:
@@ -81,6 +101,11 @@ def _duration_via_ytmusic_search(track_id: str) -> float | None:
         return None
     if not title:
         return None
+    return _duration_via_ytmusic_search(title)
+
+
+def _duration_via_ytmusic_search(title: str) -> float | None:
+    """Last resort: YT Music search using a public title string (second precision)."""
     try:
         from ytmusicapi import YTMusic
 
@@ -97,7 +122,7 @@ def _duration_via_ytmusic_search(track_id: str) -> float | None:
                     return float(parts[0]) * 60 + float(parts[1])
         return None
     except Exception as exc:
-        logger.warning("YTMusic duration fallback failed for %s: %s", track_id, exc)
+        logger.warning("YTMusic duration fallback failed for %r: %s", title, exc)
         return None
 
 
