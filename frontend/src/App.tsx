@@ -14,7 +14,7 @@ import { FretboardViewer } from './components/FretboardViewer';
 import { ScalePractice } from './components/ScalePractice';
 import { useSyncEngine } from './hooks/useSyncEngine';
 import { Music, ArrowRight, Upload, Guitar } from 'lucide-react';
-import { apiUrl } from './config';
+import { apiUrl, UPLOAD_ONLY } from './config';
 
 type AppView = 'analyze' | 'practice';
 
@@ -293,6 +293,7 @@ function App() {
       {view === 'analyze' && (
       <>
       <div className="glass-panel">
+        {!UPLOAD_ONLY && (
         <form className="input-form" onSubmit={handleAnalyze}>
           <input
             type="url"
@@ -306,6 +307,7 @@ function App() {
             {!isAnalyzing && <ArrowRight size={20} />}
           </button>
         </form>
+        )}
 
         <div className="upload-row">
           <span className="upload-divider">or</span>

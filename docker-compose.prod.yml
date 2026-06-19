@@ -1,0 +1,29 @@
+services:
+  backend:
+    build: ./backend
+    environment:
+      ALLOWED_ORIGINS: ${ALLOWED_ORIGINS}
+      CHORD_ENGINE: ml
+      CHORD_ML_MODEL: chordia
+      PORT: 8000
+    volumes:
+      - backend-cache:/app/cache
+      - backend-uploads:/app/uploads
+    restart: unless-stopped
+
+  caddy:
+    image: caddy:2-alpine
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile
+      - caddy-data:/data
+    depends_on:
+      - backend
+    restart: unless-stopped
+
+volumes:
+  backend-cache:
+  backend-uploads:
+  caddy-data:
