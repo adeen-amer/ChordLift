@@ -734,8 +734,9 @@ body {
 }
 
 .scale-practice-key {
-  font-weight: 700;
+  font-weight: 600;
   color: var(--accent-secondary);
+  font-size: 0.95rem;
 }
 
 .scale-practice-count {
@@ -851,10 +852,24 @@ body {
   color: var(--text-muted);
 }
 
+.fretboard-scroll {
+  width: 100%;
+  max-width: 100%;
+  overflow-x: auto;
+  overflow-y: hidden;
+  -webkit-overflow-scrolling: touch;
+  padding-bottom: 4px;
+}
+
+.fretboard-scroll.improv-active .fretboard-wrapper {
+  min-width: 720px;
+}
+
 .fretboard-wrapper {
   position: relative;
   width: 100%;
-  height: 240px;
+  min-width: 640px;
+  height: 268px;
   transition: opacity 0.4s ease;
 }
 
@@ -883,30 +898,138 @@ body {
 
 .fretboard-svg {
   width: 100%;
+  min-width: 640px;
   height: 100%;
   border-radius: 8px;
   background: #1a1512;
+  display: block;
 }
 
-.string {
-  stroke: #a0a0a0;
-}
-
-.fret {
+.fret-wire {
   stroke: #4a4a4a;
   stroke-width: 2;
 }
 
+.fret-wire.nut-wire {
+  stroke: #ffffff;
+  stroke-width: 6;
+}
+
+.open-string-label {
+  fill: rgba(255, 255, 255, 0.55);
+  font-size: 12px;
+  font-weight: 700;
+  text-anchor: middle;
+  dominant-baseline: central;
+  pointer-events: none;
+}
+
+.string {
+  stroke: #b8b8b8;
+}
+
 .fret-marker {
-  fill: rgba(255, 255, 255, 0.1);
+  fill: rgba(255, 255, 255, 0.12);
 }
 
 .fret-number-label {
   fill: rgba(255, 255, 255, 0.45);
-  font-size: 11px;
+  font-size: 10px;
   font-weight: 600;
   text-anchor: middle;
   pointer-events: none;
+}
+
+/* Scale practice fretboard regions & dots */
+.scale-region-outline {
+  fill: rgba(255, 255, 255, 0.03);
+  stroke: rgba(255, 255, 255, 0.16);
+  stroke-width: 1.5;
+  rx: 8;
+  ry: 8;
+  pointer-events: none;
+  transition: stroke 0.15s ease, fill 0.15s ease;
+}
+
+.scale-region-group.active-region .scale-region-outline,
+.caged-box-group.active-chord-box .caged-box-outline {
+  fill: rgba(255, 153, 102, 0.1);
+  stroke: rgba(255, 153, 102, 0.55);
+  stroke-width: 2;
+}
+
+.scale-region-number,
+.caged-box-number {
+  fill: rgba(255, 255, 255, 0.35);
+  font-size: 11px;
+  font-weight: 700;
+  pointer-events: none;
+}
+
+.scale-dot-group {
+  cursor: default;
+  transition: opacity 0.15s ease;
+}
+
+.scale-dot-group.dimmed {
+  opacity: 0.18;
+}
+
+.scale-dot-group:not(.dimmed):hover .scale-tone-dot {
+  filter: brightness(1.15);
+}
+
+.scale-tone-dot,
+.pent-scale-dot {
+  fill: #38bdf8;
+  stroke: rgba(255, 255, 255, 0.35);
+  stroke-width: 1.5;
+  transition: filter 0.12s ease;
+}
+
+.scale-root-ring {
+  fill: none;
+  stroke: var(--accent-secondary);
+  stroke-width: 2.5;
+  opacity: 0.9;
+}
+
+.scale-root-dot .scale-tone-dot,
+.pent-root-dot .pent-scale-dot {
+  fill: var(--accent-primary);
+  stroke: var(--accent-secondary);
+  stroke-width: 2.5;
+}
+
+.scale-dot-label,
+.pent-dot-label {
+  fill: #ffffff;
+  font-size: 9px;
+  font-weight: 700;
+  text-anchor: middle;
+  dominant-baseline: central;
+  pointer-events: none;
+}
+
+.scale-root-dot .scale-dot-label,
+.pent-root-dot .pent-dot-label {
+  fill: #fff;
+  font-weight: 800;
+}
+
+.pent-legend-scale {
+  background: #38bdf8;
+}
+
+.pent-legend-root {
+  background: var(--accent-primary);
+  box-shadow: 0 0 0 2px var(--accent-secondary);
+}
+
+.pent-legend-active {
+  background: transparent;
+  border-color: var(--accent-secondary);
+  box-shadow: inset 0 0 0 1px var(--accent-secondary);
 }
 
 .caged-box-outline {

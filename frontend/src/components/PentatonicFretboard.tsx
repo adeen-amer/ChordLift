@@ -1,27 +1,47 @@
 import { forwardRef, useMemo, type ReactNode } from 'react';
 import {
   FRETBOARD,
+  OPEN_STRING_LABELS,
   boundsToSvgRect,
   fretboardSpacing,
   fretLabelX,
   stringFretToXY,
 } from '../utils/fretboardLayout';
-import type { ImprovGuideData } from '../utils/pentatonic';
-import { positionKey } from '../utils/pentatonic';
+import type { ScaleGuideData } from '../utils/scales';
+import type { LabelMode } from '../utils/scales';
 
-const FRET_LABELS = [3, 5, 7, 9, 12, 15, 17];
+const FRET_MARKERS: { fret: number; strings: number[] }[] = [
+  { fret: 3, strings: [3] },
+  { fret: 5, strings: [3] },
+  { fret: 7, strings: [3] },
+  { fret: 9, strings: [3] },
+  { fret: 12, strings: [2, 4] },
+  { fret: 15, strings: [3] },
+  { fret: 17, strings: [3] },
+];
 
 interface PentatonicFretboardProps {
-  guideData?: ImprovGuideData | null;
-  highlightBox?: number | null;
+  guideData?: ScaleGuideData | null;
+  highlightPosition?: number | null;
+  labelMode?: LabelMode;
   showLegend?: boolean;
   className?: string;
   children?: ReactNode;
 }
 
 export const PentatonicFretboard = forwardRef<SVGSVGElement, PentatonicFretboardProps>(
-  ({ guideData, highlightBox = null, showLegend = true, className = '', children }, ref) => {
-    const { numFrets, numStrings, width, height, fretLabelY } = FRETBOARD;
+  (
+    {
+      guideData,
+      highlightPosition = null,
+      labelMode = 'note',
+      showLegend = true,
+      className = '',
+      children,
+    },
+    ref,
+  ) => {
+    const { numFrets, numStrings, width, height, fretLabelY, stringLabelX } = FRETBOARD;
     const { fretSpacing, stringSpacing, xOffset, yOffset } = fretboardSpacing();
 
     const boxRects = useMemo(
@@ -33,142 +53,159 @@ export const PentatonicFretboard = forwardRef<SVGSVGElement, PentatonicFretboard
       [guideData],
     );
 
-    const visibleBoxes = highlightBox
-      ? boxRects.filter((b) => b.number === highlightBox)
-      : boxRects;
+    const activePosition = highlightPosition && highlightPosition >= 1 ? highlightPosition : null;
 
-    const visibleDots = highlightBox
-      ? guideData?.dots.filter((d) => d.boxes.includes(highlightBox)) ?? []
-      : guideData?.dots ?? [];
+    const visibleDots = useMemo(() => guideData?.dots ?? [], [guideData]);
+
+    const fretNumbers = useMemo(
+      () => Array.from({ length: numFrets }, (_, i) => i + 1),
+      [numFrets],
+    );
 
     return (
-      <div className={`fretboard-wrapper${guideData ? ' improv-active' : ''} ${className}`.trim()}>
-        <svg className="fretboard-svg" viewBox={`0 0 ${width} ${height}`} ref={ref}>
-          {Array.from({ length: numFrets + 1 }).map((_, i) => (
-            <line
-              key={`fret-${i}`}
-              x1={xOffset + i * fretSpacing}
-              y1={yOffset}
-              x2={xOffset + i * fretSpacing}
-              y2={height - yOffset - 14}
-              strokeWidth={i === 0 ? 6 : 2}
-              stroke={i === 0 ? '#ffffff' : '#4a4a4a'}
-            />
-          ))}
+      <div className={`fretboard-scroll${guideData ? ' improv-active' : ''} ${className}`.trim()}>
+        <div className={`fretboard-wrapper${guideData ? ' improv-active' : ''}`}>
+          <svg className="fretboard-svg" viewBox={`0 0 ${width} ${height}`} ref={ref}>
+            {/* Fret wire lines */}
+            {Array.from({ length: numFrets + 1 }).map((_, i) => (
+              <line
+                key={`fret-${i}`}
+                className={i === 0 ? 'fret-wire nut-wire' : 'fret-wire'}
+                x1={xOffset + i * fretSpacing}
+                y1={yOffset - 6}
+                x2={xOffset + i * fretSpacing}
+                y2={height - yOffset - 8}
+              />
+            ))}
 
-          {Array.from({ length: numStrings }).map((_, i) => (
-            <line
-              key={`string-${i}`}
-              className="string"
-              x1={xOffset}
-              y1={yOffset + i * stringSpacing}
-              x2={width}
-              y2={yOffset + i * stringSpacing}
-              strokeWidth={1 + i * 0.5}
-            />
-          ))}
+            {/* Strings — thicker toward bass (bottom) */}
+            {Array.from({ length: numStrings }).map((_, i) => (
+              <line
+                key={`string-${i}`}
+                className="string"
+                x1={xOffset}
+                y1={yOffset + i * stringSpacing}
+                x2={width - 16}
+                y2={yOffset + i * stringSpacing}
+                strokeWidth={1.1 + i * 0.45}
+              />
+            ))}
 
-          {FRET_LABELS.map((fret) => (
-            <text
-              key={`fret-label-${fret}`}
-              className="fret-number-label"
-              x={fretLabelX(fret)}
-              y={fretLabelY}
-            >
-              {fret}
-            </text>
-          ))}
-
-          {[3, 5, 7, 9, 15, 17].map((fret) => (
-            <circle
-              key={`marker-${fret}`}
-              className="fret-marker"
-              cx={xOffset + (fret - 0.5) * fretSpacing}
-              cy={yOffset + 2.5 * stringSpacing}
-              r={8}
-            />
-          ))}
-          <circle
-            className="fret-marker"
-            cx={xOffset + 11.5 * fretSpacing}
-            cy={yOffset + 2 * stringSpacing}
-            r={8}
-          />
-          <circle
-            className="fret-marker"
-            cx={xOffset + 11.5 * fretSpacing}
-            cy={yOffset + 3 * stringSpacing}
-            r={8}
-          />
-
-          {guideData && (
-            <g className="pentatonic-layer">
-              {visibleBoxes.map(({ number, rect }) => (
-                <g
-                  key={`caged-box-${number}`}
-                  id={`caged-box-${number}`}
-                  className="caged-box-group"
-                >
-                  <rect
-                    className="caged-box-outline"
-                    data-box={number}
-                    x={rect.x}
-                    y={rect.y}
-                    width={rect.width}
-                    height={rect.height}
-                  />
-                  <text className="caged-box-number" x={rect.x + 8} y={rect.y + 14}>
-                    {number}
-                  </text>
-                </g>
-              ))}
-
-              <rect id="pent-box-highlight" className="pent-box-highlight" opacity={0} />
-              <text id="pent-chord-label" className="pent-chord-label" opacity={0}>
-                {' '}
+            {/* Open-string labels in left margin */}
+            {OPEN_STRING_LABELS.map((label, i) => (
+              <text
+                key={`open-label-${i}`}
+                className="open-string-label"
+                x={stringLabelX}
+                y={yOffset + i * stringSpacing}
+              >
+                {label}
               </text>
+            ))}
 
-              {visibleDots.map(({ string, fret, isKeyRoot, noteName, boxes }) => {
-                const { x, y } = stringFretToXY(string, fret);
-                const key = positionKey(string, fret);
-                const radius = isKeyRoot ? 11 : 10;
+            {/* Fret number row */}
+            {fretNumbers.map((fret) => (
+              <text
+                key={`fret-label-${fret}`}
+                className="fret-number-label"
+                x={fretLabelX(fret)}
+                y={fretLabelY}
+              >
+                {fret}
+              </text>
+            ))}
 
+            {/* Standard inlay markers */}
+            {FRET_MARKERS.flatMap(({ fret, strings }) =>
+              strings.map((stringNum) => {
+                const stringIdx = stringNum - 1;
                 return (
-                  <g
-                    key={`pent-${key}`}
-                    id={`pent-${key}`}
-                    className={`pent-dot-group${isKeyRoot ? ' pent-root-dot' : ''}`}
-                    data-string={string}
-                    data-fret={fret}
-                    data-is-root={isKeyRoot ? 'true' : 'false'}
-                    data-boxes={boxes.join(',')}
-                  >
-                    <circle className="pent-scale-dot" cx={x} cy={y} r={radius} />
-                    <text className="pent-dot-label" x={x} y={y}>
-                      {noteName.replace('#', '♯')}
-                    </text>
-                  </g>
+                  <circle
+                    key={`marker-${fret}-${stringNum}`}
+                    className="fret-marker"
+                    cx={xOffset + (fret - 0.5) * fretSpacing}
+                    cy={yOffset + stringIdx * stringSpacing}
+                    r={5}
+                  />
                 );
-              })}
-            </g>
-          )}
+              }),
+            )}
 
-          {children}
-        </svg>
+            {guideData && (
+              <g className="scale-layer">
+                {boxRects.map(({ number, rect }) => (
+                  <g
+                    key={`region-${number}`}
+                    id={`caged-box-${number}`}
+                    className={`scale-region-group caged-box-group${activePosition === number ? ' active-region active-chord-box' : ''}`}
+                  >
+                    <rect
+                      className="scale-region-outline caged-box-outline"
+                      data-box={number}
+                      x={rect.x}
+                      y={rect.y}
+                      width={rect.width}
+                      height={rect.height}
+                    />
+                    {guideData.isPentatonic && (
+                      <text className="scale-region-number caged-box-number" x={rect.x + 8} y={rect.y + 14}>
+                        {number}
+                      </text>
+                    )}
+                  </g>
+                ))}
+
+                <rect id="pent-box-highlight" className="pent-box-highlight scale-box-highlight" opacity={0} />
+                <text id="pent-chord-label" className="pent-chord-label scale-chord-label" opacity={0}>
+                  {' '}
+                </text>
+
+                {visibleDots.map(({ string, fret, isKeyRoot, noteName, degreeLabel, dimmed, boxes }) => {
+                  const { x, y } = stringFretToXY(string, fret);
+                  const key = `${string}-${fret}`;
+                  const displayLabel =
+                    labelMode === 'degree'
+                      ? degreeLabel
+                      : noteName.replace('#', '♯');
+
+                  return (
+                    <g
+                      key={`dot-${key}`}
+                      id={`pent-${key}`}
+                      className={`scale-dot-group pent-dot-group${isKeyRoot ? ' scale-root-dot pent-root-dot' : ''}${dimmed ? ' dimmed' : ''}`}
+                      data-string={string}
+                      data-fret={fret}
+                      data-is-root={isKeyRoot ? 'true' : 'false'}
+                      data-boxes={boxes.join(',')}
+                    >
+                      {isKeyRoot && <circle className="scale-root-ring" cx={x} cy={y} r={14} />}
+                      <circle className="scale-tone-dot pent-scale-dot" cx={x} cy={y} r={isKeyRoot ? 12 : 10} />
+                      <text className="scale-dot-label pent-dot-label" x={x} y={y}>
+                        {displayLabel}
+                      </text>
+                    </g>
+                  );
+                })}
+              </g>
+            )}
+
+            {children}
+          </svg>
+        </div>
 
         {showLegend && guideData && (
           <div className="pent-legend pent-legend-below" aria-hidden="true">
             <span className="pent-legend-item">
-              <span className="pent-legend-swatch pent-legend-scale" />
-              Scale
+              <span className="pent-legend-swatch pent-legend-root" />
+              Root
             </span>
             <span className="pent-legend-item">
-              <span className="pent-legend-swatch pent-legend-root" />
-              Key root
+              <span className="pent-legend-swatch pent-legend-scale" />
+              Scale tone
             </span>
             <span className="pent-legend-item">
               <span className="pent-legend-swatch pent-legend-active" />
-              Chord box
+              Position
             </span>
           </div>
         )}

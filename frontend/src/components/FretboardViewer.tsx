@@ -1,6 +1,7 @@
 import { forwardRef, useMemo } from 'react';
 import type { KeyInfo, SoloSection } from '../types';
 import { getImprovGuideData } from '../utils/pentatonic';
+import { improvGuideToScaleGuide } from '../utils/scales';
 import { PentatonicFretboard } from './PentatonicFretboard';
 import { stringFretToXY } from '../utils/fretboardLayout';
 
@@ -14,7 +15,10 @@ interface FretboardViewerProps {
 export const FretboardViewer = forwardRef<SVGSVGElement, FretboardViewerProps>(
   ({ solos, songKey, improvEnabled, onImprovToggle }, ref) => {
     const guideData = useMemo(
-      () => (improvEnabled && songKey ? getImprovGuideData(songKey, 18) : null),
+      () =>
+        improvEnabled && songKey
+          ? improvGuideToScaleGuide(getImprovGuideData(songKey, 18), songKey.display)
+          : null,
       [improvEnabled, songKey],
     );
 

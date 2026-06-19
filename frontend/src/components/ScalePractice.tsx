@@ -1,37 +1,43 @@
 import { useMemo, useState } from 'react';
 import {
   PENTATONIC_ROOTS,
-  getImprovGuideData,
-  keyInfoFromSelection,
-  type PentatonicMode,
-} from '../utils/pentatonic';
+  SCALE_REGISTRY,
+  buildScaleGuideData,
+  isPentatonicScaleId,
+  positionLabel,
+  type LabelMode,
+  type ScaleId,
+} from '../utils/scales';
 import { PentatonicFretboard } from './PentatonicFretboard';
 
-const MODES: { value: PentatonicMode; label: string }[] = [
-  { value: 'major', label: 'Major pentatonic' },
-  { value: 'minor', label: 'Minor pentatonic' },
-];
-
-const BOX_OPTIONS = [
-  { value: 0, label: 'All boxes' },
-  { value: 1, label: 'Box 1' },
-  { value: 2, label: 'Box 2' },
-  { value: 3, label: 'Box 3' },
-  { value: 4, label: 'Box 4' },
-  { value: 5, label: 'Box 5' },
-];
+const DEFAULT_SCALE: ScaleId = 'minor-penta';
 
 export function ScalePractice() {
   const [root, setRoot] = useState('A');
-  const [mode, setMode] = useState<PentatonicMode>('minor');
-  const [boxFilter, setBoxFilter] = useState(0);
+  const [scaleId, setScaleId] = useState<ScaleId>(DEFAULT_SCALE);
+  const [positionFilter, setPositionFilter] = useState(0);
+  const [labelMode, setLabelMode] = useState<LabelMode>('note');
 
-  const key = useMemo(() => keyInfoFromSelection(root, mode), [root, mode]);
+  const isPentatonic = isPentatonicScaleId(scaleId);
+
+  const positionOptions = useMemo(() => {
+    const all = { value: 0, label: 'All (full neck)' };
+    const numbered = [1, 2, 3, 4, 5].map((n) => ({
+      value: n,
+      label: isPentatonic ? `Box ${n}` : `Position ${n}`,
+    }));
+    return [all, ...numbered];
+  }, [isPentatonic]);
 
   const guideData = useMemo(
-    () => getImprovGuideData(key, 18, boxFilter || null),
-    [key, boxFilter],
+    () => buildScaleGuideData(root, scaleId, 18, positionFilter),
+    [root, scaleId, positionFilter],
   );
+
+  const metaLine = `${root} ${guideData.scaleLabel} · ${guideData.noteCount} notes · ${positionLabel(positionFilter, isPentatonic)}`;
+
+  const pentatonicScales = SCALE_REGISTRY.filter((s) => s.group === 'pentatonic');
+  const modeScales = SCALE_REGISTRY.filter((s) => s.group === 'modes');
 
   return (
     <div className="scale-practice">
@@ -40,7 +46,7 @@ export function ScalePractice() {
           <div>
             <h2 className="scale-practice-title">Scale practice</h2>
             <p className="scale-practice-subtitle">
-              CAGED pentatonic shapes — no song required. Pick a key and box to drill.
+              Pentatonic CAGED boxes and seven diatonic modes — pick a key, scale, and neck position.
             </p>
           </div>
         </div>
@@ -56,38 +62,62 @@ export function ScalePractice() {
           </label>
 
           <label className="scale-control">
-            <span>Mode</span>
-            <select value={mode} onChange={(e) => setMode(e.target.value as PentatonicMode)}>
-              {MODES.map((m) => (
-                <option key={m.value} value={m.value}>{m.label}</option>
+            <span>Scale</span>
+            <select
+              value={scaleId}
+              onChange={(e) => {
+                setScaleId(e.target.value as ScaleId);
+                setPositionFilter(0);
+              }}
+            >
+              <optgroup label="Pentatonic">
+                {pentatonicScales.map((s) => (
+                  <option key={s.id} value={s.id}>{s.label}</option>
+                ))}
+              </optgroup>
+              <optgroup label="Modes">
+                {modeScales.map((s) => (
+                  <option key={s.id} value={s.id}>{s.label}</option>
+                ))}
+              </optgroup>
+            </select>
+          </label>
+
+          <label className="scale-control">
+            <span>Position</span>
+            <select
+              value={positionFilter}
+              onChange={(e) => setPositionFilter(Number(e.target.value))}
+            >
+              {positionOptions.map((b) => (
+                <option key={b.value} value={b.value}>{b.label}</option>
               ))}
             </select>
           </label>
 
           <label className="scale-control">
-            <span>Box</span>
+            <span>Labels</span>
             <select
-              value={boxFilter}
-              onChange={(e) => setBoxFilter(Number(e.target.value))}
+              value={labelMode}
+              onChange={(e) => setLabelMode(e.target.value as LabelMode)}
             >
-              {BOX_OPTIONS.map((b) => (
-                <option key={b.value} value={b.value}>{b.label}</option>
-              ))}
+              <option value="note">Note names</option>
+              <option value="degree">Scale degrees</option>
             </select>
           </label>
         </div>
 
         <div className="scale-practice-meta">
-          <span className="scale-practice-key">{key.display}</span>
+          <span className="scale-practice-key">{metaLine}</span>
           <span className="scale-practice-count">
-            {guideData.dots.length} notes · {guideData.boxes.length} box
-            {guideData.boxes.length !== 1 ? 'es' : ''}
+            {guideData.dots.filter((d) => !d.dimmed).length} visible · {guideData.dots.length} total
           </span>
         </div>
 
         <PentatonicFretboard
           guideData={guideData}
-          highlightBox={boxFilter || null}
+          highlightPosition={positionFilter || null}
+          labelMode={labelMode}
           showLegend
         />
       </div>

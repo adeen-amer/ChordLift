@@ -16,6 +16,8 @@ import { useSyncEngine } from '../hooks/useSyncEngine';
 import { Music, ArrowRight, Upload, Guitar } from 'lucide-react';
 import { apiUrl, UPLOAD_ONLY } from '../config';
 
+const SOLO_ENABLED = import.meta.env.VITE_ENABLE_SOLO === 'true';
+
 type AppView = 'analyze' | 'practice';
 
 function HomePage() {
@@ -25,7 +27,6 @@ function HomePage() {
   const [stage, setStage] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [data, setData] = useState<AnalysisData | null>(null);
-  const [improvEnabled, setImprovEnabled] = useState(false);
   const [presentationMode, setPresentationMode] = useState<PresentationMode>(loadPresentationMode);
   const [correctionCache, setCorrectionCache] = useState<{ videoId: string; map: ReturnType<typeof loadCorrections> } | null>(null);
   const [audioLoadState, setAudioLoadState] = useState<AudioLoadState>('idle');
@@ -93,7 +94,7 @@ function HomePage() {
     chordContainerRef,
     lyricsPanelRef,
     fretboardRef,
-    improvEnabled,
+    improvEnabled: false,
   });
 
   const handleCorrectChord = useCallback((time: number, chord: string) => {
@@ -427,15 +428,17 @@ function HomePage() {
             )}
           </div>
 
+          {SOLO_ENABLED && (
           <div className="glass-panel fretboard-panel">
             <FretboardViewer
               solos={data.solos}
               songKey={data.key}
-              improvEnabled={improvEnabled}
-              onImprovToggle={setImprovEnabled}
+              improvEnabled={false}
+              onImprovToggle={() => {}}
               ref={fretboardRef}
             />
           </div>
+          )}
         </>
       )}
 

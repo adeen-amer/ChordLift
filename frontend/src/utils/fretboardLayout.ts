@@ -3,12 +3,16 @@
 export const FRETBOARD = {
   numFrets: 18,
   numStrings: 6,
-  width: 1200,
-  height: 240,
-  yOffset: 24,
-  xOffset: 44,
-  fretLabelY: 228,
+  width: 1240,
+  height: 268,
+  yOffset: 36,
+  xOffset: 88,
+  fretLabelY: 22,
+  stringLabelX: 28,
 } as const;
+
+/** String 1 = high e (top) … string 6 = low E (bottom). */
+export const OPEN_STRING_LABELS = ['e', 'B', 'G', 'D', 'A', 'E'] as const;
 
 export function fretboardSpacing() {
   const { width, height, yOffset, xOffset, numFrets, numStrings } = FRETBOARD;
