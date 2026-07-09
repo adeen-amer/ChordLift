@@ -50,14 +50,14 @@ jobs:
         if: steps.gold-audio-cache.outputs.cache-hit == 'true'
         run: python scripts/fetch_gold_audio_bundle.py --verify-only
 
-      - name: Gold v2 DEV — mir_eval vs v50 baseline
+      - name: Gold v2 DEV — mir_eval vs v49 baseline
         run: python eval_gold_mir.py --no-cache --split dev --require-audio-identity --check-baseline
         env:
           CHORD_ENGINE: ml
           CHORD_ML_MODEL: chordia
           CHORD_ENGINE_STRICT: "1"
 
-      - name: Gold v2 TEST — mir_eval vs v50 baseline
+      - name: Gold v2 TEST — mir_eval vs v49 baseline
         run: python eval_gold_mir.py --no-cache --split test --require-audio-identity --check-baseline
         env:
           CHORD_ENGINE: ml
