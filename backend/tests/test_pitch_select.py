@@ -98,3 +98,54 @@ def test_tta_decodes_averaged_probs(monkeypatch):
     assert applied == 0.0  # TTA blends labels; no shift is "applied"
     assert calls["decoded"][0][0] == pytest.approx(0.7)  # mean of 0.5 and 0.9
     assert calls["decoded"][0][1] == "hmm_raw"  # decoded with raw-branch decoder
+
+
+def test_ml_path_does_not_precorrect_full_mix(monkeypatch):
+    import chord_engine
+
+    monkeypatch.setattr(chord_engine, "CHORD_ENGINE", "ml")
+
+    def boom(y, sr):
+        raise AssertionError("normalize_pitch must not run on the ML path")
+
+    monkeypatch.setattr(chord_engine, "normalize_pitch", boom)
+    monkeypatch.setattr(
+        "chord_engine_ml.extract_chords_ml",
+        lambda y, sr, pipeline: ([{"chord": "C", "start": 0.0, "end": 1.0}], {}),
+    )
+    monkeypatch.setattr(
+        "chord_pipeline.build_chord_pipeline_context",
+        lambda y, sr: __import__("types").SimpleNamespace(
+            stems=__import__("types").SimpleNamespace(method="hpss")
+        ),
+    )
+    segments, key_info = chord_engine.extract_chords(
+        np.zeros(22050, dtype=np.float32), 22050
+    )
+    assert segments[0]["chord"] == "C"
+    assert key_info["chord_engine_actual"] == "ml"
+
+
+def test_classic_path_still_normalizes_pitch(monkeypatch):
+    import chord_engine
+
+    monkeypatch.setattr(chord_engine, "CHORD_ENGINE", "classic")
+    called = {}
+
+    def fake_normalize(y, sr):
+        called["yes"] = True
+        return y, 0.0
+
+    monkeypatch.setattr(chord_engine, "normalize_pitch", fake_normalize)
+    monkeypatch.setattr(
+        "analyzer.extract_chords",
+        lambda y, sr, pipeline: ([{"chord": "C", "start": 0.0, "end": 1.0}], {}),
+    )
+    monkeypatch.setattr(
+        "chord_pipeline.build_chord_pipeline_context",
+        lambda y, sr: __import__("types").SimpleNamespace(
+            stems=__import__("types").SimpleNamespace(method="hpss")
+        ),
+    )
+    chord_engine.extract_chords(np.zeros(22050, dtype=np.float32), 22050)
+    assert called.get("yes")

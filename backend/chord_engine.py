@@ -2,7 +2,7 @@
 Chord extraction dispatcher.
 
 Set CHORD_ENGINE=classic to force the template-based engine.
-ML default: lv-chordia on HPSS chord stem + pitch reliability gate.
+ML default: lv-chordia on HPSS chord stem + decode-both pitch selection.
 
 Pitch normalization runs before either engine (see pitch_utils).
 """
@@ -43,8 +43,12 @@ def log_chord_engine_status():
 
 def extract_chords(y, sr, pipeline=None, *, return_pipeline=False):
     log_chord_engine_status()
+    if not PITCH_CORRECT:
+        os.environ["CHORD_PITCH_SELECT"] = "off"
     pitch_shift = 0.0
-    if PITCH_CORRECT:
+    if PITCH_CORRECT and CHORD_ENGINE != "ml":
+        # ML path selects pitch per-branch inside extract_chords_ml (v50);
+        # only the classic engine still uses whole-mix pre-correction.
         y, pitch_shift = normalize_pitch(y, sr)
         if pitch_shift:
             logger.info("Pitch-corrected audio by %.2f semitones before chord analysis", pitch_shift)
@@ -56,7 +60,7 @@ def extract_chords(y, sr, pipeline=None, *, return_pipeline=False):
         key_info = dict(key_info or {})
         key_info["stem_method"] = pipeline.stems.method
         key_info["chord_pipeline"] = "stems+beats+bars"
-        if pitch_shift:
+        if pitch_shift and "pitch_correction_semitones" not in key_info:
             key_info["pitch_correction_semitones"] = round(pitch_shift, 3)
         return key_info
 
