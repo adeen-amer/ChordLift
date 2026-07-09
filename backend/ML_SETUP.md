@@ -12,7 +12,7 @@ Check readiness: `GET /api/health` → `ml_ready: true`.
 ## Eval
 
 ```bash
-make eval          # gold v2 DEV+TEST vs v49 baseline
+make eval          # gold v2 DEV+TEST vs v50 baseline
 make phase13-v49   # regenerate v49 baselines
 make phase-v50     # regenerate v50 baselines (decode-both pitch selection)
 ```

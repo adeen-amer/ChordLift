@@ -19,6 +19,7 @@ from chord_engine_chordia import (
 from pitch_utils import (
     MIN_SHIFT_SEMITONES,
     estimate_pitch_shift_semitones,
+    normalize_pitch,
     pitch_shift_audio,
 )
 
@@ -130,6 +131,11 @@ def extract_chords_ml(y, sr, pipeline=None):
     raw = chordia_to_segments(raw_segments)
     if not raw:
         logger.warning("lv-chordia returned no segments; falling back to classic stem HMM")
+        y, shift = normalize_pitch(y, sr)
+        if shift:
+            logger.info("Pitch-corrected audio by %.2f semitones before chord analysis", shift)
+            from chord_pipeline import build_chord_pipeline_context
+            pipeline = build_chord_pipeline_context(y, sr)
         return extract_chords_classic(y, sr, pipeline, bar_finalize=True)
 
     y_chord_for_key = pipeline.y_chord

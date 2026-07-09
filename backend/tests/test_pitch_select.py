@@ -228,3 +228,41 @@ def test_ml_fallback_still_normalizes_pitch(monkeypatch):
     )
     assert called.get("yes")
     assert key_info["ml_fallback"] is True
+    assert key_info["pitch_correction_semitones"] == pytest.approx(-0.5)
+
+
+def test_ml_empty_segments_fallback_pitch_corrects(monkeypatch):
+    import types
+
+    monkeypatch.setattr(chord_engine_ml, "_recognize_probs", lambda y, sr: (None, None, None))
+    monkeypatch.setattr(chord_engine_ml, "_decode_probs", lambda probs, hmm, entry: [])
+
+    recorder = {}
+
+    def fake_normalize(y, sr):
+        recorder["called"] = True
+        return y, -0.5
+
+    monkeypatch.setattr(chord_engine_ml, "normalize_pitch", fake_normalize)
+    monkeypatch.setattr(
+        "analyzer.extract_chords",
+        lambda y, sr, pipeline, bar_finalize=True: (
+            [{"chord": "C", "start": 0.0, "end": 1.0}],
+            {},
+        ),
+    )
+    monkeypatch.setattr(
+        "chord_pipeline.build_chord_pipeline_context",
+        lambda y, sr: types.SimpleNamespace(
+            stems=types.SimpleNamespace(method="hpss"), y_chord=y
+        ),
+    )
+
+    y = np.zeros(100, dtype=np.float32)
+    pipeline = types.SimpleNamespace(
+        stems=types.SimpleNamespace(method="hpss"), y_chord=y
+    )
+    segments, key_info = chord_engine_ml.extract_chords_ml(y, 22050, pipeline)
+
+    assert recorder.get("called")
+    assert segments[0]["chord"] == "C"
