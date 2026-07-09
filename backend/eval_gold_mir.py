@@ -14,8 +14,8 @@ BACKEND = Path(__file__).resolve().parent
 FIXTURES = BACKEND / "tests" / "fixtures" / "gold_mir_tracks_v2.json"
 SPLIT_FILE = BACKEND / "tests" / "fixtures" / "gold_split_v2.json"
 BASELINES = {
-    "dev": BACKEND / "analysis" / "BASELINE_mir_gold_DEV_v49.json",
-    "test": BACKEND / "analysis" / "BASELINE_mir_gold_TEST_v49.json",
+    "dev": BACKEND / "analysis" / "BASELINE_mir_gold_DEV_v50.json",
+    "test": BACKEND / "analysis" / "BASELINE_mir_gold_TEST_v50.json",
 }
 MAJMIN_TOLERANCE = 0.015
 

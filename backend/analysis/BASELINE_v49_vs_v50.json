@@ -1,0 +1,186 @@
+{
+  "dev": {
+    "split": "dev",
+    "v49_summary": {
+      "track_count": 14,
+      "avg_root_wcsr": 0.7665,
+      "avg_majmin_wcsr": 0.7608,
+      "avg_sevenths_wcsr": 0.6501,
+      "avg_seg_score": 0.8356
+    },
+    "v50_summary": {
+      "track_count": 14,
+      "avg_root_wcsr": 0.8146,
+      "avg_majmin_wcsr": 0.8027,
+      "avg_sevenths_wcsr": 0.6805,
+      "avg_seg_score": 0.8389
+    },
+    "delta_majmin_agg": 0.0419,
+    "tracks": [
+      {
+        "id": "yellow-submarine",
+        "v49_majmin": 0.19033862661224854,
+        "v50_majmin": 0.747826145824484,
+        "delta_majmin": 0.5575
+      },
+      {
+        "id": "youre-my-best-friend",
+        "v49_majmin": 0.7951791453047249,
+        "v50_majmin": 0.834095154519005,
+        "delta_majmin": 0.0389
+      },
+      {
+        "id": "ticket-to-ride",
+        "v49_majmin": 0.960131587341924,
+        "v50_majmin": 0.960523023382155,
+        "delta_majmin": 0.0004
+      },
+      {
+        "id": "let-it-be",
+        "v49_majmin": 0.8743769293332204,
+        "v50_majmin": 0.8743769293332204,
+        "delta_majmin": 0.0
+      },
+      {
+        "id": "come-together",
+        "v49_majmin": 0.9540015344317911,
+        "v50_majmin": 0.9540015344317911,
+        "delta_majmin": 0.0
+      },
+      {
+        "id": "help",
+        "v49_majmin": 0.9694684385836528,
+        "v50_majmin": 0.9694684385836528,
+        "delta_majmin": 0.0
+      },
+      {
+        "id": "something",
+        "v49_majmin": 0.7818463141605446,
+        "v50_majmin": 0.7818463141605446,
+        "delta_majmin": 0.0
+      },
+      {
+        "id": "i-saw-her-standing-there",
+        "v49_majmin": 0.9329962846558554,
+        "v50_majmin": 0.9329962846558554,
+        "delta_majmin": 0.0
+      },
+      {
+        "id": "while-my-guitar-gently-weeps",
+        "v49_majmin": 0.8057422696837516,
+        "v50_majmin": 0.8057422696837516,
+        "delta_majmin": 0.0
+      },
+      {
+        "id": "another-one-bites-the-dust",
+        "v49_majmin": 0.12807608506770396,
+        "v50_majmin": 0.12807608506770396,
+        "delta_majmin": 0.0
+      },
+      {
+        "id": "dont-stop-me-now",
+        "v49_majmin": 0.806170863326592,
+        "v50_majmin": 0.806170863326592,
+        "delta_majmin": 0.0
+      },
+      {
+        "id": "play-the-game",
+        "v49_majmin": 0.5745765375066781,
+        "v50_majmin": 0.5745765375066781,
+        "delta_majmin": 0.0
+      },
+      {
+        "id": "twist-and-shout",
+        "v49_majmin": 0.9410355922387541,
+        "v50_majmin": 0.9403191524078096,
+        "delta_majmin": -0.0007
+      },
+      {
+        "id": "cant-buy-me-love",
+        "v49_majmin": 0.9368414826218008,
+        "v50_majmin": 0.9274368480221505,
+        "delta_majmin": -0.0094
+      }
+    ]
+  },
+  "test": {
+    "split": "test",
+    "v49_summary": {
+      "track_count": 10,
+      "avg_root_wcsr": 0.7302,
+      "avg_majmin_wcsr": 0.73,
+      "avg_sevenths_wcsr": 0.6779,
+      "avg_seg_score": 0.6603
+    },
+    "v50_summary": {
+      "track_count": 10,
+      "avg_root_wcsr": 0.7486,
+      "avg_majmin_wcsr": 0.7499,
+      "avg_sevenths_wcsr": 0.6919,
+      "avg_seg_score": 0.6695
+    },
+    "delta_majmin_agg": 0.0199,
+    "tracks": [
+      {
+        "id": "penny-lane",
+        "v49_majmin": 0.7966482081341266,
+        "v50_majmin": 0.9263269803048209,
+        "delta_majmin": 0.1297
+      },
+      {
+        "id": "somebody-to-love",
+        "v49_majmin": 0.44135814164992937,
+        "v50_majmin": 0.4837415038635244,
+        "delta_majmin": 0.0424
+      },
+      {
+        "id": "here-comes-the-sun",
+        "v49_majmin": 0.8325917268292102,
+        "v50_majmin": 0.8537857818533858,
+        "delta_majmin": 0.0212
+      },
+      {
+        "id": "hammer-to-fall",
+        "v49_majmin": 0.6232690028356097,
+        "v50_majmin": 0.6294103232194923,
+        "delta_majmin": 0.0061
+      },
+      {
+        "id": "yesterday",
+        "v49_majmin": 0.8595489519659112,
+        "v50_majmin": 0.8595489519659112,
+        "delta_majmin": 0.0
+      },
+      {
+        "id": "back-in-the-ussr",
+        "v49_majmin": 0.9189050107904033,
+        "v50_majmin": 0.9189050107904033,
+        "delta_majmin": 0.0
+      },
+      {
+        "id": "get-back",
+        "v49_majmin": 0.7332732552906215,
+        "v50_majmin": 0.7332732552906215,
+        "delta_majmin": 0.0
+      },
+      {
+        "id": "norwegian-wood",
+        "v49_majmin": 0.8879300914115645,
+        "v50_majmin": 0.8879300914115645,
+        "delta_majmin": 0.0
+      },
+      {
+        "id": "crazy-little-thing-called-love",
+        "v49_majmin": 0.6400349148797204,
+        "v50_majmin": 0.6400349148797204,
+        "delta_majmin": 0.0
+      },
+      {
+        "id": "seven-seas-of-rhye",
+        "v49_majmin": 0.5664302572736464,
+        "v50_majmin": 0.5664302572736464,
+        "delta_majmin": 0.0
+      }
+    ]
+  }
+}

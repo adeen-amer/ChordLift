@@ -1,6 +1,7 @@
 """Tests for pitch normalization."""
 import numpy as np
 import librosa
+import pytest
 
 from pitch_utils import estimate_pitch_shift_semitones, normalize_pitch
 
@@ -23,22 +24,22 @@ def test_estimate_pitch_shift_detects_sharp_signal():
     assert shift > 0.1
 
 
-def test_pitch_gate_skips_unreliable_correction(monkeypatch):
-    """Unreliable correction should skip apply (shift returned as 0)."""
-    from pitch_utils import normalize_pitch
+def test_normalize_pitch_applies_detected_shift(monkeypatch):
+    import numpy as np
+    import pitch_utils
 
-    sr = 22050
-    y = librosa.tone(110, sr=sr, duration=2.0)
+    monkeypatch.setattr(pitch_utils, "estimate_pitch_shift_semitones", lambda y, sr: 0.3)
+    y = np.random.RandomState(0).randn(22050).astype(np.float32)
+    corrected, shift = pitch_utils.normalize_pitch(y, 22050)
+    assert shift == pytest.approx(-0.3)
+    assert not np.array_equal(corrected, y)
 
-    monkeypatch.setattr(
-        "pitch_utils.estimate_pitch_shift_semitones",
-        lambda _y, _sr: 0.5,
-    )
-    monkeypatch.setattr(
-        "pitch_utils._estimate_reliable",
-        lambda shift, _y, _sr, _corrected: False,
-    )
-    out, applied = normalize_pitch(y, sr)
-    assert applied == 0.0
-    np.testing.assert_array_equal(out, y)
+
+def test_pitch_shift_audio_is_public():
+    import numpy as np
+    from pitch_utils import pitch_shift_audio
+
+    y = np.random.RandomState(0).randn(22050).astype(np.float32)
+    out = pitch_shift_audio(y, 22050, 0.5)
+    assert out is not None and len(out) == len(y)
 
