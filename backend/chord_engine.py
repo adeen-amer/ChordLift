@@ -4,7 +4,8 @@ Chord extraction dispatcher.
 Set CHORD_ENGINE=classic to force the template-based engine.
 ML default: lv-chordia on HPSS chord stem + decode-both pitch selection.
 
-Pitch normalization runs before either engine (see pitch_utils).
+Classic engine: pitch normalization runs up front. ML engine: pitch is
+selected per-branch inside chord_engine_ml (see pitch_utils).
 """
 import logging
 import os
@@ -94,6 +95,14 @@ def extract_chords(y, sr, pipeline=None, *, return_pipeline=False):
             )
             if strict_engine_checks_enabled():
                 raise
+            if PITCH_CORRECT:
+                # ponytail: rebuild is only reached on the rare ML-failure
+                # fallback path; the direct-classic path above already
+                # pitch-corrected before the pipeline was first built.
+                y, pitch_shift = normalize_pitch(y, sr)
+                if pitch_shift:
+                    logger.info("Pitch-corrected audio by %.2f semitones before chord analysis", pitch_shift)
+                pipeline = build_chord_pipeline_context(y, sr)
 
     from analyzer import extract_chords as extract_chords_classic
     segments, key_info = extract_chords_classic(y, sr, pipeline)

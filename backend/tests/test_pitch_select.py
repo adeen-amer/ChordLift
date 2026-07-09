@@ -1,4 +1,6 @@
 """Decode-both pitch selection (v50 levers 1+2). Chordia calls are mocked."""
+import os
+
 import numpy as np
 import pytest
 
@@ -149,3 +151,58 @@ def test_classic_path_still_normalizes_pitch(monkeypatch):
     )
     chord_engine.extract_chords(np.zeros(22050, dtype=np.float32), 22050)
     assert called.get("yes")
+
+
+def test_pitch_correct_off_sets_env_flag(monkeypatch):
+    import chord_engine
+
+    monkeypatch.delenv("CHORD_PITCH_SELECT", raising=False)
+    monkeypatch.setattr(chord_engine, "PITCH_CORRECT", False)
+    monkeypatch.setattr(chord_engine, "CHORD_ENGINE", "ml")
+    monkeypatch.setattr(
+        "chord_engine_ml.extract_chords_ml",
+        lambda y, sr, pipeline: ([{"chord": "C", "start": 0.0, "end": 1.0}], {}),
+    )
+    monkeypatch.setattr(
+        "chord_pipeline.build_chord_pipeline_context",
+        lambda y, sr: __import__("types").SimpleNamespace(
+            stems=__import__("types").SimpleNamespace(method="hpss")
+        ),
+    )
+    chord_engine.extract_chords(np.zeros(22050, dtype=np.float32), 22050)
+    assert os.environ["CHORD_PITCH_SELECT"] == "off"
+
+
+def test_ml_fallback_still_normalizes_pitch(monkeypatch):
+    import chord_engine
+
+    monkeypatch.setattr(chord_engine, "CHORD_ENGINE", "ml")
+    monkeypatch.setattr(chord_engine, "strict_engine_checks_enabled", lambda: False)
+
+    def boom(y, sr, pipeline):
+        raise RuntimeError("ml engine exploded")
+
+    monkeypatch.setattr("chord_engine_ml.extract_chords_ml", boom)
+
+    called = {}
+
+    def fake_normalize(y, sr):
+        called["yes"] = True
+        return y, -0.5
+
+    monkeypatch.setattr(chord_engine, "normalize_pitch", fake_normalize)
+    monkeypatch.setattr(
+        "analyzer.extract_chords",
+        lambda y, sr, pipeline: ([{"chord": "C", "start": 0.0, "end": 1.0}], {}),
+    )
+    monkeypatch.setattr(
+        "chord_pipeline.build_chord_pipeline_context",
+        lambda y, sr: __import__("types").SimpleNamespace(
+            stems=__import__("types").SimpleNamespace(method="hpss")
+        ),
+    )
+    segments, key_info = chord_engine.extract_chords(
+        np.zeros(22050, dtype=np.float32), 22050
+    )
+    assert called.get("yes")
+    assert key_info["ml_fallback"] is True
