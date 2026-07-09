@@ -92,6 +92,18 @@ def test_oversized_shift_candidate_is_rejected(monkeypatch):
     assert segs[0]["chord"] == "via_hmm_raw"
 
 
+def test_varispeed_shift_below_cap_is_contested(monkeypatch):
+    monkeypatch.setenv("CHORD_PITCH_SELECT", "confidence")
+    monkeypatch.setenv("CHORD_PITCH_CONF_MARGIN", "0.0")
+    calls = _patch(monkeypatch, conf_raw=0.5, conf_cor=0.9, shift=0.38)
+    segs, applied = chord_engine_ml._chordia_segments_pitch_selected(
+        np.zeros(22050, dtype=np.float32), 22050
+    )
+    assert calls["n"] == 2
+    assert segs[0]["chord"] == "via_hmm_cor"
+    assert applied == pytest.approx(-0.38)
+
+
 def test_off_mode_never_corrects(monkeypatch):
     monkeypatch.setenv("CHORD_PITCH_SELECT", "off")
     calls = _patch(monkeypatch, conf_raw=0.5, conf_cor=0.9, shift=0.8)

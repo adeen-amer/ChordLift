@@ -46,14 +46,15 @@ def _chordia_segments_pitch_selected(y_chord, sr):
     Returns (raw_segments, applied_shift_semitones).
     """
     mode = os.getenv("CHORD_PITCH_SELECT", "confidence").lower().strip()
-    max_candidate = float(os.getenv("CHORD_PITCH_MAX_CANDIDATE_SHIFT", "0.30"))
+    max_candidate = float(os.getenv("CHORD_PITCH_MAX_CANDIDATE_SHIFT", "0.40"))
     shift = _estimate_shift(y_chord, sr)
     probs_raw, hmm_raw, entry_raw = _recognize_probs(y_chord, sr)
 
-    # ponytail: tuning estimates beyond ~0.3st are estimator error, not real
-    # detune (DEV: -0.45st on a bass-driven track won the confidence contest
-    # with a catastrophic correction; genuine detunes measured ~0.2st). Raise
-    # via env if a real large detune ever shows up.
+    # ponytail: cap tuned on 3 measured cases across both gold splits — real
+    # varispeed detunes at 0.37-0.38st (corrections worth +13/+20pp),
+    # estimator error at 0.45st (bass-only track, correction cost -11pp).
+    # 0.05st of headroom to the known-bad case; raise/lower via env as new
+    # cases appear.
     if (
         mode == "off"
         or abs(shift) < MIN_SHIFT_SEMITONES
