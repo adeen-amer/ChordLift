@@ -44,12 +44,12 @@ def _patch(monkeypatch, conf_raw, conf_cor, shift=0.4):
 def test_corrected_branch_wins_on_higher_confidence(monkeypatch):
     monkeypatch.setenv("CHORD_PITCH_SELECT", "confidence")
     monkeypatch.setenv("CHORD_PITCH_CONF_MARGIN", "0.0")
-    _patch(monkeypatch, conf_raw=0.5, conf_cor=0.7, shift=0.4)
+    _patch(monkeypatch, conf_raw=0.5, conf_cor=0.7, shift=0.2)
     segs, applied = chord_engine_ml._chordia_segments_pitch_selected(
         np.zeros(22050, dtype=np.float32), 22050
     )
     assert segs[0]["chord"] == "via_hmm_cor"
-    assert applied == pytest.approx(-0.4)
+    assert applied == pytest.approx(-0.2)
 
 
 def test_raw_wins_on_tie(monkeypatch):
@@ -66,7 +66,7 @@ def test_raw_wins_on_tie(monkeypatch):
 def test_margin_blocks_marginal_correction(monkeypatch):
     monkeypatch.setenv("CHORD_PITCH_SELECT", "confidence")
     monkeypatch.setenv("CHORD_PITCH_CONF_MARGIN", "0.05")
-    _patch(monkeypatch, conf_raw=0.60, conf_cor=0.63)
+    _patch(monkeypatch, conf_raw=0.60, conf_cor=0.63, shift=0.2)
     segs, applied = chord_engine_ml._chordia_segments_pitch_selected(
         np.zeros(22050, dtype=np.float32), 22050
     )
@@ -82,6 +82,16 @@ def test_small_shift_skips_second_inference(monkeypatch):
     assert calls["n"] == 1 and applied == 0.0
 
 
+def test_oversized_shift_candidate_is_rejected(monkeypatch):
+    monkeypatch.setenv("CHORD_PITCH_SELECT", "confidence")
+    calls = _patch(monkeypatch, conf_raw=0.5, conf_cor=0.9, shift=0.45)
+    segs, applied = chord_engine_ml._chordia_segments_pitch_selected(
+        np.zeros(22050, dtype=np.float32), 22050
+    )
+    assert calls["n"] == 1 and applied == 0.0
+    assert segs[0]["chord"] == "via_hmm_raw"
+
+
 def test_off_mode_never_corrects(monkeypatch):
     monkeypatch.setenv("CHORD_PITCH_SELECT", "off")
     calls = _patch(monkeypatch, conf_raw=0.5, conf_cor=0.9, shift=0.8)
@@ -93,7 +103,7 @@ def test_off_mode_never_corrects(monkeypatch):
 
 def test_tta_decodes_averaged_probs(monkeypatch):
     monkeypatch.setenv("CHORD_PITCH_SELECT", "tta")
-    calls = _patch(monkeypatch, conf_raw=0.5, conf_cor=0.9, shift=0.4)
+    calls = _patch(monkeypatch, conf_raw=0.5, conf_cor=0.9, shift=0.2)
     segs, applied = chord_engine_ml._chordia_segments_pitch_selected(
         np.zeros(22050, dtype=np.float32), 22050
     )
