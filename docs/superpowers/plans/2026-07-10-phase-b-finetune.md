@@ -69,14 +69,13 @@ git commit -m "feat: Phase B spike — warm-start + data contract proven (FINDIN
 - Consumes: `scripts/verify_training_leakage.py` (CLI: takes a manifest path, exits nonzero on gold overlap), `analysis/gold_holdout_v2.json`.
 - Produces:
   - Manifest format (Tasks 3/5/6 rely on it): one line per track, `<abs_audio_path>\t<abs_lab_path>`.
-  - `build_manifest.py` CLI: `--data-dir DIR --out FILE [--role train|val]` — scans DIR for `<stem>.(mp3|wav|m4a)` + `<stem>.lab` pairs, writes the manifest, then runs `verify_training_leakage.py` on it and exits nonzero if leakage found or if pair count < 10; prints `pairs=<N> leakage=OK`.
+  - `build_manifest.py` CLI: `--data-dir DIR --out FILE [--min-pairs N]` (default 10) — scans DIR for `<stem>.(mp3|wav|m4a)` + `<stem>.lab` pairs, writes the manifest, then runs `verify_training_leakage.py` on it and exits nonzero if leakage found or if pair count < 10; prints `pairs=<N> leakage=OK`.
   - `billboard_to_lab.py` CLI: `--annotations-dir DIR --out-labs DIR` — converts McGill Billboard `salami_chords.txt` files (format: `<time>\t<chord>` event lines with section markers) into Harte `.lab` lines `<start>\t<end>\t<chord>`; skips tracks whose annotation cannot be parsed; prints per-file `ok`/`skip` and a final count.
 
 - [ ] **Step 1: Write the failing tests**
 
 ```python
 """backend/tests/test_chord_training_data.py"""
-import json
 import subprocess
 import sys
 from pathlib import Path
@@ -108,12 +107,7 @@ def test_build_manifest_pairs_and_leakage(tmp_path):
 
 
 def test_build_manifest_rejects_gold_track(tmp_path):
-    gold = json.loads((BACKEND / "analysis" / "gold_holdout_v2.json").read_text())
-    # take any gold recording basename to trigger the leakage check
-    sample = gold["tracks"][0] if isinstance(gold, dict) and "tracks" in gold else (
-        gold[0] if isinstance(gold, list) else list(gold.values())[0][0])
-    # fallback: use a known gold id
-    gold_stem = "let-it-be"
+    gold_stem = "let-it-be"  # known gold-24 id; must trip the leakage gate
     data = tmp_path / "data"
     data.mkdir()
     (data / f"{gold_stem}.mp3").write_bytes(b"\x00")
