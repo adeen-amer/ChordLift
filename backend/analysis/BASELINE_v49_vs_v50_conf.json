@@ -1,0 +1,106 @@
+{
+  "dev": {
+    "split": "dev",
+    "v49_summary": {
+      "track_count": 14,
+      "avg_root_wcsr": 0.7665,
+      "avg_majmin_wcsr": 0.7608,
+      "avg_sevenths_wcsr": 0.6501,
+      "avg_seg_score": 0.8356
+    },
+    "v50_summary": {
+      "track_count": 14,
+      "avg_root_wcsr": 0.804,
+      "avg_majmin_wcsr": 0.7945,
+      "avg_sevenths_wcsr": 0.6723,
+      "avg_seg_score": 0.8299
+    },
+    "delta_majmin_agg": 0.0337,
+    "tracks": [
+      {
+        "id": "yellow-submarine",
+        "v49_majmin": 0.19033862661224854,
+        "v50_majmin": 0.747826145824484,
+        "delta_majmin": 0.5575
+      },
+      {
+        "id": "youre-my-best-friend",
+        "v49_majmin": 0.7951791453047249,
+        "v50_majmin": 0.834095154519005,
+        "delta_majmin": 0.0389
+      },
+      {
+        "id": "ticket-to-ride",
+        "v49_majmin": 0.960131587341924,
+        "v50_majmin": 0.960523023382155,
+        "delta_majmin": 0.0004
+      },
+      {
+        "id": "let-it-be",
+        "v49_majmin": 0.8743769293332204,
+        "v50_majmin": 0.8743769293332204,
+        "delta_majmin": 0.0
+      },
+      {
+        "id": "come-together",
+        "v49_majmin": 0.9540015344317911,
+        "v50_majmin": 0.9540015344317911,
+        "delta_majmin": 0.0
+      },
+      {
+        "id": "help",
+        "v49_majmin": 0.9694684385836528,
+        "v50_majmin": 0.9694684385836528,
+        "delta_majmin": 0.0
+      },
+      {
+        "id": "something",
+        "v49_majmin": 0.7818463141605446,
+        "v50_majmin": 0.7818463141605446,
+        "delta_majmin": 0.0
+      },
+      {
+        "id": "i-saw-her-standing-there",
+        "v49_majmin": 0.9329962846558554,
+        "v50_majmin": 0.9329962846558554,
+        "delta_majmin": 0.0
+      },
+      {
+        "id": "while-my-guitar-gently-weeps",
+        "v49_majmin": 0.8057422696837516,
+        "v50_majmin": 0.8057422696837516,
+        "delta_majmin": 0.0
+      },
+      {
+        "id": "dont-stop-me-now",
+        "v49_majmin": 0.806170863326592,
+        "v50_majmin": 0.806170863326592,
+        "delta_majmin": 0.0
+      },
+      {
+        "id": "play-the-game",
+        "v49_majmin": 0.5745765375066781,
+        "v50_majmin": 0.5745765375066781,
+        "delta_majmin": 0.0
+      },
+      {
+        "id": "twist-and-shout",
+        "v49_majmin": 0.9410355922387541,
+        "v50_majmin": 0.9403191524078096,
+        "delta_majmin": -0.0007
+      },
+      {
+        "id": "cant-buy-me-love",
+        "v49_majmin": 0.9368414826218008,
+        "v50_majmin": 0.9274368480221505,
+        "delta_majmin": -0.0094
+      },
+      {
+        "id": "another-one-bites-the-dust",
+        "v49_majmin": 0.12807608506770396,
+        "v50_majmin": 0.013752990870326595,
+        "delta_majmin": -0.1143
+      }
+    ]
+  }
+}
