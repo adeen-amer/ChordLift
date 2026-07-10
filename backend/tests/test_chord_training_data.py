@@ -68,3 +68,26 @@ def test_billboard_to_lab_converts_events(tmp_path):
     assert first_chord == "C:maj"
     assert float(first_start) == pytest.approx(0.5)
     assert float(first_end) == pytest.approx(2.5)
+
+
+def test_pack_bundle_layout(tmp_path):
+    data = tmp_path / "d"
+    data.mkdir()
+    (data / "a.wav").write_bytes(b"\x00")
+    (data / "a.lab").write_text("0.0\t1.0\tC:maj\n")
+    m = tmp_path / "train.txt"
+    m.write_text(f"{data}/a.wav\t{data}/a.lab\n")
+    v = tmp_path / "val.txt"
+    v.write_text(f"{data}/a.wav\t{data}/a.lab\n")
+    out = tmp_path / "bundle.zip"
+    r = subprocess.run(
+        [PY, str(BACKEND / "chord_training" / "pack_bundle.py"),
+         "--train-manifest", str(m), "--val-manifest", str(v), "--out", str(out)],
+        capture_output=True, text=True, cwd=BACKEND,
+    )
+    assert r.returncode == 0, r.stderr
+    import zipfile
+    names = zipfile.ZipFile(out).namelist()
+    assert "RUNBOOK.md" in names and "kit/finetune.py" in names
+    assert "train_manifest.txt" in names
+    assert any(n.startswith("checkpoints_in/") and n.endswith(".sdict") for n in names)

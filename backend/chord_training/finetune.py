@@ -57,14 +57,14 @@ def _read_manifest(path: str) -> list[tuple[str, str]]:
     return pairs
 
 
-def _warm_start(seed: int, cache_dir: str) -> NetworkInterface:
+def _warm_start(seed: int, cache_dir: str, pretrained_dir: str) -> NetworkInterface:
     """Fresh net under the ft1 save name, hard-loaded with the packaged s{seed}
     weights (FINDINGS.md §6): constructing under a NEW name keeps finalized=False
     so train_supervised will accept it; loading via the constructor instead would
     load the ft1 checkpoint (if one already exists) and trip the finalized guard.
     """
     counter = pickle.load(open(os.path.join(PKG, "data", f"cross_subpart_weight{seed}.pkl"), "rb"))
-    pretrained = os.path.join(CACHE_DATA_PATH, NAME_TMPL.format(seed=seed) + ".sdict")
+    pretrained = os.path.join(pretrained_dir, NAME_TMPL.format(seed=seed) + ".sdict")
     iface = NetworkInterface(ChordNet(counter), FT_NAME_TMPL.format(seed=seed),
                               load_checkpoint=False, load_path=cache_dir)
     if iface.finalized:
@@ -117,6 +117,11 @@ def main() -> int:
     ap.add_argument("--epochs-cap", type=int, default=30)
     ap.add_argument("--batch-size", type=int, default=8)
     ap.add_argument("--sample-length", type=int, default=DEFAULT_SAMPLE_LENGTH)
+    ap.add_argument("--pretrained-dir", default=CACHE_DATA_PATH,
+                     help="dir holding the packaged pretrained *_s{seed}.best.sdict "
+                          "checkpoints (default: the active venv's lv_chordia share "
+                          "cache; the training bundle's checkpoints_in/ overrides this "
+                          "so the run doesn't depend on what pip happened to install)")
     ap.add_argument("--dry-run", action="store_true")
     args = ap.parse_args()
 
@@ -140,7 +145,7 @@ def main() -> int:
                                          sample_length=args.sample_length)
         val_provider = make_providers(val_x, val_y, train=False)
 
-        iface = _warm_start(seed, cache_dir)
+        iface = _warm_start(seed, cache_dir, args.pretrained_dir)
 
         if args.dry_run:
             _dry_run_step(iface, train_provider, args.batch_size)
