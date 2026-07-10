@@ -1,1 +1,1 @@
-"""Pseudo-label training for the Conformer chord recognizer."""
+"""Phase B fine-tuning kit for the lv_chordia serving checkpoints."""
