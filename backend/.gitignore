@@ -16,3 +16,4 @@ models/*.pt
 !models/.gitkeep
 *.egg-info/
 chord_training/spike_out/
+chord_training/data/
