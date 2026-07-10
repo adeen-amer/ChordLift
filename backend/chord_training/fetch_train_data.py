@@ -351,23 +351,28 @@ def _match_file_to_row(file_stem: str, candidates: list[dict]) -> dict | list[di
 
 def _run_chunk(
     chunk_rows: list[dict], dest: Path, spotdl_py: Path, tolerance: float, label: str,
-) -> list[dict]:
+) -> tuple[list[dict], bool]:
     """One spotdl invocation over chunk_rows; gate results by duration and
-    move matches into dest. Returns the rows that were successfully
-    downloaded (caller drops these from its own pending list)."""
+    move matches into dest. Returns (rows successfully downloaded, whether
+    the chunk was empty) -- caller drops matched rows from its own pending
+    list and backs off longer after an empty chunk (rate-limit signal)."""
     tmp_dir = Path(tempfile.mkdtemp(prefix="spotdl_batch_"))
     gated = rejected = ambiguous = 0
     matched_rows: list[dict] = []
     still_pending = list(chunk_rows)  # per-chunk claim tracking, avoids double-matching
     try:
         queries = [f"{r['artist']} - {r['title']}" for r in chunk_rows]
-        subprocess.run(
+        result = subprocess.run(
             [str(spotdl_py), "-m", "spotdl", "download", *queries,
              "--output", str(tmp_dir / "{artist} - {title}.{output-ext}"),
              "--format", "mp3", "--threads", "8"],
             cwd=str(BACKEND), capture_output=True, text=True,
         )  # no check=True: one bad query in a chunk shouldn't raise on the rest
         candidates = sorted(tmp_dir.glob("*.mp3")) + sorted(tmp_dir.glob("*.m4a"))
+        empty_chunk = not candidates
+        if empty_chunk:  # likely a rate-limit window -- surface spotdl's own output to see why
+            tail = ((result.stdout or "") + (result.stderr or "")).strip().splitlines()[-10:]
+            print("spotdl output (empty chunk):\n" + "\n".join(tail), flush=True)
         for src in candidates:
             match = _match_file_to_row(src.stem, still_pending)
             if match is None:
@@ -400,7 +405,7 @@ def _run_chunk(
         shutil.rmtree(tmp_dir, ignore_errors=True)
 
     print(f"{label}: +{gated} gated, {rejected} reject, {ambiguous} ambiguous", flush=True)
-    return matched_rows
+    return matched_rows, empty_chunk
 
 
 def stage_download_batch(
@@ -424,27 +429,30 @@ def stage_download_batch(
     spotdl_py = BACKEND / ".venv" / "bin" / "python"
     chunks = [pending[i:i + chunk_size] for i in range(0, len(pending), chunk_size)]
     for idx, chunk_rows in enumerate(chunks, start=1):
-        matched = _run_chunk(chunk_rows, dest, spotdl_py, tolerance, f"chunk {idx}/{len(chunks)}")
+        matched, empty_chunk = _run_chunk(chunk_rows, dest, spotdl_py, tolerance, f"chunk {idx}/{len(chunks)}")
         for m in matched:
             pending.remove(m)
         if idx < len(chunks):
-            print("cooldown: sleeping 60s before next chunk", flush=True)
-            time.sleep(60)
+            if empty_chunk:
+                print("rate-limit backoff: 300s", flush=True)
+                time.sleep(300)
+            else:
+                print("cooldown: sleeping 60s before next chunk", flush=True)
+                time.sleep(60)
 
     if pending:  # one retry sweep: a rate-limited chunk can return zero queries
-        matched = _run_chunk(list(pending), dest, spotdl_py, tolerance, "retry chunk")
+        matched, _ = _run_chunk(list(pending), dest, spotdl_py, tolerance, "retry chunk")
         for m in matched:
             pending.remove(m)
 
     for r in pending:
         print(f"UNRESOLVED {r['slug']}", flush=True)
 
-    train_tracks = json.loads(TRAIN_TRACKS_JSON.read_text())
     ready = sum(
-        1 for s in train_tracks
-        if (dest / f"{s}.mp3").exists() or (dest / f"{s}.m4a").exists()
+        1 for r in rows
+        if (dest / f"{r['slug']}.mp3").exists() or (dest / f"{r['slug']}.m4a").exists()
     )
-    print(f"train pairs ready: {ready}/{len(train_tracks)}", flush=True)
+    print(f"pairs ready: {ready}/{len(rows)}", flush=True)
     return 0
 
 
