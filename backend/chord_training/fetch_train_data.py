@@ -258,7 +258,8 @@ def stage_audio_plan() -> int:
     return 0
 
 
-def stage_download(plan_path: Path, limit: int | None) -> int:
+def stage_download(plan_path: Path, limit: int | None, dest: Path = TRAIN_DIR) -> int:
+    dest.mkdir(parents=True, exist_ok=True)
     rows = []
     for line in plan_path.read_text().splitlines():
         line = line.strip()
@@ -271,7 +272,7 @@ def stage_download(plan_path: Path, limit: int | None) -> int:
 
     spotdl_py = BACKEND / ".venv" / "bin" / "python"
     for slug, artist, title, end_s in rows:
-        if (TRAIN_DIR / f"{slug}.mp3").exists() or (TRAIN_DIR / f"{slug}.m4a").exists():
+        if (dest / f"{slug}.mp3").exists() or (dest / f"{slug}.m4a").exists():
             continue  # resumable: already fetched
 
         tmp_dir = Path(tempfile.mkdtemp(prefix=f"spotdl_{slug}_"))
@@ -288,7 +289,7 @@ def stage_download(plan_path: Path, limit: int | None) -> int:
             src = candidates[0]
             dur = _audio_duration(src)
             if abs(dur - end_s) <= DURATION_TOLERANCE_SEC:
-                shutil.move(str(src), str(TRAIN_DIR / f"{slug}.mp3"))
+                shutil.move(str(src), str(dest / f"{slug}.mp3"))
                 print(f"OK {slug} (duration {dur:.1f}s vs lab {end_s:.1f}s)")
             else:
                 print(f"REJECT {slug} (duration {dur:.1f} vs {end_s:.1f})")
@@ -303,7 +304,7 @@ def stage_download(plan_path: Path, limit: int | None) -> int:
     train_tracks = json.loads(TRAIN_TRACKS_JSON.read_text())
     ready = sum(
         1 for s in train_tracks
-        if (TRAIN_DIR / f"{s}.mp3").exists() or (TRAIN_DIR / f"{s}.m4a").exists()
+        if (dest / f"{s}.mp3").exists() or (dest / f"{s}.m4a").exists()
     )
     print(f"train pairs ready: {ready}/{len(train_tracks)}")
     return 0
@@ -314,6 +315,7 @@ def main() -> int:
     ap.add_argument("--stage", required=True, choices=["labs", "audio-plan", "download"])
     ap.add_argument("--plan", type=Path, default=DOWNLOAD_PLAN, help="download stage: plan TSV to consume")
     ap.add_argument("--limit", type=int, default=None, help="download stage: cap rows processed")
+    ap.add_argument("--dest", type=Path, default=TRAIN_DIR, help="download stage: destination dir for audio files (default: data/train/)")
     args = ap.parse_args()
 
     TRAIN_DIR.mkdir(parents=True, exist_ok=True)
@@ -322,7 +324,7 @@ def main() -> int:
         return stage_labs()
     if args.stage == "audio-plan":
         return stage_audio_plan()
-    return stage_download(args.plan, args.limit)
+    return stage_download(args.plan, args.limit, args.dest)
 
 
 if __name__ == "__main__":
