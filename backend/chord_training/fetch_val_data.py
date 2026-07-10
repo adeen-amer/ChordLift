@@ -225,7 +225,7 @@ def _is_excluded_artist(artist: str) -> bool:
     return norm in EXCLUDED_ARTIST_NORMS
 
 
-def stage_labs() -> int:
+def stage_labs(pick: int = VAL_TARGET) -> int:
     ann_files = sorted(RAW_DIR.rglob("salami_chords.txt"))
     if not ann_files:
         print("error: no salami_chords.txt under data/billboard_raw/ -- run --stage annotations first", file=sys.stderr)
@@ -311,7 +311,7 @@ def stage_labs() -> int:
         slug = base_slug if used[base_slug] == 1 else f"{base_slug}-{used[base_slug]}"
         final.append((slug, artist, title, duration, segments))
 
-    picked = final[:VAL_TARGET]
+    picked = final[:pick]
 
     VAL_DIR.mkdir(parents=True, exist_ok=True)
     val_tracks: dict[str, dict] = {}
@@ -337,11 +337,12 @@ def stage_labs() -> int:
 def main() -> int:
     ap = argparse.ArgumentParser(description="Phase B val-data fetch (annotations / labs)")
     ap.add_argument("--stage", required=True, choices=["annotations", "labs"])
+    ap.add_argument("--pick", type=int, default=VAL_TARGET, help="number of val tracks to pick (labs stage only)")
     args = ap.parse_args()
 
     if args.stage == "annotations":
         return stage_annotations()
-    return stage_labs()
+    return stage_labs(args.pick)
 
 
 if __name__ == "__main__":
