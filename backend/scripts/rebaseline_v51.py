@@ -36,8 +36,12 @@ def _run_eval(split: str, out_path: Path, args) -> dict:
     os.environ["CHORD_CHORDIA_DICT"] = args.dict
     if args.models:
         os.environ["CHORD_CHORDIA_MODELS"] = args.models
+    else:
+        os.environ.pop("CHORD_CHORDIA_MODELS", None)
     if args.model_dir:
         os.environ["CHORD_CHORDIA_MODEL_DIR"] = args.model_dir
+    else:
+        os.environ.pop("CHORD_CHORDIA_MODEL_DIR", None)
     argv = [
         "eval_gold_mir.py", "--no-cache", "--split", split,
         "--require-audio-identity", "--write", str(out_path),
