@@ -38,6 +38,7 @@ import subprocess
 import sys
 import tarfile
 import tempfile
+import time
 import urllib.request
 from collections import Counter, defaultdict
 from pathlib import Path
@@ -263,7 +264,10 @@ def stage_audio_plan() -> int:
     return 0
 
 
-def stage_download(plan_path: Path, limit: int | None, dest: Path = TRAIN_DIR) -> int:
+def stage_download(
+    plan_path: Path, limit: int | None, dest: Path = TRAIN_DIR,
+    tolerance: float = DURATION_TOLERANCE_SEC,
+) -> int:
     dest.mkdir(parents=True, exist_ok=True)
     rows = []
     for line in plan_path.read_text().splitlines():
@@ -293,11 +297,11 @@ def stage_download(plan_path: Path, limit: int | None, dest: Path = TRAIN_DIR) -
                 raise FileNotFoundError("spotdl produced no mp3")
             src = candidates[0]
             dur = _audio_duration(src)
-            if abs(dur - end_s) <= DURATION_TOLERANCE_SEC:
+            if abs(dur - end_s) <= tolerance:
                 shutil.move(str(src), str(dest / f"{slug}.mp3"))
                 print(f"OK {slug} (duration {dur:.1f}s vs lab {end_s:.1f}s)")
             else:
-                print(f"REJECT {slug} (duration {dur:.1f} vs {end_s:.1f})")
+                print(f"REJECT {slug} (duration {dur:.1f} vs {end_s:.1f}, tolerance {tolerance:.1f}s)")
         except subprocess.CalledProcessError as exc:
             err = (exc.stderr or "").strip().splitlines()[-1:] or [""]
             print(f"FAIL {slug}: spotdl exit {exc.returncode}: {err[0][:200]}")
@@ -345,7 +349,64 @@ def _match_file_to_row(file_stem: str, candidates: list[dict]) -> dict | list[di
     return best[0] if len(best) == 1 else [row for row, _ in hits]
 
 
-def stage_download_batch(plan_path: Path, dest: Path, chunk_size: int) -> int:
+def _run_chunk(
+    chunk_rows: list[dict], dest: Path, spotdl_py: Path, tolerance: float, label: str,
+) -> list[dict]:
+    """One spotdl invocation over chunk_rows; gate results by duration and
+    move matches into dest. Returns the rows that were successfully
+    downloaded (caller drops these from its own pending list)."""
+    tmp_dir = Path(tempfile.mkdtemp(prefix="spotdl_batch_"))
+    gated = rejected = ambiguous = 0
+    matched_rows: list[dict] = []
+    still_pending = list(chunk_rows)  # per-chunk claim tracking, avoids double-matching
+    try:
+        queries = [f"{r['artist']} - {r['title']}" for r in chunk_rows]
+        subprocess.run(
+            [str(spotdl_py), "-m", "spotdl", "download", *queries,
+             "--output", str(tmp_dir / "{artist} - {title}.{output-ext}"),
+             "--format", "mp3", "--threads", "8"],
+            cwd=str(BACKEND), capture_output=True, text=True,
+        )  # no check=True: one bad query in a chunk shouldn't raise on the rest
+        candidates = sorted(tmp_dir.glob("*.mp3")) + sorted(tmp_dir.glob("*.m4a"))
+        for src in candidates:
+            match = _match_file_to_row(src.stem, still_pending)
+            if match is None:
+                print(f"UNMATCHED file {src.name}", flush=True)
+                continue
+            if isinstance(match, list):
+                print(f"AMBIGUOUS {src.name}: candidates {[r['slug'] for r in match]}", flush=True)
+                ambiguous += 1
+                continue
+            still_pending.remove(match)
+            try:
+                dur = _audio_duration(src)
+            except Exception as exc:
+                print(f"REJECT {match['slug']}: duration probe failed: {exc}", flush=True)
+                src.unlink(missing_ok=True)
+                rejected += 1
+                continue
+            if abs(dur - match["end_s"]) <= tolerance:
+                shutil.move(str(src), str(dest / f"{match['slug']}{src.suffix}"))
+                matched_rows.append(match)
+                gated += 1
+            else:
+                print(
+                    f"REJECT {match['slug']} (got {dur:.1f}s want {match['end_s']:.1f}s, "
+                    f"tolerance {tolerance:.1f}s)", flush=True,
+                )
+                src.unlink(missing_ok=True)
+                rejected += 1
+    finally:
+        shutil.rmtree(tmp_dir, ignore_errors=True)
+
+    print(f"{label}: +{gated} gated, {rejected} reject, {ambiguous} ambiguous", flush=True)
+    return matched_rows
+
+
+def stage_download_batch(
+    plan_path: Path, dest: Path, chunk_size: int,
+    tolerance: float = DURATION_TOLERANCE_SEC,
+) -> int:
     dest.mkdir(parents=True, exist_ok=True)
     rows = []
     for line in plan_path.read_text().splitlines():
@@ -363,47 +424,17 @@ def stage_download_batch(plan_path: Path, dest: Path, chunk_size: int) -> int:
     spotdl_py = BACKEND / ".venv" / "bin" / "python"
     chunks = [pending[i:i + chunk_size] for i in range(0, len(pending), chunk_size)]
     for idx, chunk_rows in enumerate(chunks, start=1):
-        tmp_dir = Path(tempfile.mkdtemp(prefix="spotdl_batch_"))
-        gated = rejected = ambiguous = 0
-        still_pending = list(chunk_rows)  # per-chunk claim tracking, avoids double-matching
-        try:
-            queries = [f"{r['artist']} - {r['title']}" for r in chunk_rows]
-            subprocess.run(
-                [str(spotdl_py), "-m", "spotdl", "download", *queries,
-                 "--output", str(tmp_dir / "{artist} - {title}.{output-ext}"),
-                 "--format", "mp3", "--threads", "8"],
-                cwd=str(BACKEND), capture_output=True, text=True,
-            )  # no check=True: one bad query in a chunk shouldn't raise on the rest
-            candidates = sorted(tmp_dir.glob("*.mp3")) + sorted(tmp_dir.glob("*.m4a"))
-            for src in candidates:
-                match = _match_file_to_row(src.stem, still_pending)
-                if match is None:
-                    print(f"UNMATCHED file {src.name}", flush=True)
-                    continue
-                if isinstance(match, list):
-                    print(f"AMBIGUOUS {src.name}: candidates {[r['slug'] for r in match]}", flush=True)
-                    ambiguous += 1
-                    continue
-                still_pending.remove(match)
-                try:
-                    dur = _audio_duration(src)
-                except Exception as exc:
-                    print(f"REJECT {match['slug']}: duration probe failed: {exc}", flush=True)
-                    src.unlink(missing_ok=True)
-                    rejected += 1
-                    continue
-                if abs(dur - match["end_s"]) <= DURATION_TOLERANCE_SEC:
-                    shutil.move(str(src), str(dest / f"{match['slug']}{src.suffix}"))
-                    pending.remove(match)
-                    gated += 1
-                else:
-                    print(f"REJECT {match['slug']} (got {dur:.1f}s want {match['end_s']:.1f}s)", flush=True)
-                    src.unlink(missing_ok=True)
-                    rejected += 1
-        finally:
-            shutil.rmtree(tmp_dir, ignore_errors=True)
+        matched = _run_chunk(chunk_rows, dest, spotdl_py, tolerance, f"chunk {idx}/{len(chunks)}")
+        for m in matched:
+            pending.remove(m)
+        if idx < len(chunks):
+            print("cooldown: sleeping 60s before next chunk", flush=True)
+            time.sleep(60)
 
-        print(f"chunk {idx}/{len(chunks)}: +{gated} gated, {rejected} reject, {ambiguous} ambiguous", flush=True)
+    if pending:  # one retry sweep: a rate-limited chunk can return zero queries
+        matched = _run_chunk(list(pending), dest, spotdl_py, tolerance, "retry chunk")
+        for m in matched:
+            pending.remove(m)
 
     for r in pending:
         print(f"UNRESOLVED {r['slug']}", flush=True)
@@ -424,6 +455,10 @@ def main() -> int:
     ap.add_argument("--limit", type=int, default=None, help="download stage: cap rows processed")
     ap.add_argument("--dest", type=Path, default=TRAIN_DIR, help="download/download-batch stage: destination dir for audio files (default: data/train/)")
     ap.add_argument("--chunk", type=int, default=25, help="download-batch stage: queries per spotdl invocation")
+    ap.add_argument(
+        "--tolerance", type=float, default=DURATION_TOLERANCE_SEC,
+        help="download/download-batch stage: duration-match gate, +/- seconds (default 2.0)",
+    )
     args = ap.parse_args()
 
     TRAIN_DIR.mkdir(parents=True, exist_ok=True)
@@ -433,8 +468,8 @@ def main() -> int:
     if args.stage == "audio-plan":
         return stage_audio_plan()
     if args.stage == "download-batch":
-        return stage_download_batch(args.plan, args.dest, args.chunk)
-    return stage_download(args.plan, args.limit, args.dest)
+        return stage_download_batch(args.plan, args.dest, args.chunk, args.tolerance)
+    return stage_download(args.plan, args.limit, args.dest, args.tolerance)
 
 
 if __name__ == "__main__":
