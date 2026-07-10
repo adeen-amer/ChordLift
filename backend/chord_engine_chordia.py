@@ -15,6 +15,15 @@ logger = logging.getLogger(__name__)
 CHORDIA_DICT = os.getenv("CHORD_CHORDIA_DICT", "submission").lower().strip()
 
 
+def _model_names() -> list[str]:
+    """Serving checkpoint list; CHORD_CHORDIA_MODELS overrides (Phase B)."""
+    raw = os.getenv("CHORD_CHORDIA_MODELS", "").strip()
+    if raw:
+        return [n.strip() for n in raw.split(",") if n.strip()]
+    from lv_chordia.chord_recognition import MODEL_NAMES
+    return list(MODEL_NAMES)
+
+
 def recognize_chordia_probs(y_chord, sr: int):
     """
     Run lv-chordia inference and return frame posteriors instead of labels.
@@ -30,7 +39,6 @@ def recognize_chordia_probs(y_chord, sr: int):
     """
     import importlib.resources
 
-    from lv_chordia.chord_recognition import MODEL_NAMES
     from lv_chordia.chordnet_ismir_naive import ChordNet
     from lv_chordia.extractors.cqt import CQTV2
     from lv_chordia.extractors.xhmm_ismir import XHMMDecoder
@@ -53,9 +61,13 @@ def recognize_chordia_probs(y_chord, sr: int):
         entry.append_file(tmp_path, io.MusicIO, "music")
         entry.append_extractor(CQTV2, "cqt")
         cqt = entry.cqt  # materialize before the temp file is unlinked
+        model_dir = os.getenv("CHORD_CHORDIA_MODEL_DIR", "").strip()
+        net_kwargs = {"load_path": model_dir} if model_dir else {}
         per_model = []
-        for model_name in MODEL_NAMES:
-            net = NetworkInterface(ChordNet(None), model_name, load_checkpoint=False)
+        for model_name in _model_names():
+            net = NetworkInterface(
+                ChordNet(None), model_name, load_checkpoint=False, **net_kwargs
+            )
             logger.info("Inference: %s", model_name)
             per_model.append(net.inference(cqt))
         probs = [
