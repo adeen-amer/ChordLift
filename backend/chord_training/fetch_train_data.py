@@ -18,6 +18,11 @@ Three stages, run in order:
 
   --stage download      spotdl the remaining plan rows, duration-gate, resumable.
 
+  --stage download-batch  same duration gate, but one spotdl invocation per
+                        --chunk queries (default 25) instead of per-track --
+                        amortizes process startup, ~10x faster. Falls back
+                        to --stage download for anything left UNRESOLVED.
+
 Reuses the archive URLs + tempfile-caching pattern from
 scripts/extract_isophonics_labs.py (copied below rather than imported --
 scripts/ has no __init__.py, so importing across dirs needs a sys.path hack
@@ -310,12 +315,115 @@ def stage_download(plan_path: Path, limit: int | None, dest: Path = TRAIN_DIR) -
     return 0
 
 
+def _tokens(s: str) -> set[str]:
+    return set(_slugify(s).split("-")) - {""}
+
+
+def _match_file_to_row(file_stem: str, candidates: list[dict]) -> dict | list[dict] | None:
+    """Slugified-stem match between a downloaded file and a pending plan row.
+    A row matches a file when one's token set is a subset of the other's
+    (handles spotdl/ffmpeg adding words like a parenthetical). Ties are
+    broken by exact token equality, then by largest token overlap; a real
+    tie is returned as a list (caller logs AMBIGUOUS and skips) rather than
+    guessing a wrong pairing."""
+    file_tokens = _tokens(file_stem)
+    hits = []
+    for row in candidates:
+        slug_tokens = set(row["slug"].split("-")) - {""}
+        if slug_tokens <= file_tokens or file_tokens <= slug_tokens:
+            hits.append((row, slug_tokens))
+    if not hits:
+        return None
+    if len(hits) == 1:
+        return hits[0][0]
+    exact = [row for row, toks in hits if toks == file_tokens]
+    if len(exact) == 1:
+        return exact[0]
+    overlaps = [(row, len(toks & file_tokens)) for row, toks in hits]
+    best_n = max(n for _, n in overlaps)
+    best = [row for row, n in overlaps if n == best_n]
+    return best[0] if len(best) == 1 else [row for row, _ in hits]
+
+
+def stage_download_batch(plan_path: Path, dest: Path, chunk_size: int) -> int:
+    dest.mkdir(parents=True, exist_ok=True)
+    rows = []
+    for line in plan_path.read_text().splitlines():
+        line = line.strip()
+        if not line:
+            continue
+        slug, artist, title, end_s = line.split("\t")
+        rows.append({"slug": slug, "artist": artist, "title": title, "end_s": float(end_s)})
+
+    pending = [
+        r for r in rows
+        if not (dest / f"{r['slug']}.mp3").exists() and not (dest / f"{r['slug']}.m4a").exists()
+    ]
+
+    spotdl_py = BACKEND / ".venv" / "bin" / "python"
+    chunks = [pending[i:i + chunk_size] for i in range(0, len(pending), chunk_size)]
+    for idx, chunk_rows in enumerate(chunks, start=1):
+        tmp_dir = Path(tempfile.mkdtemp(prefix="spotdl_batch_"))
+        gated = rejected = ambiguous = 0
+        still_pending = list(chunk_rows)  # per-chunk claim tracking, avoids double-matching
+        try:
+            queries = [f"{r['artist']} - {r['title']}" for r in chunk_rows]
+            subprocess.run(
+                [str(spotdl_py), "-m", "spotdl", "download", *queries,
+                 "--output", str(tmp_dir / "{artist} - {title}.{output-ext}"),
+                 "--format", "mp3", "--threads", "8"],
+                cwd=str(BACKEND), capture_output=True, text=True,
+            )  # no check=True: one bad query in a chunk shouldn't raise on the rest
+            candidates = sorted(tmp_dir.glob("*.mp3")) + sorted(tmp_dir.glob("*.m4a"))
+            for src in candidates:
+                match = _match_file_to_row(src.stem, still_pending)
+                if match is None:
+                    print(f"UNMATCHED file {src.name}", flush=True)
+                    continue
+                if isinstance(match, list):
+                    print(f"AMBIGUOUS {src.name}: candidates {[r['slug'] for r in match]}", flush=True)
+                    ambiguous += 1
+                    continue
+                still_pending.remove(match)
+                try:
+                    dur = _audio_duration(src)
+                except Exception as exc:
+                    print(f"REJECT {match['slug']}: duration probe failed: {exc}", flush=True)
+                    src.unlink(missing_ok=True)
+                    rejected += 1
+                    continue
+                if abs(dur - match["end_s"]) <= DURATION_TOLERANCE_SEC:
+                    shutil.move(str(src), str(dest / f"{match['slug']}{src.suffix}"))
+                    pending.remove(match)
+                    gated += 1
+                else:
+                    print(f"REJECT {match['slug']} (got {dur:.1f}s want {match['end_s']:.1f}s)", flush=True)
+                    src.unlink(missing_ok=True)
+                    rejected += 1
+        finally:
+            shutil.rmtree(tmp_dir, ignore_errors=True)
+
+        print(f"chunk {idx}/{len(chunks)}: +{gated} gated, {rejected} reject, {ambiguous} ambiguous", flush=True)
+
+    for r in pending:
+        print(f"UNRESOLVED {r['slug']}", flush=True)
+
+    train_tracks = json.loads(TRAIN_TRACKS_JSON.read_text())
+    ready = sum(
+        1 for s in train_tracks
+        if (dest / f"{s}.mp3").exists() or (dest / f"{s}.m4a").exists()
+    )
+    print(f"train pairs ready: {ready}/{len(train_tracks)}", flush=True)
+    return 0
+
+
 def main() -> int:
     ap = argparse.ArgumentParser(description="Phase B training-data fetch (labs / audio-plan / download)")
-    ap.add_argument("--stage", required=True, choices=["labs", "audio-plan", "download"])
-    ap.add_argument("--plan", type=Path, default=DOWNLOAD_PLAN, help="download stage: plan TSV to consume")
+    ap.add_argument("--stage", required=True, choices=["labs", "audio-plan", "download", "download-batch"])
+    ap.add_argument("--plan", type=Path, default=DOWNLOAD_PLAN, help="download/download-batch stage: plan TSV to consume")
     ap.add_argument("--limit", type=int, default=None, help="download stage: cap rows processed")
-    ap.add_argument("--dest", type=Path, default=TRAIN_DIR, help="download stage: destination dir for audio files (default: data/train/)")
+    ap.add_argument("--dest", type=Path, default=TRAIN_DIR, help="download/download-batch stage: destination dir for audio files (default: data/train/)")
+    ap.add_argument("--chunk", type=int, default=25, help="download-batch stage: queries per spotdl invocation")
     args = ap.parse_args()
 
     TRAIN_DIR.mkdir(parents=True, exist_ok=True)
@@ -324,6 +432,8 @@ def main() -> int:
         return stage_labs()
     if args.stage == "audio-plan":
         return stage_audio_plan()
+    if args.stage == "download-batch":
+        return stage_download_batch(args.plan, args.dest, args.chunk)
     return stage_download(args.plan, args.limit, args.dest)
 
 
