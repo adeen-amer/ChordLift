@@ -45,7 +45,7 @@ def test_dry_run_ok(manifests, tmp_path):
     r = subprocess.run(
         [PY, str(BACKEND / "chord_training" / "finetune.py"),
          "--train-manifest", str(train), "--val-manifest", str(val),
-         "--work-dir", str(tmp_path), "--seeds", "0", "--dry-run"],
+         "--work-dir", str(tmp_path), "--seeds", "0", "--sample-length", "800", "--dry-run"],
         capture_output=True, text=True, cwd=BACKEND,
     )
     assert r.returncode == 0, r.stderr
@@ -57,7 +57,7 @@ def test_one_round_train_writes_checkpoint(manifests, tmp_path):
     r = subprocess.run(
         [PY, str(BACKEND / "chord_training" / "finetune.py"),
          "--train-manifest", str(train), "--val-manifest", str(val),
-         "--work-dir", str(tmp_path), "--seeds", "0",
+         "--work-dir", str(tmp_path), "--seeds", "0", "--sample-length", "800",
          "--lr", "1e-4", "--epochs-cap", "1", "--batch-size", "2"],
         capture_output=True, text=True, cwd=BACKEND,
     )

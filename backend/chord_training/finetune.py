@@ -34,12 +34,11 @@ PKG = os.path.dirname(lv_chordia.__file__)
 NAME_TMPL = "joint_chord_net_ismir_naive_v1.0_reweight(0.0,10.0)_s{seed}.best"
 FT_NAME_TMPL = "joint_chord_net_ismir_naive_v1.0_reweight(0.0,10.0)_ft1_s{seed}.best"
 
-# ponytail: LSTM_TRAIN_LENGTH (1000 frames / 23.2s) is the architecture's proven
-# training-sample length (FINDINGS.md §1), but Task 5's short fixture clips (~20s /
-# 862 frames) would be dropped by the train provider's floor at that length. 800
-# frames (~18.6s) clears real fixture clips while staying close to the proven
-# window; pass --sample-length 1000 explicitly for full-song production runs.
-DEFAULT_SAMPLE_LENGTH = 800
+# ponytail: default is LSTM_TRAIN_LENGTH, the FINDINGS-verified production
+# value (FINDINGS.md §1). Short fixture clips (Task 5, ~20s) fall under this and
+# must pass --sample-length explicitly (e.g. 800) to clear the train provider's
+# floor; tests do so rather than shrinking the production default.
+DEFAULT_SAMPLE_LENGTH = LSTM_TRAIN_LENGTH
 
 
 def _read_manifest(path: str) -> list[tuple[str, str]]:
@@ -68,9 +67,25 @@ def _warm_start(seed: int, cache_dir: str) -> NetworkInterface:
     pretrained = os.path.join(CACHE_DATA_PATH, NAME_TMPL.format(seed=seed) + ".sdict")
     iface = NetworkInterface(ChordNet(counter), FT_NAME_TMPL.format(seed=seed),
                               load_checkpoint=False, load_path=cache_dir)
-    assert not iface.finalized, f"{FT_NAME_TMPL.format(seed=seed)} already finalized in {cache_dir}"
+    if iface.finalized:
+        new_name = FT_NAME_TMPL.format(seed=seed)
+        raise RuntimeError(
+            f"checkpoint {new_name} already exists in {cache_dir} — delete it or choose a new work dir"
+        )
     iface.net.load_state_dict(torch.load(pretrained, map_location="cpu")["net"])
     return iface
+
+
+def _send_to_gpu(var):
+    """Verbatim copy of NetworkInterface.train_supervised's local send_to_gpu
+    (lv_chordia/mir/nn/train.py:166-171): it's a closure nested inside the
+    training loop, not an importable module-level symbol, so the recursive
+    list/tuple-of-tensors walk is reproduced here rather than imported."""
+    if isinstance(var, list):
+        return [_send_to_gpu(sub_var) for sub_var in var]
+    if isinstance(var, tuple):
+        return tuple(_send_to_gpu(sub_var) for sub_var in var)
+    return var.cuda()
 
 
 def _dry_run_step(iface: NetworkInterface, train_provider, batch_size: int) -> None:
@@ -81,6 +96,8 @@ def _dry_run_step(iface: NetworkInterface, train_provider, batch_size: int) -> N
                          shuffle=train_provider.need_shuffle, num_workers=0,
                          collate_fn=train_provider.collate_fn)
     batch = next(iter(loader))
+    if iface.net.use_gpu:  # mirrors train.py:172-173's gate before the loss call
+        batch = _send_to_gpu(batch)
     iface.net.init_settings(True)
     iface.optimizer.zero_grad()
     raw_loss = iface.net.loss(*batch)
