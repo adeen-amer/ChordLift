@@ -9,6 +9,7 @@ arbitrary (audio, lab) pairs instead of two hardcoded synthetic clips.
 from __future__ import annotations
 
 import sys
+from pathlib import Path
 
 import librosa
 import numpy as np
@@ -104,8 +105,13 @@ class _Entry:
 
 def _build_storage(abs_name, proxy_name, arrays, dtype):
     storage = FramedH5DataStorage(abs_name, dtype=dtype)
-    if storage.created:  # deterministic re-runs
-        storage.delete()
+    if storage.created:  # deterministic re-runs: clear pre-existing storage files
+        # ponytail: storage.delete() calls self.root.close() unconditionally, but
+        # root is only ever set by load()/create_and_cache(), never by __init__ -
+        # crashes on this freshly-constructed object. Unlink the files it writes
+        # (final .h5d + its .h5part rename staging temp) directly instead.
+        Path(storage.filename).unlink(missing_ok=True)
+        Path(storage.filename + ".h5part").unlink(missing_ok=True)
         storage = FramedH5DataStorage(abs_name, dtype=dtype)
     entries = [_Entry("song%d" % i, proxy_name, a) for i, a in enumerate(arrays)]
     storage.create_and_cache(entries, proxy_name)

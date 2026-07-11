@@ -14,7 +14,7 @@ pytest.importorskip("lv_chordia")
 BACKEND = Path(__file__).resolve().parent.parent
 PY = sys.executable
 sys.path.insert(0, str(BACKEND / "chord_training"))
-from dataset import read_lab  # noqa: E402
+from dataset import build_storages, read_lab  # noqa: E402
 
 
 def _make_pair(d: Path, stem: str):
@@ -66,6 +66,25 @@ def test_read_lab_whitespace_agnostic(tmp_path):
     expected = [(0.0, 10.0, "C:maj"), (10.0, 20.0, "F:maj")]
     assert read_lab(str(space_lab)) == expected
     assert read_lab(str(tab_lab)) == expected
+
+
+def test_build_storages_rerun_into_same_dir_ok(tmp_path):
+    """Regression: re-running build_storages into a work-dir that already has
+    storage files from a prior run must not crash. It used to call
+    FramedH5DataStorage.delete() on a freshly-constructed object, which
+    unconditionally does self.root.close() -> AttributeError on None (root is
+    only set by load()/create_and_cache(), never by __init__)."""
+    _make_pair(tmp_path, "clip")
+    pairs = [(str(tmp_path / "clip.wav"), str(tmp_path / "clip.lab"))]
+    out_dir = tmp_path / "storage"
+    out_dir.mkdir()
+
+    x1, y1 = build_storages(pairs, str(out_dir))
+    x2, y2 = build_storages(pairs, str(out_dir))  # must not raise
+
+    assert x1 == x2 and y1 == y2
+    for p in (x1, y1):
+        assert Path(f"{p}.h5d").exists()
 
 
 def test_one_round_train_writes_checkpoint(manifests, tmp_path):
