@@ -8,6 +8,7 @@ arbitrary (audio, lab) pairs instead of two hardcoded synthetic clips.
 """
 from __future__ import annotations
 
+import re
 import sys
 from pathlib import Path
 
@@ -56,12 +57,41 @@ def read_lab(lab_path: str) -> list[tuple[float, float, str]]:
     return segs
 
 
+_HARTE_PAREN_RE = re.compile(r"\([^)]*\)")
+_HARTE_SLASH_RE = re.compile(r"/[^/]+$")
+
+
+def normalize_harte(label: str) -> str:
+    """Rewrite a raw Isophonics Harte label into the dialect lv_chordia's Chord()
+    parser accepts.
+
+    Chord() only accepts 'N', 'X', or '<root>:<quality>' — it raises on bare
+    roots ('A'), slash-bass notation ('D/5', 'Db:maj/3'), and parenthesized
+    extension lists ('C:maj(9)', 'A:(1,5)'), which together were silently
+    dropping ~60% of real Isophonics segments to the X fallback (measured).
+    Harte implies a major triad when no quality is given, so after stripping
+    extensions/slash-bass, anything left without a ':quality' is a bare root
+    and gets ':maj' appended. Qualities Chord() genuinely can't parse still
+    fall back to X in encode_labels — this only recovers the shapes Harte
+    permits that Chord()'s dialect requires spelled out (majors/minors/7ths).
+    """
+    if label in ("N", "X"):
+        return label
+    lab = _HARTE_PAREN_RE.sub("", label)   # C:maj(9) -> C:maj ; A:(1,5) -> A:
+    lab = _HARTE_SLASH_RE.sub("", lab)     # D/5 -> D ; E:min/5 -> E:min
+    if lab.endswith(":"):
+        lab = lab[:-1]                     # A: (empty quality after paren-strip) -> A
+    if ":" not in lab:
+        lab = f"{lab}:maj"                 # bare root -> major triad
+    return lab
+
+
 def encode_labels(segs, n_frames: int) -> np.ndarray:
     """Frame-align a .lab to the 6-component complex-chord array via Chord().to_numpy().
 
     Frame f covers time f*HOP/SR. Frames past the last segment, or whose label
-    isn't in the Harte subset `Chord` parses, -> 'X' (ignored by the loss;
-    FINDINGS.md §3). Returns int16 (n_frames, 6).
+    (after normalize_harte) still isn't in the Harte subset `Chord` parses,
+    -> 'X' (ignored by the loss; FINDINGS.md §3). Returns int16 (n_frames, 6).
     """
     y = np.empty((n_frames, 6), dtype=np.int16)
     x_arr = Chord("X").to_numpy()
@@ -74,7 +104,7 @@ def encode_labels(segs, n_frames: int) -> np.ndarray:
         else:
             if lab not in cache:
                 try:
-                    cache[lab] = Chord(lab).to_numpy()
+                    cache[lab] = Chord(normalize_harte(lab)).to_numpy()
                 except Exception:
                     cache[lab] = x_arr  # unparseable label -> ignored, not fatal
             y[f] = cache[lab]

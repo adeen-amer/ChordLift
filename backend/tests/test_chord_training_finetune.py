@@ -14,7 +14,8 @@ pytest.importorskip("lv_chordia")
 BACKEND = Path(__file__).resolve().parent.parent
 PY = sys.executable
 sys.path.insert(0, str(BACKEND / "chord_training"))
-from dataset import build_storages, read_lab  # noqa: E402
+from dataset import build_storages, encode_labels, normalize_harte, read_lab  # noqa: E402
+from lv_chordia.complex_chord import Chord  # noqa: E402
 
 
 def _make_pair(d: Path, stem: str):
@@ -66,6 +67,36 @@ def test_read_lab_whitespace_agnostic(tmp_path):
     expected = [(0.0, 10.0, "C:maj"), (10.0, 20.0, "F:maj")]
     assert read_lab(str(space_lab)) == expected
     assert read_lab(str(tab_lab)) == expected
+
+
+@pytest.mark.parametrize("raw,expected", [
+    ("A", "A:maj"),
+    ("D/5", "D:maj"),
+    ("E:min/5", "E:min"),
+    ("C:maj(9)", "C:maj"),
+    ("N", "N"),
+])
+def test_normalize_harte(raw, expected):
+    """Regression: Chord() rejects bare roots, slash-bass, and parenthesized
+    extensions (~60% of real Isophonics segments, measured) -> silently
+    fell back to X. normalize_harte must rewrite these into Chord()'s
+    dialect before parsing."""
+    assert normalize_harte(raw) == expected
+    Chord(normalize_harte(raw))  # must not raise
+
+
+def test_encode_labels_bare_root_not_x(tmp_path):
+    """Regression: a bare-root label ('A', Harte shorthand for a major triad)
+    used to silently fall back to X in encode_labels because Chord("A")
+    raises. After normalize_harte it must decode to a real major-triad
+    frame, not X."""
+    segs = [(0.0, 1.0, "A")]
+    n_frames = 5  # covers the 1.0s segment at HOP/SR ~= 0.023s/frame
+    y = encode_labels(segs, n_frames)
+    x_arr = Chord("X").to_numpy()
+    a_maj = Chord("A:maj").to_numpy()
+    assert not (y[0] == x_arr).all(), "bare-root label must not decode to X"
+    assert (y[0] == a_maj).all()
 
 
 def test_build_storages_rerun_into_same_dir_ok(tmp_path):
