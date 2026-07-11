@@ -13,6 +13,8 @@ import pytest
 pytest.importorskip("lv_chordia")
 BACKEND = Path(__file__).resolve().parent.parent
 PY = sys.executable
+sys.path.insert(0, str(BACKEND / "chord_training"))
+from dataset import read_lab  # noqa: E402
 
 
 def _make_pair(d: Path, stem: str):
@@ -50,6 +52,20 @@ def test_dry_run_ok(manifests, tmp_path):
     )
     assert r.returncode == 0, r.stderr
     assert "DRY-RUN OK" in r.stdout
+
+
+def test_read_lab_whitespace_agnostic(tmp_path):
+    """Real Isophonics .lab files are space-separated; our Billboard converter
+    writes tabs. read_lab must parse both (bug: it used to split on \\t only,
+    which silently broke on every real Isophonics train pair)."""
+    space_lab = tmp_path / "space.lab"
+    space_lab.write_text("0.0 10.0 C:maj\n10.0 20.0 F:maj\n")
+    tab_lab = tmp_path / "tab.lab"
+    tab_lab.write_text("0.0\t10.0\tC:maj\n10.0\t20.0\tF:maj\n")
+
+    expected = [(0.0, 10.0, "C:maj"), (10.0, 20.0, "F:maj")]
+    assert read_lab(str(space_lab)) == expected
+    assert read_lab(str(tab_lab)) == expected
 
 
 def test_one_round_train_writes_checkpoint(manifests, tmp_path):

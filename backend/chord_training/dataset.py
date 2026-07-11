@@ -38,14 +38,19 @@ def compute_cqt(wav_path: str) -> np.ndarray:
 
 
 def read_lab(lab_path: str) -> list[tuple[float, float, str]]:
-    """Harte .lab: tab-separated  start<TAB>end<TAB>label  (ChordLabIO format)."""
+    """Harte .lab: start end label, whitespace-separated (tab or space).
+
+    Real Isophonics .lab files are space-separated; our Billboard converter
+    writes tabs. maxsplit=2 is safe because Harte chord labels never contain
+    whitespace.
+    """
     segs = []
     with open(lab_path) as f:
         for line in f:
             line = line.strip()
             if not line:
                 continue
-            s, e, lab = line.split("\t")
+            s, e, lab = line.split(None, 2)
             segs.append((float(s), float(e), lab))
     return segs
 
