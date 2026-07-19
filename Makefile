@@ -1,4 +1,4 @@
-.PHONY: eval test eval-gold-dev eval-gold-test eval-gold-all phase13-v49 phase-v50 build-gold-bundle verify-gold-audio
+.PHONY: eval test eval-gold-dev eval-gold-test eval-gold-all phase13-v49 phase-v50 phase-v51 build-gold-bundle verify-gold-audio
 
 PYTHON ?= $(shell if [ -x backend/.venv/bin/python ]; then echo .venv/bin/python; else echo python3; fi)
 BACKEND = backend
@@ -28,6 +28,10 @@ phase13-v49:
 phase-v50:
 	cd $(BACKEND) && \
 		$(PYTHON) scripts/rebaseline_v50.py --split both --select confidence
+
+phase-v51:
+	cd $(BACKEND) && \
+		$(PYTHON) scripts/rebaseline_v51.py --split both --select confidence
 
 verify-gold-audio:
 	cd $(BACKEND) && $(PYTHON) scripts/verify_gold_audio.py

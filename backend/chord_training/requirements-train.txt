@@ -1,0 +1,14 @@
+# Phase B desktop training bundle — Python 3.11 venv.
+#
+# torch is NOT listed here: install it FIRST from the CUDA wheel index (see
+# RUNBOOK.md Step 1) so pip doesn't fall back to a CPU build. lv-chordia only
+# requires torch>=1.4.0, so installing the rest afterward will not touch an
+# already-satisfied torch install.
+#
+# Versions below are pinned to what was verified working on the Mac dev venv
+# (CPU only there; same versions, CUDA build of torch, on the training box).
+lv-chordia==1.0.0
+librosa==0.11.0
+soundfile==0.14.0
+numpy==1.26.4
+h5py==3.16.0

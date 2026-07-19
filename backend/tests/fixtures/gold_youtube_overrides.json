@@ -1,8 +1,7 @@
 {
   "description": "Curated YT Music URLs when spotdl picks a wrong take (live/MV/work-tape). Keys are gold track ids.",
   "overrides": {
-    "dont-stop-me-now": "https://music.youtube.com/watch?v=CczcMarUoVk",
-    "seven-seas-of-rhye": "https://music.youtube.com/watch?v=NtUANoNnC2U",
+    "dont-stop-me-now": "https://music.youtube.com/watch?v=R8xYWbRNzyA",
     "yellow-submarine": "https://music.youtube.com/watch?v=RhoprlMxteE"
   }
 }

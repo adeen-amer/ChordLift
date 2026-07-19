@@ -40,3 +40,30 @@ def test_chordia_confidence_in_unit_interval():
 
     fake = [np.full((10, 4), 0.25), np.zeros((10, 13))]
     assert chordia_confidence(fake) == pytest.approx(0.25)
+
+
+def test_model_list_env_override(monkeypatch):
+    import chord_engine_chordia as cec
+
+    monkeypatch.setenv("CHORD_CHORDIA_MODELS", "name_a.best,name_b.best")
+    assert cec._model_names() == ["name_a.best", "name_b.best"]
+    monkeypatch.delenv("CHORD_CHORDIA_MODELS")
+    from lv_chordia.chord_recognition import MODEL_NAMES
+    assert cec._model_names() == list(MODEL_NAMES)
+
+
+def test_model_list_env_override_preserves_commas_in_parens(monkeypatch):
+    """Real checkpoint names embed a literal comma in their reweight(X,Y)
+    suffix -- a naive comma-split shreds them into unmatched fragments that
+    silently fall back to random init (no exception, no error log)."""
+    import chord_engine_chordia as cec
+
+    monkeypatch.setenv(
+        "CHORD_CHORDIA_MODELS",
+        "joint_chord_net_ismir_naive_v1.0_reweight(0.0,10.0)_ft1_s0.best,"
+        "joint_chord_net_ismir_naive_v1.0_reweight(0.0,10.0)_ft1_s1.best",
+    )
+    assert cec._model_names() == [
+        "joint_chord_net_ismir_naive_v1.0_reweight(0.0,10.0)_ft1_s0.best",
+        "joint_chord_net_ismir_naive_v1.0_reweight(0.0,10.0)_ft1_s1.best",
+    ]
