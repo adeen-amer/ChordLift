@@ -31,7 +31,7 @@ jobs:
           pip install -r requirements.txt -r requirements-ml.txt soundfile
 
       - name: Verify madmom import
-        run: python -c "import madmom"
+        run: python -c "import collections, collections.abc; collections.MutableSequence = getattr(collections, 'MutableSequence', collections.abc.MutableSequence); import madmom"
 
       - name: Gold audio cache key
         id: gold-cache-key

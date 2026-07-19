@@ -82,6 +82,9 @@ def track_beats(
 
 def _track_beats_madmom(y_full: np.ndarray, sr: int, beats_per_bar: int = BEATS_PER_BAR) -> BeatGrid:
     """Model-based beat/downbeat tracking on the full mix (no stems needed)."""
+    from madmom_compat import ensure_collections_compat
+
+    ensure_collections_compat()
     from madmom.audio.signal import Signal
     from madmom.features.downbeats import DBNDownBeatTrackingProcessor, RNNDownBeatProcessor
 

@@ -58,6 +58,10 @@ def run(stems, sr: int, beats_per_bar: int = BEATS_PER_BAR) -> BeatGrid:
     Raises on any failure — callers handle fallback (beat_tracking.track_beats_auto).
     """
     import torch
+
+    from madmom_compat import ensure_collections_compat
+
+    ensure_collections_compat()
     from madmom.features.beats import DBNBeatTrackingProcessor
     from madmom.features.downbeats import DBNDownBeatTrackingProcessor
 

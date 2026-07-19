@@ -15,7 +15,7 @@ RUN pip install --no-cache-dir numpy==1.23.5 Cython && \
     pip install --no-cache-dir --no-build-isolation madmom==0.16.1 && \
     pip install --no-cache-dir -r requirements.txt -r requirements-ml.txt && \
     pip install --no-cache-dir soundfile && \
-    python -c "import madmom"
+    python -c "import collections, collections.abc; collections.MutableSequence = getattr(collections, 'MutableSequence', collections.abc.MutableSequence); import madmom"
 
 COPY . .
 
