@@ -1,6 +1,12 @@
 import { describe, expect, it } from 'vitest';
 import { activeLyricIndex } from './lyricsSync';
-import { activeLyricIndexBinary, activeRangeIndex, activeSegmentIndex } from './timeline';
+import {
+  activeLyricIndexBinary,
+  activeRangeIndex,
+  activeSegmentIndex,
+  barIndexForTime,
+  barNumbersForTimeline,
+} from './timeline';
 
 describe('activeSegmentIndex', () => {
   const segments = [
@@ -42,5 +48,41 @@ describe('activeLyricIndexBinary', () => {
     for (const t of [-1, 0, 5, 10, 15, 20, 99]) {
       expect(activeLyricIndexBinary(lines, t)).toBe(activeLyricIndex(lines, t));
     }
+  });
+});
+
+describe('barIndexForTime', () => {
+  const downbeats = [0, 2, 4, 6];
+
+  it('returns 0 before the first downbeat', () => {
+    expect(barIndexForTime(downbeats, -1)).toBe(0);
+  });
+
+  it('finds the containing bar', () => {
+    expect(barIndexForTime(downbeats, 0)).toBe(0);
+    expect(barIndexForTime(downbeats, 1.9)).toBe(0);
+    expect(barIndexForTime(downbeats, 2)).toBe(1);
+    expect(barIndexForTime(downbeats, 5.5)).toBe(2);
+  });
+
+  it('clamps to the last bar past the final downbeat', () => {
+    expect(barIndexForTime(downbeats, 100)).toBe(3);
+  });
+
+  it('returns 0 for an empty downbeat list', () => {
+    expect(barIndexForTime([], 5)).toBe(0);
+  });
+});
+
+describe('barNumbersForTimeline', () => {
+  it('maps each chord to its bar index', () => {
+    const downbeats = [0, 2, 4];
+    const timeline = [{ time: 0 }, { time: 1 }, { time: 2.1 }, { time: 5 }];
+    expect(barNumbersForTimeline(timeline, downbeats)).toEqual([0, 0, 1, 2]);
+  });
+
+  it('returns all zeros with no downbeat data', () => {
+    const timeline = [{ time: 0 }, { time: 3 }];
+    expect(barNumbersForTimeline(timeline, [])).toEqual([0, 0]);
   });
 });

@@ -1,17 +1,20 @@
-import { forwardRef, useState } from 'react';
+import { forwardRef, Fragment, useState } from 'react';
 import type { ChordEvent } from '../types';
 import { ChordDiagram } from './ChordDiagram';
 import { segmentTimeKey, timelineListKey } from '../utils/chordCorrections';
+import { barNumbersForTimeline } from '../utils/timeline';
 
 interface ChordSequenceProps {
   timeline: ChordEvent[];
+  downbeatTimes?: number[];
   onCorrectChord?: (time: number, chord: string) => void;
 }
 
 export const ChordSequence = forwardRef<HTMLDivElement, ChordSequenceProps>(
-  ({ timeline, onCorrectChord }, ref) => {
+  ({ timeline, downbeatTimes, onCorrectChord }, ref) => {
     const [editingKey, setEditingKey] = useState<string | null>(null);
     const [draft, setDraft] = useState('');
+    const barNumbers = barNumbersForTimeline(timeline, downbeatTimes ?? []);
 
     const startEdit = (seg: ChordEvent, idx: number) => {
       if (!onCorrectChord) return;
@@ -38,68 +41,77 @@ export const ChordSequence = forwardRef<HTMLDivElement, ChordSequenceProps>(
             const tierClass = tier !== 'high' ? ` confidence-${tier}` : '';
             const adjustedClass = chord.display_adjusted ? ' display-adjusted' : '';
             const correctedClass = chord.user_corrected ? ' user-corrected' : '';
+            const showBarDivider =
+              downbeatTimes && downbeatTimes.length > 0 && (idx === 0 || barNumbers[idx] !== barNumbers[idx - 1]);
 
             return (
-              <div
-                key={timelineListKey(idx)}
-                className={`chord-card${tierClass}${adjustedClass}${correctedClass}`}
-                id={`chord-${timelineListKey(idx)}`}
-                data-seg-index={idx}
-                data-time={segKey}
-                title={
-                  chord.model_chord && chord.model_chord !== chord.chord
-                    ? `Model: ${chord.model_chord}`
-                    : undefined
-                }
-              >
-                {editingKey === editKey ? (
-                  <input
-                    className="chord-edit-input"
-                    value={draft}
-                    onChange={(e) => setDraft(e.target.value)}
-                    onBlur={() => commitEdit(chord)}
-                    onKeyDown={(e) => {
-                      if (e.key === 'Enter') commitEdit(chord);
-                      if (e.key === 'Escape') setEditingKey(null);
-                    }}
-                    autoFocus
-                    aria-label="Edit chord"
-                  />
-                ) : (
-                  <div
-                    className="chord-name"
-                    role="button"
-                    tabIndex={onCorrectChord ? 0 : undefined}
-                    onDoubleClick={() => startEdit(chord, idx)}
-                    onKeyDown={(e) => {
-                      if (onCorrectChord && (e.key === 'Enter' || e.key === ' ')) {
-                        e.preventDefault();
-                        startEdit(chord, idx);
-                      }
-                    }}
-                  >
-                    {chord.chord}
-                    {tier === 'low' && (
-                      <span className="low-confidence" title="Low confidence detection">?</span>
-                    )}
-                    {tier === 'medium' && (
-                      <span className="medium-confidence" title="Medium confidence">~</span>
-                    )}
-                    {chord.user_corrected && (
-                      <span className="user-corrected-badge" title="Your correction">✎</span>
-                    )}
+              <Fragment key={timelineListKey(idx)}>
+                {showBarDivider && (
+                  <div className="bar-divider" key={`bar-${timelineListKey(idx)}`}>
+                    <span className="bar-number">{barNumbers[idx] + 1}</span>
                   </div>
                 )}
-                <ChordDiagram chordName={chord.chord} />
-                {chord.strumming && chord.strumming_is_heuristic && (
-                  <div
-                    className="strumming"
-                    title="Rhythm hint from onset density — not true strumming detection"
-                  >
-                    {chord.strumming}
-                  </div>
-                )}
-              </div>
+                <div
+                  key={timelineListKey(idx)}
+                  className={`chord-card${tierClass}${adjustedClass}${correctedClass}`}
+                  id={`chord-${timelineListKey(idx)}`}
+                  data-seg-index={idx}
+                  data-time={segKey}
+                  title={
+                    chord.model_chord && chord.model_chord !== chord.chord
+                      ? `Model: ${chord.model_chord}`
+                      : undefined
+                  }
+                >
+                  {editingKey === editKey ? (
+                    <input
+                      className="chord-edit-input"
+                      value={draft}
+                      onChange={(e) => setDraft(e.target.value)}
+                      onBlur={() => commitEdit(chord)}
+                      onKeyDown={(e) => {
+                        if (e.key === 'Enter') commitEdit(chord);
+                        if (e.key === 'Escape') setEditingKey(null);
+                      }}
+                      autoFocus
+                      aria-label="Edit chord"
+                    />
+                  ) : (
+                    <div
+                      className="chord-name"
+                      role="button"
+                      tabIndex={onCorrectChord ? 0 : undefined}
+                      onDoubleClick={() => startEdit(chord, idx)}
+                      onKeyDown={(e) => {
+                        if (onCorrectChord && (e.key === 'Enter' || e.key === ' ')) {
+                          e.preventDefault();
+                          startEdit(chord, idx);
+                        }
+                      }}
+                    >
+                      {chord.chord}
+                      {tier === 'low' && (
+                        <span className="low-confidence" title="Low confidence detection">?</span>
+                      )}
+                      {tier === 'medium' && (
+                        <span className="medium-confidence" title="Medium confidence">~</span>
+                      )}
+                      {chord.user_corrected && (
+                        <span className="user-corrected-badge" title="Your correction">✎</span>
+                      )}
+                    </div>
+                  )}
+                  <ChordDiagram chordName={chord.chord} />
+                  {chord.strumming && chord.strumming_is_heuristic && (
+                    <div
+                      className="strumming"
+                      title="Rhythm hint from onset density — not true strumming detection"
+                    >
+                      {chord.strumming}
+                    </div>
+                  )}
+                </div>
+              </Fragment>
             );
           })}
         </div>

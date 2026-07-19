@@ -402,6 +402,24 @@ body {
   overflow: hidden;
 }
 
+.bar-divider {
+  flex: 0 0 auto;
+  align-self: stretch;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  width: 1px;
+  background: rgba(255, 255, 255, 0.12);
+  position: relative;
+}
+.bar-divider .bar-number {
+  position: absolute;
+  top: -14px;
+  font-size: 10px;
+  color: rgba(255, 255, 255, 0.4);
+  white-space: nowrap;
+}
+
 /* Spotify-style synced lyrics panel */
 .lyrics-panel-wrap {
   display: flex;

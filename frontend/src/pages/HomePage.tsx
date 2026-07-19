@@ -407,6 +407,7 @@ function HomePage() {
               <ChordSequence
                 key={`${data.video_id}-${effectivePresentationMode}`}
                 timeline={displayTimeline}
+                downbeatTimes={data.beats?.downbeat_times}
                 ref={chordContainerRef}
                 onCorrectChord={handleCorrectChord}
               />

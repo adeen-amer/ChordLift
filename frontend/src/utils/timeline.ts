@@ -81,3 +81,32 @@ export function activeLyricIndexBinary(
 
   return candidate;
 }
+
+/** Index of the bar containing `t`, given sorted downbeat times. Same binary search shape as activeSegmentIndex. */
+export function barIndexForTime(downbeatTimes: number[], t: number): number {
+  if (!downbeatTimes.length) return 0;
+
+  let lo = 0;
+  let hi = downbeatTimes.length - 1;
+  let candidate = 0;
+
+  while (lo <= hi) {
+    const mid = (lo + hi) >> 1;
+    if (downbeatTimes[mid] <= t) {
+      candidate = mid;
+      lo = mid + 1;
+    } else {
+      hi = mid - 1;
+    }
+  }
+
+  return candidate;
+}
+
+/** Bar index for every chord segment's start time, in timeline order. */
+export function barNumbersForTimeline(
+  timeline: { time: number }[],
+  downbeatTimes: number[],
+): number[] {
+  return timeline.map((seg) => barIndexForTime(downbeatTimes, seg.time));
+}
