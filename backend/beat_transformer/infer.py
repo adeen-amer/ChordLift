@@ -57,8 +57,9 @@ def run(stems, sr: int, beats_per_bar: int = BEATS_PER_BAR) -> BeatGrid:
 
     Raises on any failure — callers handle fallback (beat_tracking.track_beats_auto).
     """
-    import madmom
     import torch
+    from madmom.features.beats import DBNBeatTrackingProcessor
+    from madmom.features.downbeats import DBNDownBeatTrackingProcessor
 
     from model_cache import get_beat_transformer_model
 
@@ -71,13 +72,13 @@ def run(stems, sr: int, beats_per_bar: int = BEATS_PER_BAR) -> BeatGrid:
     down_act = torch.sigmoid(pred[0, :, 1]).cpu().numpy()
 
     # Canonical post-processing (code/eight_fold_test.py), see FINDINGS.md sec 4.
-    beat_tracker = madmom.features.beats.DBNBeatTrackingProcessor(
+    beat_tracker = DBNBeatTrackingProcessor(
         min_bpm=55.0, max_bpm=215.0, fps=FPS,
         transition_lambda=100, observation_lambda=6, num_tempi=None, threshold=0.2,
     )
     beat_times = np.asarray(beat_tracker(beat_act), dtype=np.float64)
 
-    downbeat_tracker = madmom.features.downbeats.DBNDownBeatTrackingProcessor(
+    downbeat_tracker = DBNDownBeatTrackingProcessor(
         beats_per_bar=[3, 4], min_bpm=55.0, max_bpm=215.0, fps=FPS,
         transition_lambda=100, observation_lambda=6, num_tempi=None, threshold=0.2,
     )

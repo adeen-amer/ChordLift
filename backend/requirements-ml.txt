@@ -3,9 +3,17 @@ lv-chordia>=0.1.0
 torch>=2.0.0,<2.6.0
 spotdl==4.2.11
 
-# madmom needs numpy/Cython present *before* it builds its C extensions.
-# If plain `pip install -r requirements-ml.txt` fails on madmom:
-#   pip install numpy Cython && pip install --no-build-isolation madmom==0.16.1
+# numpy must stay <1.24: madmom==0.16.1 (latest release on PyPI, 2018 — no
+# newer madmom exists) uses the np.float/np.int aliases removed in numpy
+# 1.24. 1.23.5 is the newest 1.23.x release, has Python 3.11 wheels, and
+# satisfies lv-chordia (numpy>=1.19.2) and torch (unconstrained).
+numpy==1.23.5
+
+# madmom ships source-only (no wheel) and needs numpy/Cython present
+# *before* it builds its C extensions. If plain `pip install -r
+# requirements-ml.txt` fails on madmom:
+#   pip install numpy==1.23.5 Cython && pip install --no-build-isolation madmom==0.16.1
+# Dockerfile and CI apply this two-step install for you; see backend/Dockerfile.
 madmom==0.16.1
 
 # Optional stems (Demucs):

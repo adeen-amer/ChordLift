@@ -26,7 +26,11 @@ jobs:
       - name: Install Python dependencies
         run: |
           pip install --upgrade pip
-          pip install -r requirements.txt -r requirements-ml.txt soundfile
+          pip install numpy==1.23.5 Cython
+          pip install --no-build-isolation -r requirements.txt -r requirements-ml.txt soundfile
+
+      - name: Verify madmom import
+        run: python -c "import madmom"
 
       - name: Gold audio cache key
         id: gold-cache-key
