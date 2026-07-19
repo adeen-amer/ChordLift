@@ -146,3 +146,45 @@ def test_auto_falls_back_to_madmom_when_transformer_fails(monkeypatch):
     object.__setattr__(stems, "method", "demucs")
     track_beats_auto(stems, 22050)
     assert calls == ["transformer", "madmom"]
+
+
+# --- Deterministic click-track accuracy sanity check --------------------------
+
+
+def _click_track(sr=22050, bpm=120.0, bars=8, beats_per_bar=4):
+    """Synthetic click track: sharp clicks on every beat, louder on downbeats. Exact ground truth."""
+    beat_dur = 60.0 / bpm
+    total_beats = bars * beats_per_bar
+    duration = total_beats * beat_dur + 1.0
+    y = np.zeros(int(sr * duration), dtype=np.float32)
+    click = np.exp(-np.linspace(0, 30, int(sr * 0.03))).astype(np.float32)  # short decaying click
+    beat_times_gt = []
+    downbeat_times_gt = []
+    for i in range(total_beats):
+        t = i * beat_dur
+        beat_times_gt.append(t)
+        if i % beats_per_bar == 0:
+            downbeat_times_gt.append(t)
+        start = int(t * sr)
+        amp = 1.0 if i % beats_per_bar == 0 else 0.6
+        end = min(start + len(click), len(y))
+        y[start:end] += amp * click[: end - start]
+    return y, np.array(beat_times_gt), np.array(downbeat_times_gt)
+
+
+def test_madmom_downbeat_accuracy_on_click_track(monkeypatch):
+    pytest.importorskip("madmom")
+    monkeypatch.setattr(beat_tracking, "BEAT_ENGINE", "madmom")
+    y, beat_gt, downbeat_gt = _click_track()
+    stems = separate_stems(y, 22050)
+    grid = track_beats_auto(stems, 22050)
+
+    # every ground-truth downbeat should have a detected downbeat within 60ms
+    tolerance = 0.06
+    hits = 0
+    for gt in downbeat_gt:
+        if len(grid.downbeat_times) and np.min(np.abs(grid.downbeat_times - gt)) < tolerance:
+            hits += 1
+    assert hits / len(downbeat_gt) >= 0.8, (
+        f"only {hits}/{len(downbeat_gt)} ground-truth downbeats matched within {tolerance}s"
+    )
