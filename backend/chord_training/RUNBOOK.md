@@ -125,11 +125,16 @@ the full run again.
 When done, copy these back to the Mac:
 
 ```
-out/cache_data/*_ft1_s*.best.sdict
+out/cache_data/*_ft1_s*.best.best.sdict
 ```
 
-One `.best.sdict` per seed (the val-loss-best checkpoint from that seed's
-run) — five files total if all seeds completed.
+One `.best.best.sdict` per seed (the val-loss-best checkpoint from that
+seed's run) — five files total if all seeds completed. Note the **double**
+`.best`: `save_name` already ends in `.best` (matching the pretrained
+warm-start naming), and `train.py` appends another `.best.sdict` on val-loss
+improvement (see `FINDINGS.md` §9). The single-suffixed `*_ft1_s*.best.sdict`
+is the *final* end-of-schedule checkpoint, not the best-val one — loading it
+instead silently ships a worse (sometimes badly overfit) model.
 
 ## Troubleshooting
 

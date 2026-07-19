@@ -60,8 +60,18 @@ def _download_spotdl(url: str, track_tmp: Path) -> Path:
     track_tmp.mkdir(parents=True, exist_ok=True)
     for old in track_tmp.glob("*.mp3"):
         old.unlink()
+    auth_args = []
+    client_id = os.getenv("SPOTIFY_CLIENT_ID")
+    client_secret = os.getenv("SPOTIFY_CLIENT_SECRET")
+    if client_id and client_secret:
+        auth_args = ["--client-id", client_id, "--client-secret", client_secret]
     subprocess.run(
-        [sys.executable, "-m", "spotdl", "download", url, "--output", str(track_tmp), "--format", "mp3"],
+        [
+            sys.executable, "-m", "spotdl", "download", url,
+            "--output", str(track_tmp), "--format", "mp3",
+            "--lyrics", "genius", "musixmatch",  # azlyrics session.get() has no timeout, hangs forever
+            *auth_args,
+        ],
         check=True,
         cwd=str(BACKEND),
     )

@@ -1,4 +1,5 @@
 .venv/
+train-venv/
 venv/
 venv2/
 venv2/
@@ -17,3 +18,6 @@ models/*.pt
 *.egg-info/
 chord_training/spike_out/
 chord_training/data/
+chord_training/checkpoints_ft1/
+chord_training/checkpoints_pretrained_fresh/
+chord_training/ft2_out/

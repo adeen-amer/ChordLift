@@ -16,10 +16,10 @@ import librosa
 import numpy as np
 
 from lv_chordia.chordnet_ismir_naive import (
-    SPEC_DIM, SHIFT_LOW, SHIFT_HIGH, LSTM_TRAIN_LENGTH,
+    SPEC_DIM, SHIFT_LOW, SHIFT_HIGH, LSTM_TRAIN_LENGTH, chord_limit,
     ComplexChordShifter,
 )
-from lv_chordia.complex_chord import Chord
+from lv_chordia.complex_chord import Chord, complex_chord_chop
 from lv_chordia.mir.nn.data_decorator import CQTPitchShifter
 from lv_chordia.mir.nn.data_provider import FramedDataProvider
 from lv_chordia.mir.nn.data_storage import FramedH5DataStorage
@@ -92,6 +92,13 @@ def encode_labels(segs, n_frames: int) -> np.ndarray:
     Frame f covers time f*HOP/SR. Frames past the last segment, or whose label
     (after normalize_harte) still isn't in the Harte subset `Chord` parses,
     -> 'X' (ignored by the loss; FINDINGS.md §3). Returns int16 (n_frames, 6).
+
+    complex_chord_chop clips any component past the network's head width (e.g.
+    power/bare-root chords -- Harte '5'/'1' suffixes, common in Billboard's rock
+    catalog -- encode triad indices 73-96, outside the 73-wide triad head) to -2
+    (ignored). Without this, out-of-range class indices reach F.cross_entropy
+    directly (conditional_classifier_loss only masks <0, never checks the upper
+    bound), which on GPU silently corrupts gradients instead of raising.
     """
     y = np.empty((n_frames, 6), dtype=np.int16)
     x_arr = Chord("X").to_numpy()
@@ -104,7 +111,7 @@ def encode_labels(segs, n_frames: int) -> np.ndarray:
         else:
             if lab not in cache:
                 try:
-                    cache[lab] = Chord(normalize_harte(lab)).to_numpy()
+                    cache[lab] = complex_chord_chop(Chord(normalize_harte(lab)).to_numpy(), chord_limit)
                 except Exception:
                     cache[lab] = x_arr  # unparseable label -> ignored, not fatal
             y[f] = cache[lab]

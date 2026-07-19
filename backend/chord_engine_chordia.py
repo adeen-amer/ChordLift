@@ -15,11 +15,36 @@ logger = logging.getLogger(__name__)
 CHORDIA_DICT = os.getenv("CHORD_CHORDIA_DICT", "submission").lower().strip()
 
 
+def _split_model_names(raw: str) -> list[str]:
+    """Split CHORD_CHORDIA_MODELS on commas outside parentheses.
+
+    Checkpoint names embed a literal comma in their reweight(X,Y) suffix
+    (e.g. joint_chord_net_ismir_naive_v1.0_reweight(0.0,10.0)_s0.best) -- a
+    naive raw.split(",") shreds every name into two garbage fragments that
+    match no file on disk, silently falling back to the network's random
+    initialization (finalized stays False, no checkpoint gets loaded).
+    """
+    names, depth, current = [], 0, ""
+    for ch in raw:
+        if ch == "(":
+            depth += 1
+        elif ch == ")":
+            depth -= 1
+        if ch == "," and depth == 0:
+            names.append(current)
+            current = ""
+        else:
+            current += ch
+    if current:
+        names.append(current)
+    return [n.strip() for n in names if n.strip()]
+
+
 def _model_names() -> list[str]:
     """Serving checkpoint list; CHORD_CHORDIA_MODELS overrides (Phase B)."""
     raw = os.getenv("CHORD_CHORDIA_MODELS", "").strip()
     if raw:
-        return [n.strip() for n in raw.split(",") if n.strip()]
+        return _split_model_names(raw)
     from lv_chordia.chord_recognition import MODEL_NAMES
     return list(MODEL_NAMES)
 

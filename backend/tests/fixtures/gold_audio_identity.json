@@ -253,8 +253,8 @@
     },
     "while-my-guitar-gently-weeps": {
       "lab_end_sec": 285.309388,
-      "audio_duration_sec": 285.28,
-      "duration_delta_sec": 0.029,
+      "audio_duration_sec": 285.0,
+      "duration_delta_sec": 0.309,
       "duration_status": "pass",
       "ear_check_sec": [
         15.0,
@@ -264,7 +264,7 @@
       "ear_check_status": "approved",
       "spotify_track_id": "389QX9Q1eUOEZ19vtzzI9O",
       "spotify_duration_sec": 285.0,
-      "spotify_delta_sec": 0.28,
+      "spotify_delta_sec": 0.0,
       "spotify_duration_status": "pass",
       "needs_manual_review": false,
       "manual_review_reason": "",
@@ -329,8 +329,8 @@
     },
     "dont-stop-me-now": {
       "lab_end_sec": 211.733,
-      "audio_duration_sec": 209.413,
-      "duration_delta_sec": 2.32,
+      "audio_duration_sec": 209.409,
+      "duration_delta_sec": 2.324,
       "duration_status": "pass",
       "ear_check_sec": [
         15.0,
@@ -340,7 +340,7 @@
       "ear_check_status": "approved",
       "spotify_track_id": "2X8XuQXjSnm5S0J4HJbnAx",
       "spotify_duration_sec": 209.413,
-      "spotify_delta_sec": 0.0,
+      "spotify_delta_sec": 0.004,
       "spotify_duration_status": "pass",
       "needs_manual_review": false,
       "manual_review_reason": "",
@@ -405,8 +405,8 @@
     },
     "youre-my-best-friend": {
       "lab_end_sec": 172.173,
-      "audio_duration_sec": 171.015,
-      "duration_delta_sec": 1.158,
+      "audio_duration_sec": 170.787,
+      "duration_delta_sec": 1.386,
       "duration_status": "pass",
       "ear_check_sec": [
         15.0,
@@ -416,7 +416,7 @@
       "ear_check_status": "approved",
       "spotify_track_id": "4vEXJ6NvEwS8ptynkNswaa",
       "spotify_duration_sec": 170.8,
-      "spotify_delta_sec": 0.215,
+      "spotify_delta_sec": 0.013,
       "spotify_duration_status": "pass",
       "needs_manual_review": false,
       "manual_review_reason": "",

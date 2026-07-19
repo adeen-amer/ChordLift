@@ -1,0 +1,106 @@
+{
+  "dev": {
+    "split": "dev",
+    "v50_summary": {
+      "track_count": 14,
+      "avg_root_wcsr": 0.8146,
+      "avg_majmin_wcsr": 0.8027,
+      "avg_sevenths_wcsr": 0.6805,
+      "avg_seg_score": 0.8389
+    },
+    "v51_summary": {
+      "track_count": 14,
+      "avg_root_wcsr": 0.8019,
+      "avg_majmin_wcsr": 0.7931,
+      "avg_sevenths_wcsr": 0.6676,
+      "avg_seg_score": 0.8142
+    },
+    "delta_majmin_agg": -0.0096,
+    "tracks": [
+      {
+        "id": "yellow-submarine",
+        "v50_majmin": 0.747826145824484,
+        "v51_majmin": 0.7968551451274855,
+        "delta_majmin": 0.049
+      },
+      {
+        "id": "while-my-guitar-gently-weeps",
+        "v50_majmin": 0.8057422696837516,
+        "v51_majmin": 0.8387533417517229,
+        "delta_majmin": 0.033
+      },
+      {
+        "id": "dont-stop-me-now",
+        "v50_majmin": 0.806170863326592,
+        "v51_majmin": 0.8149699508286276,
+        "delta_majmin": 0.0088
+      },
+      {
+        "id": "come-together",
+        "v50_majmin": 0.9540015344317911,
+        "v51_majmin": 0.9565749068659674,
+        "delta_majmin": 0.0026
+      },
+      {
+        "id": "let-it-be",
+        "v50_majmin": 0.8743769293332204,
+        "v51_majmin": 0.8722059817666235,
+        "delta_majmin": -0.0022
+      },
+      {
+        "id": "ticket-to-ride",
+        "v50_majmin": 0.960523023382155,
+        "v51_majmin": 0.9553762031002287,
+        "delta_majmin": -0.0051
+      },
+      {
+        "id": "help",
+        "v50_majmin": 0.9694684385836528,
+        "v51_majmin": 0.9637680975034564,
+        "delta_majmin": -0.0057
+      },
+      {
+        "id": "twist-and-shout",
+        "v50_majmin": 0.9403191524078096,
+        "v51_majmin": 0.9344816567910879,
+        "delta_majmin": -0.0058
+      },
+      {
+        "id": "cant-buy-me-love",
+        "v50_majmin": 0.9274368480221505,
+        "v51_majmin": 0.9215721693958016,
+        "delta_majmin": -0.0059
+      },
+      {
+        "id": "something",
+        "v50_majmin": 0.7818463141605446,
+        "v51_majmin": 0.7733073306321188,
+        "delta_majmin": -0.0085
+      },
+      {
+        "id": "play-the-game",
+        "v50_majmin": 0.5745765375066781,
+        "v51_majmin": 0.5640316143427297,
+        "delta_majmin": -0.0105
+      },
+      {
+        "id": "i-saw-her-standing-there",
+        "v50_majmin": 0.9329962846558554,
+        "v51_majmin": 0.9043884676883285,
+        "delta_majmin": -0.0286
+      },
+      {
+        "id": "youre-my-best-friend",
+        "v50_majmin": 0.834095154519005,
+        "v51_majmin": 0.7943099037593151,
+        "delta_majmin": -0.0398
+      },
+      {
+        "id": "another-one-bites-the-dust",
+        "v50_majmin": 0.12807608506770396,
+        "v51_majmin": 0.013502359278715733,
+        "delta_majmin": -0.1146
+      }
+    ]
+  }
+}

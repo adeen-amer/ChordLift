@@ -32,6 +32,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import os
 import re
 import shutil
 import subprocess
@@ -57,6 +58,21 @@ GOLD_MIR_TRACKS = BACKEND / "tests" / "fixtures" / "gold_mir_tracks_v2.json"
 CHORD_REFS = BACKEND / "tests" / "fixtures" / "chord_refs.json"
 
 DURATION_TOLERANCE_SEC = 2.0
+
+
+def _spotdl_auth_args() -> list[str]:
+    """--client-id/--client-secret from env (SPOTIFY_CLIENT_ID/SECRET, same names
+    spotify_metadata.py uses), overriding spotdl's shared default app (rate-limited
+    globally across all spotdl users). Also drops azlyrics from the lyrics-provider
+    fallback chain: its requests.Session.get() calls carry no timeout, so an
+    unreachable azlyrics.com hangs the whole download forever. We only need the
+    audio, not embedded lyrics, so skip it outright."""
+    args = ["--lyrics", "genius", "musixmatch"]
+    client_id = os.environ.get("SPOTIFY_CLIENT_ID")
+    client_secret = os.environ.get("SPOTIFY_CLIENT_SECRET")
+    if client_id and client_secret:
+        args += ["--client-id", client_id, "--client-secret", client_secret]
+    return args
 
 # Same as scripts/extract_isophonics_labs.py's ARCHIVE_URLS.
 ARCHIVE_URLS = {
@@ -279,7 +295,7 @@ def stage_download(
     if limit is not None:
         rows = rows[:limit]
 
-    spotdl_py = BACKEND / ".venv" / "bin" / "python"
+    spotdl_py = Path(sys.executable)
     for slug, artist, title, end_s in rows:
         if (dest / f"{slug}.mp3").exists() or (dest / f"{slug}.m4a").exists():
             continue  # resumable: already fetched
@@ -289,8 +305,9 @@ def stage_download(
             query = f"{artist} - {title}"
             subprocess.run(
                 [str(spotdl_py), "-m", "spotdl", "download", query,
-                 "--output", str(tmp_dir), "--format", "mp3"],
+                 "--output", str(tmp_dir), "--format", "mp3", *_spotdl_auth_args()],
                 check=True, cwd=str(BACKEND), capture_output=True, text=True,
+                encoding="utf-8", errors="replace",
             )
             candidates = sorted(tmp_dir.glob("*.mp3"))
             if not candidates:
@@ -365,8 +382,9 @@ def _run_chunk(
         result = subprocess.run(
             [str(spotdl_py), "-m", "spotdl", "download", *queries,
              "--output", str(tmp_dir / "{artist} - {title}.{output-ext}"),
-             "--format", "mp3", "--threads", "8"],
+             "--format", "mp3", "--threads", "8", *_spotdl_auth_args()],
             cwd=str(BACKEND), capture_output=True, text=True,
+            encoding="utf-8", errors="replace",
         )  # no check=True: one bad query in a chunk shouldn't raise on the rest
         candidates = sorted(tmp_dir.glob("*.mp3")) + sorted(tmp_dir.glob("*.m4a"))
         empty_chunk = not candidates
@@ -426,7 +444,7 @@ def stage_download_batch(
         if not (dest / f"{r['slug']}.mp3").exists() and not (dest / f"{r['slug']}.m4a").exists()
     ]
 
-    spotdl_py = BACKEND / ".venv" / "bin" / "python"
+    spotdl_py = Path(sys.executable)
     chunks = [pending[i:i + chunk_size] for i in range(0, len(pending), chunk_size)]
     for idx, chunk_rows in enumerate(chunks, start=1):
         matched, empty_chunk = _run_chunk(chunk_rows, dest, spotdl_py, tolerance, f"chunk {idx}/{len(chunks)}")
