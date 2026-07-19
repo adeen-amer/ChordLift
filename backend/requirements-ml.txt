@@ -3,5 +3,10 @@ lv-chordia>=0.1.0
 torch>=2.0.0,<2.6.0
 spotdl==4.2.11
 
+# madmom needs numpy/Cython present *before* it builds its C extensions.
+# If plain `pip install -r requirements-ml.txt` fails on madmom:
+#   pip install numpy Cython && pip install --no-build-isolation madmom==0.16.1
+madmom==0.16.1
+
 # Optional stems (Demucs):
 # demucs>=4.0.0

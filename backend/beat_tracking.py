@@ -1,12 +1,17 @@
 """Beat and downbeat grid for bar-aligned chord decoding."""
 from __future__ import annotations
 
+import logging
+import os
 from dataclasses import dataclass
 
 import librosa
 import numpy as np
 
+logger = logging.getLogger(__name__)
+
 BEATS_PER_BAR = 4
+BEAT_ENGINE = os.getenv("CHORD_BEAT_ENGINE", "auto").lower().strip()
 
 
 @dataclass(frozen=True)
@@ -72,4 +77,63 @@ def track_beats(
         downbeat_times=np.asarray(downbeat_times, dtype=np.float64),
         tempo_bpm=float(tempo),
         beats_per_bar=beats_per_bar,
+    )
+
+
+def _track_beats_madmom(y_full: np.ndarray, sr: int, beats_per_bar: int = BEATS_PER_BAR) -> BeatGrid:
+    """Model-based beat/downbeat tracking on the full mix (no stems needed)."""
+    from madmom.audio.signal import Signal
+    from madmom.features.downbeats import DBNDownBeatTrackingProcessor, RNNDownBeatProcessor
+
+    signal = Signal(y_full.astype(np.float32), sample_rate=sr, num_channels=1)
+    activations = RNNDownBeatProcessor()(signal)
+    proc = DBNDownBeatTrackingProcessor(beats_per_bar=[beats_per_bar], fps=100)
+    beat_positions = proc(activations)  # rows: [time_sec, beat_number]
+
+    if len(beat_positions) == 0:
+        raise RuntimeError("madmom returned no beats")
+
+    beat_times = np.asarray(beat_positions[:, 0], dtype=np.float64)
+    downbeat_mask = beat_positions[:, 1].astype(int) == 1
+    downbeat_times = beat_times[downbeat_mask]
+    if len(downbeat_times) == 0:
+        downbeat_times = beat_times[::beats_per_bar]
+
+    tempo_bpm = 60.0 / float(np.median(np.diff(beat_times))) if len(beat_times) > 1 else 120.0
+
+    return BeatGrid(
+        beat_times=beat_times,
+        downbeat_times=np.asarray(downbeat_times, dtype=np.float64),
+        tempo_bpm=tempo_bpm,
+        beats_per_bar=beats_per_bar,
+    )
+
+
+def track_beats_auto(
+    stems,
+    sr: int,
+    hop_length: int = 512,
+    beats_per_bar: int = BEATS_PER_BAR,
+) -> BeatGrid:
+    """
+    Dispatch to the configured beat/downbeat engine (CHORD_BEAT_ENGINE).
+
+    "auto" (default) tries madmom, falling back to the librosa heuristic on
+    any failure. "madmom" forces madmom (errors surface). "librosa" keeps
+    today's heuristic. Task 4 adds a "transformer" engine and upgrades
+    "auto" to try it first when real Demucs stems are available.
+    """
+    engine = BEAT_ENGINE
+
+    if engine == "madmom":
+        return _track_beats_madmom(stems.full, sr, beats_per_bar=beats_per_bar)
+
+    if engine == "auto":
+        try:
+            return _track_beats_madmom(stems.full, sr, beats_per_bar=beats_per_bar)
+        except Exception:
+            logger.warning("madmom beat tracking failed, falling back to librosa heuristic", exc_info=True)
+
+    return track_beats(
+        stems.chord_signal, stems.bass, sr, hop_length=hop_length, beats_per_bar=beats_per_bar,
     )

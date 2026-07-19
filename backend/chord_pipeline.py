@@ -5,7 +5,7 @@ from dataclasses import dataclass
 
 import numpy as np
 
-from beat_tracking import BeatGrid, track_beats
+from beat_tracking import BeatGrid, track_beats_auto
 from stem_separation import StemBundle, separate_stems
 
 
@@ -87,6 +87,6 @@ def build_chord_pipeline_context(
 ) -> ChordPipelineContext:
     """Separate stems and track beats/downbeats before chord decoding."""
     stems = separate_stems(y, sr)
-    beats = track_beats(stems.chord_signal, stems.bass, sr, hop_length=hop_length)
+    beats = track_beats_auto(stems, sr, hop_length=hop_length)
     return ChordPipelineContext(stems=stems, beats=beats, sr=sr, hop_length=hop_length)
 
