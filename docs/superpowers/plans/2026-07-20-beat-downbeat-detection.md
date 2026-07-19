@@ -657,7 +657,7 @@ git commit -m "feat: Beat-Transformer engine, auto-preferred for real Demucs ste
 
 ### Task 5: Deterministic click-track sanity check
 
-**Skip if Task 3 kill-switched — this task still applies to the madmom engine either way, adjust scope to whichever engines exist.**
+**Always runs.** Targets the madmom engine (Task 1, always present). If Task 3 did not kill-switch and Task 4 landed, this task does not need to add a transformer-engine variant — the madmom check alone satisfies this task's scope.
 
 **Files:**
 - Test: `backend/tests/test_beat_engine.py` (append)
