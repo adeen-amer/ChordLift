@@ -17,9 +17,16 @@ import shutil
 import zipfile
 from pathlib import Path
 
+from lv_chordia.mir.common import CACHE_DATA_PATH
+
 HERE = Path(__file__).resolve().parent  # backend/chord_training
 BACKEND = HERE.parent  # backend/
-CHECKPOINTS_DIR = BACKEND / ".venv" / "share" / "lv-chordia" / "cache_data"
+# ponytail: was hardcoded to BACKEND/".venv"/"share"/..., which assumes a venv
+# literally named .venv -- broke in CI (no .venv there, just the system
+# Python) and on any dev setup with a differently named venv. CACHE_DATA_PATH
+# is lv_chordia's own resolution of where it installed its packaged
+# checkpoints, correct regardless of venv layout.
+CHECKPOINTS_DIR = Path(CACHE_DATA_PATH)
 KIT_FILES = ["dataset.py", "finetune.py", "FINDINGS.md"]
 
 
