@@ -1,5 +1,8 @@
 # ML chord engine — lv-chordia raw + pitch reliability gate
-lv-chordia>=0.1.0
+# Pinned exact: 1.1.0 dropped NetworkInterface.train_supervised and changed how
+# packaged checkpoints ship (breaks chord_training/*, discovered via CI failure).
+# Keep in lockstep with chord_training/requirements-train.txt's pin.
+lv-chordia==1.0.0
 torch>=2.0.0,<2.6.0
 spotdl==4.2.11
 
