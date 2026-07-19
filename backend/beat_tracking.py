@@ -109,6 +109,13 @@ def _track_beats_madmom(y_full: np.ndarray, sr: int, beats_per_bar: int = BEATS_
     )
 
 
+def _track_beats_transformer(stems, sr: int, beats_per_bar: int = BEATS_PER_BAR) -> BeatGrid:
+    """Beat-Transformer engine: needs real Demucs stems, not HPSS pseudo-stems."""
+    from beat_transformer.infer import run as run_beat_transformer
+
+    return run_beat_transformer(stems, sr, beats_per_bar=beats_per_bar)
+
+
 def track_beats_auto(
     stems,
     sr: int,
@@ -118,17 +125,25 @@ def track_beats_auto(
     """
     Dispatch to the configured beat/downbeat engine (CHORD_BEAT_ENGINE).
 
-    "auto" (default) tries madmom, falling back to the librosa heuristic on
-    any failure. "madmom" forces madmom (errors surface). "librosa" keeps
-    today's heuristic. Task 4 adds a "transformer" engine and upgrades
-    "auto" to try it first when real Demucs stems are available.
+    "auto" (default) prefers Beat-Transformer when real Demucs stems are
+    available, then madmom, falling back to the librosa heuristic on any
+    failure. "transformer" / "madmom" force those engines (errors surface).
+    "librosa" keeps today's heuristic.
     """
     engine = BEAT_ENGINE
+
+    if engine == "transformer":
+        return _track_beats_transformer(stems, sr, beats_per_bar=beats_per_bar)
 
     if engine == "madmom":
         return _track_beats_madmom(stems.full, sr, beats_per_bar=beats_per_bar)
 
     if engine == "auto":
+        if stems.method == "demucs":
+            try:
+                return _track_beats_transformer(stems, sr, beats_per_bar=beats_per_bar)
+            except Exception:
+                logger.warning("Beat-Transformer failed, falling back to madmom", exc_info=True)
         try:
             return _track_beats_madmom(stems.full, sr, beats_per_bar=beats_per_bar)
         except Exception:

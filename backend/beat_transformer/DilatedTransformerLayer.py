@@ -115,44 +115,6 @@ class DilatedTransformerLayer(nn.Module):
         return x, x_
 
 
-    def inference(self, x, layer=0):
-        #x: (batch, time, dmodel)
-        if self.norm_first:
-            x_, attn = self._sa_block(self.norm1(x), layer)
-            x = x + x_
-            x = x + self._ff_block(self.norm2(x))
-        else:
-            x_, attn = self._sa_block(x, layer)
-            x = self.norm1(x + x_)
-            x = self.norm2(x + self._ff_block(x))
-
-
-        attn = attn.squeeze(-2) #batch, num_head, time, attn_len
-        batch, num_head, time, attn_len = attn.shape
-        padded_attn_len = (attn_len-1) * (2**layer) + 1
-        tmp_output = torch.zeros(batch, num_head, time, padded_attn_len, device=x.device)
-        for i, j in enumerate(range(0, padded_attn_len, 2**layer)):
-            tmp_output[:, :, :, j] = attn[:, :, :, i]
-
-        attn = torch.zeros(batch, num_head, time, time+(padded_attn_len-1)*2, device=x.device)
-        for i in range(time):
-            attn[:, :, i, i: i+padded_attn_len] = tmp_output[:, :, i]
-
-        center = (padded_attn_len-1)
-        attn = torch.cat(
-                            [
-                                attn[:, 0: 4, :,  center - (2**layer) * 2:  center - (2**layer) * 2 + time],
-                                attn[:, 4: 5, :,  center - (2**layer) * 1:  center - (2**layer) * 1 + time],
-                                attn[:, 5: 6, :,  center - (2**layer) * 0:  center - (2**layer) * 0 + time],
-                                attn[:, 6: 7, :,  center - (2**layer) * 3:  center - (2**layer) * 3 + time],
-                                attn[:, 7: 8, :,  center - (2**layer) * 4:  center - (2**layer) * 4 + time]
-                            ],
-                            dim=1
-                        )   #restore the square attention matrix from dilated self-attention
-
-        return x, x_, attn
-
-
     # self-attention block
     def _sa_block(self, x, layer=0):
         x, attn = self.self_attn(x, x, x, layer)
@@ -163,21 +125,3 @@ class DilatedTransformerLayer(nn.Module):
     def _ff_block(self, x):
         x = self.linear2(self.dropout(self.activation(self.linear1(x))))
         return self.dropout2(x)
-
-
-
-
-if __name__ == '__main__':
-    BATCH=1
-    TIME=9
-    DMODEL=8
-    N_HEAD=4
-    ATTN_LEN=5
-    LAYER=1
-
-    x = torch.ones(BATCH, TIME, DMODEL)
-
-    model = DilatedMultiheadSelfAttentionWithRelativePositionalEmbedding(dmodel=DMODEL, num_heads=N_HEAD, attn_len=ATTN_LEN)
-
-    output, attn = model(x, x, x, layer=LAYER)
-    print(attn[0, 0, :, :, :])
