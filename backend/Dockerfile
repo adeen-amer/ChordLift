@@ -12,7 +12,8 @@ COPY requirements.txt requirements-ml.txt ./
 # extensions build; --no-build-isolation lets that build see them (see the
 # comment above madmom in requirements-ml.txt for the full rationale).
 RUN pip install --no-cache-dir numpy==1.23.5 Cython && \
-    pip install --no-cache-dir --no-build-isolation -r requirements.txt -r requirements-ml.txt && \
+    pip install --no-cache-dir --no-build-isolation madmom==0.16.1 && \
+    pip install --no-cache-dir -r requirements.txt -r requirements-ml.txt && \
     pip install --no-cache-dir soundfile && \
     python -c "import madmom"
 
