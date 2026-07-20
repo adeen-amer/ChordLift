@@ -23,9 +23,13 @@ commit's file stays free of unused imports.
 """
 from __future__ import annotations
 
+import sys
 from pathlib import Path
 
 import numpy as np
+
+HERE = Path(__file__).resolve().parent  # backend/chord_training
+BACKEND = HERE.parent  # backend/
 
 
 # ---- confidence filtering ---------------------------------------------
@@ -83,3 +87,34 @@ def retained_coverage(segments: list[dict], track_duration: float) -> float:
         return 0.0
     covered = sum(s["end_time"] - s["start_time"] for s in segments)
     return covered / track_duration
+
+
+# ---- track-level orchestration -----------------------------------------
+
+def label_track(
+    audio_path: str, lab_out_path: str, threshold: float, min_coverage: float = 0.5,
+) -> float | None:
+    """Pseudo-label one track with the production chordia ensemble.
+
+    Returns retained-coverage fraction and writes lab_out_path on success;
+    returns None (writes nothing) if confidence-filtering leaves less than
+    min_coverage of the track's duration covered -- same skip-and-report
+    convention dataset.py:build_storages uses for unencodable pairs.
+    """
+    import librosa
+
+    sys.path.insert(0, str(BACKEND))
+    from chord_engine_chordia import decode_chordia_probs, recognize_chordia_probs
+    from lv_chordia.settings import DEFAULT_HOP_LENGTH as HOP, DEFAULT_SR as SR
+
+    y, sr = librosa.load(audio_path, sr=SR, mono=True)
+    duration = len(y) / sr
+    probs, hmm, entry = recognize_chordia_probs(y, sr)
+    segments = decode_chordia_probs(probs, hmm, entry)
+    frame_conf = frame_confidences(probs)
+    kept = filter_low_confidence_segments(segments, frame_conf, sr, HOP, threshold)
+    coverage = retained_coverage(kept, duration)
+    if coverage < min_coverage:
+        return None
+    write_lab(lab_out_path, kept)
+    return coverage

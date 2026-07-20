@@ -16,6 +16,16 @@ import pytest
 BACKEND = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(BACKEND / "chord_training"))
 
+lv_chordia = pytest.importorskip("lv_chordia")
+
+
+def _sine_chord(sr=22050, duration=5.0):
+    """C major triad — same recipe as tests/test_chordia_probs.py."""
+    t = np.linspace(0, duration, int(sr * duration), endpoint=False)
+    freqs = [261.63, 329.63, 392.00]
+    y = sum(np.sin(2 * np.pi * f * t) for f in freqs) / len(freqs)
+    return y.astype(np.float32)
+
 
 def test_frame_confidences_is_max_over_classes():
     from pseudo_label import frame_confidences
@@ -69,3 +79,36 @@ def test_retained_coverage_zero_duration_is_zero():
     from pseudo_label import retained_coverage
 
     assert retained_coverage([], track_duration=0.0) == 0.0
+
+
+def test_label_track_threshold_zero_keeps_most_of_track(tmp_path):
+    import soundfile as sf
+
+    from pseudo_label import label_track
+
+    y = _sine_chord()
+    wav = tmp_path / "clip.wav"
+    sf.write(str(wav), y, 22050)
+    lab = tmp_path / "clip.lab"
+
+    coverage = label_track(str(wav), str(lab), threshold=0.0)
+
+    assert coverage is not None
+    assert coverage > 0.9
+    assert lab.exists()
+
+
+def test_label_track_impossible_threshold_returns_none(tmp_path):
+    import soundfile as sf
+
+    from pseudo_label import label_track
+
+    y = _sine_chord()
+    wav = tmp_path / "clip.wav"
+    sf.write(str(wav), y, 22050)
+    lab = tmp_path / "clip.lab"
+
+    coverage = label_track(str(wav), str(lab), threshold=1.01, min_coverage=0.5)
+
+    assert coverage is None
+    assert not lab.exists()
