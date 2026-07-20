@@ -20,6 +20,10 @@ segments are handled by the existing pipeline for free.
 Built up incrementally (Tasks 1-5); imports and module-level constants are
 added in the task that first needs them, not all upfront, so every
 commit's file stays free of unused imports.
+
+Dependencies: main backend venv (backend/requirements.txt + requirements-ml.txt),
+not the GPU-only desktop bundle (requirements-train.txt). This script is a
+data-acquisition tool like fetch_train_data.py and is not part of pack_bundle.py.
 """
 from __future__ import annotations
 
