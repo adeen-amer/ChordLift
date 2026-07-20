@@ -5,6 +5,7 @@
 lv-chordia==1.0.0
 torch>=2.0.0,<2.6.0
 spotdl==4.2.11
+requests  # direct import in chord_training/pseudo_label.py (FMA API client)
 
 # numpy must stay <1.24: madmom==0.16.1 (latest release on PyPI, 2018 — no
 # newer madmom exists) uses the np.float/np.int aliases removed in numpy
