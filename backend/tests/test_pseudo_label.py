@@ -152,3 +152,65 @@ def test_label_track_impossible_threshold_returns_none(tmp_path):
 
     assert coverage is None
     assert not lab.exists()
+
+
+def test_merge_manifests_appends_new_and_skips_duplicates(tmp_path):
+    from pseudo_label import merge_manifests
+
+    train = tmp_path / "train_manifest.txt"
+    train.write_text("a.wav\ta.lab\n")
+    pseudo = tmp_path / "pseudo_manifest.txt"
+    pseudo.write_text("a.wav\ta.lab\nb.wav\tb.lab\n")
+
+    added = merge_manifests(str(train), str(pseudo))
+
+    assert added == ["b.wav\tb.lab"]
+    assert train.read_text().splitlines() == ["a.wav\ta.lab", "b.wav\tb.lab"]
+
+
+def test_cli_label_stage_writes_manifest(tmp_path):
+    import subprocess
+    import sys as _sys
+
+    import soundfile as sf
+
+    audio_dir = tmp_path / "audio"
+    audio_dir.mkdir()
+    y = _sine_chord(duration=5.0)
+    sf.write(str(audio_dir / "fma-1.wav"), y, 22050)
+
+    manifest_path = tmp_path / "pseudo_manifest.txt"
+    r = subprocess.run(
+        [_sys.executable, str(BACKEND / "chord_training" / "pseudo_label.py"),
+         "--stage", "label", "--data-dir", str(audio_dir),
+         "--confidence-threshold", "0.0", "--pseudo-manifest", str(manifest_path)],
+        capture_output=True, text=True, cwd=BACKEND,
+    )
+    assert r.returncode == 0, r.stderr
+    assert manifest_path.exists()
+    lines = manifest_path.read_text().splitlines()
+    assert len(lines) == 1
+    audio_path, lab_path = lines[0].split("\t")
+    assert Path(lab_path).exists()
+
+
+def test_cli_manifest_stage_merges_and_passes_leakage_check(tmp_path):
+    import subprocess
+    import sys as _sys
+
+    train = tmp_path / "train_manifest.txt"
+    train.write_text("")
+    pseudo = tmp_path / "pseudo_manifest.txt"
+    (tmp_path / "fma-1.wav").write_text("x")
+    (tmp_path / "fma-1.lab").write_text("0.0\t1.0\tC:maj\n")
+    pseudo.write_text(f"{tmp_path / 'fma-1.wav'}\t{tmp_path / 'fma-1.lab'}\n")
+
+    r = subprocess.run(
+        [_sys.executable, str(BACKEND / "chord_training" / "pseudo_label.py"),
+         "--stage", "manifest", "--train-manifest", str(train),
+         "--pseudo-manifest", str(pseudo)],
+        capture_output=True, text=True, cwd=BACKEND,
+    )
+    assert r.returncode == 0, r.stderr
+    assert "fma-1.wav" in train.read_text()
+    assert "PASS" in r.stdout or "OK" in r.stdout

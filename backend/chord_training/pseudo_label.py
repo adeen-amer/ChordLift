@@ -27,9 +27,11 @@ data-acquisition tool like fetch_train_data.py and is not part of pack_bundle.py
 """
 from __future__ import annotations
 
+import argparse
 import csv
 import os
 import random
+import subprocess
 import sys
 from pathlib import Path
 
@@ -38,6 +40,8 @@ import requests
 
 HERE = Path(__file__).resolve().parent  # backend/chord_training
 BACKEND = HERE.parent  # backend/
+DATA_DIR = HERE / "data"
+VERIFY_SCRIPT = BACKEND / "scripts" / "verify_training_leakage.py"
 
 FMA_API_BASE = "https://freemusicarchive.org/api/get/"
 FMA_FILES_BASE = "https://files.freemusicarchive.org/"
@@ -202,3 +206,88 @@ def label_track(
         return None
     write_lab(lab_out_path, kept)
     return coverage
+
+
+# ---- manifest merging ----------------------------------------------------
+
+def merge_manifests(train_manifest_path: str, pseudo_manifest_path: str) -> list[str]:
+    """Append pseudo-labeled (audio, lab) pairs into an existing
+    train_manifest.txt, skipping lines already present."""
+    with open(train_manifest_path) as f:
+        existing = {line.strip() for line in f if line.strip()}
+    with open(pseudo_manifest_path) as f:
+        candidates = [line.strip() for line in f if line.strip()]
+    to_add = [line for line in candidates if line not in existing]
+    with open(train_manifest_path, "a") as f:
+        for line in to_add:
+            f.write(line + "\n")
+    return to_add
+
+
+# ---- CLI ------------------------------------------------------------------
+
+def main() -> int:
+    from build_manifest import AUDIO_EXTS
+
+    ap = argparse.ArgumentParser(description="Pseudo-label FMA audio for chordia fine-tuning")
+    ap.add_argument("--stage", required=True, choices=["fetch", "label", "manifest"])
+    ap.add_argument("--pool-csv", help="fetch stage: flat track_id,duration_sec CSV (Task 0 Step 4)")
+    ap.add_argument("--api-key", default=os.environ.get("FMA_KEY", ""), help="fetch stage: FMA API key")
+    ap.add_argument("--data-dir", default=str(DATA_DIR / "pseudo"),
+                     help="fetch: download destination; label: audio source + .lab output dir")
+    ap.add_argument("--n", type=int, default=200, help="fetch stage: sample size")
+    ap.add_argument("--min-duration", type=float, default=60.0,
+                     help="fetch stage: minimum track duration in seconds")
+    ap.add_argument("--seed", type=int, default=0, help="fetch stage: sampling seed")
+    ap.add_argument("--confidence-threshold", type=float, default=0.7,
+                     help="label stage: minimum segment confidence to keep")
+    ap.add_argument("--min-coverage", type=float, default=0.5,
+                     help="label stage: minimum retained-duration fraction to keep a track")
+    ap.add_argument("--pseudo-manifest", default=str(DATA_DIR / "pseudo_manifest.txt"),
+                     help="label stage output / manifest stage input")
+    ap.add_argument("--train-manifest", help="manifest stage: train_manifest.txt to append into")
+    args = ap.parse_args()
+
+    if args.stage == "fetch":
+        if not args.pool_csv:
+            print("--pool-csv is required for the fetch stage", file=sys.stderr)
+            return 1
+        if not args.api_key:
+            print("FMA_KEY env var or --api-key is required for the fetch stage", file=sys.stderr)
+            return 1
+        fetched = fetch_fma_sample(args.pool_csv, args.api_key, args.data_dir,
+                                    args.n, args.min_duration, args.seed)
+        print(f"fetched: {len(fetched)}/{args.n}")
+        return 0
+
+    if args.stage == "label":
+        audio_files = sorted(
+            p for ext in AUDIO_EXTS for p in Path(args.data_dir).glob(f"*{ext}")
+        )
+        kept = 0
+        with open(args.pseudo_manifest, "w") as manifest:
+            for audio_path in audio_files:
+                lab_path = audio_path.with_suffix(".lab")
+                coverage = label_track(str(audio_path), str(lab_path),
+                                        args.confidence_threshold, args.min_coverage)
+                if coverage is None:
+                    print(f"skipping {audio_path.name}: retained coverage below "
+                          f"{args.min_coverage}", file=sys.stderr)
+                    continue
+                manifest.write(f"{audio_path}\t{lab_path}\n")
+                kept += 1
+        print(f"labeled: {kept}/{len(audio_files)}")
+        return 0
+
+    # manifest stage
+    if not args.train_manifest:
+        print("--train-manifest is required for the manifest stage", file=sys.stderr)
+        return 1
+    added = merge_manifests(args.train_manifest, args.pseudo_manifest)
+    print(f"merged {len(added)} new pairs into {args.train_manifest}")
+    leak_rc = subprocess.run([sys.executable, str(VERIFY_SCRIPT), args.train_manifest]).returncode
+    return 1 if leak_rc != 0 else 0
+
+
+if __name__ == "__main__":
+    sys.exit(main())
