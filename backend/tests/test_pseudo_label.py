@@ -214,3 +214,96 @@ def test_cli_manifest_stage_merges_and_passes_leakage_check(tmp_path):
     assert r.returncode == 0, r.stderr
     assert "fma-1.wav" in train.read_text()
     assert "PASS" in r.stdout or "OK" in r.stdout
+
+
+# ---- final-review regression tests -------------------------------------
+
+def test_get_track_http_error_does_not_leak_api_key(monkeypatch):
+    """Finding 1: get_track must sanitize HTTPError so the api_key query
+    param (baked into requests' default error message via response.url)
+    never reaches fetch_fma_sample's stderr report."""
+    import requests
+
+    from pseudo_label import FreeMusicArchive
+
+    class FakeResponse:
+        status_code = 403
+
+        def raise_for_status(self):
+            raise requests.HTTPError(
+                "403 Client Error: Forbidden for url: "
+                "https://freemusicarchive.org/api/get/tracks.json"
+                "?track_id=1&api_key=SECRET123"
+            )
+
+    monkeypatch.setattr(requests, "get", lambda *a, **k: FakeResponse())
+
+    client = FreeMusicArchive("SECRET123")
+    with pytest.raises(Exception) as excinfo:
+        client.get_track(1)
+
+    assert "SECRET123" not in str(excinfo.value)
+
+
+def test_cli_label_stage_skips_corrupt_track_but_keeps_valid_one(tmp_path):
+    """Finding 2: one unreadable track in --stage label must not abort the
+    whole batch -- it should be skipped-and-reported like fetch_fma_sample
+    already does, leaving the valid track in the output manifest."""
+    import subprocess
+    import sys as _sys
+
+    import soundfile as sf
+
+    audio_dir = tmp_path / "audio"
+    audio_dir.mkdir()
+    y = _sine_chord(duration=5.0)
+    sf.write(str(audio_dir / "fma-1-good.wav"), y, 22050)
+    (audio_dir / "fma-2-corrupt.wav").write_bytes(
+        b"this is not a real wav file, just garbage bytes" * 20
+    )
+
+    manifest_path = tmp_path / "pseudo_manifest.txt"
+    r = subprocess.run(
+        [_sys.executable, str(BACKEND / "chord_training" / "pseudo_label.py"),
+         "--stage", "label", "--data-dir", str(audio_dir),
+         "--confidence-threshold", "0.0", "--pseudo-manifest", str(manifest_path)],
+        capture_output=True, text=True, cwd=BACKEND,
+    )
+
+    assert r.returncode == 0, r.stderr
+    assert "skipping fma-2-corrupt.wav" in r.stderr
+
+    lines = manifest_path.read_text().splitlines()
+    assert len(lines) == 1
+    assert "fma-1-good.wav" in lines[0]
+    assert "fma-2-corrupt" not in manifest_path.read_text()
+
+
+def test_cli_manifest_stage_blocks_leak_before_writing_train_manifest(tmp_path):
+    """Finding 3: the leak check must gate the CANDIDATE pseudo_manifest
+    before any write to train_manifest -- if it fails, train_manifest must
+    come out byte-for-byte unchanged, not merged-then-flagged."""
+    import subprocess
+    import sys as _sys
+
+    train = tmp_path / "train_manifest.txt"
+    original_content = "existing.wav\texisting.lab\n"
+    train.write_text(original_content)
+
+    # "come-together" is a real gold_holdout_v2.json track_ids entry.
+    pseudo = tmp_path / "pseudo_manifest.txt"
+    leaking_audio = tmp_path / "come-together.wav"
+    leaking_lab = tmp_path / "come-together.lab"
+    leaking_audio.write_text("x")
+    leaking_lab.write_text("0.0\t1.0\tC:maj\n")
+    pseudo.write_text(f"{leaking_audio}\t{leaking_lab}\n")
+
+    r = subprocess.run(
+        [_sys.executable, str(BACKEND / "chord_training" / "pseudo_label.py"),
+         "--stage", "manifest", "--train-manifest", str(train),
+         "--pseudo-manifest", str(pseudo)],
+        capture_output=True, text=True, cwd=BACKEND,
+    )
+
+    assert r.returncode != 0
+    assert train.read_text() == original_content

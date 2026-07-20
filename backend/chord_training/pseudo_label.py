@@ -66,7 +66,13 @@ class FreeMusicArchive:
             params={"track_id": track_id, "api_key": self.api_key},
             timeout=30,
         )
-        r.raise_for_status()
+        try:
+            r.raise_for_status()
+        except requests.HTTPError as exc:
+            # r.url (and thus the default HTTPError message) carries the API
+            # key as a query param -- re-raise sanitized so it never reaches
+            # stderr/CI logs via fetch_fma_sample's exception handler.
+            raise RuntimeError(f"FMA API HTTP {r.status_code} for track {track_id}") from exc
         payload = r.json()
         if payload.get("errors"):
             raise RuntimeError(f"FMA API error for track {track_id}: {payload['errors']}")
@@ -268,8 +274,12 @@ def main() -> int:
         with open(args.pseudo_manifest, "w") as manifest:
             for audio_path in audio_files:
                 lab_path = audio_path.with_suffix(".lab")
-                coverage = label_track(str(audio_path), str(lab_path),
-                                        args.confidence_threshold, args.min_coverage)
+                try:
+                    coverage = label_track(str(audio_path), str(lab_path),
+                                            args.confidence_threshold, args.min_coverage)
+                except Exception as exc:
+                    print(f"skipping {audio_path.name}: {exc}", file=sys.stderr)
+                    continue
                 if coverage is None:
                     print(f"skipping {audio_path.name}: retained coverage below "
                           f"{args.min_coverage}", file=sys.stderr)
@@ -283,10 +293,16 @@ def main() -> int:
     if not args.train_manifest:
         print("--train-manifest is required for the manifest stage", file=sys.stderr)
         return 1
+    # Gate on the candidate pseudo pairs BEFORE touching train_manifest: once
+    # merge_manifests appends into train_manifest there's no clean rollback
+    # (a re-run just skips already-present lines), so leaked rows must never
+    # land there in the first place.
+    leak_rc = subprocess.run([sys.executable, str(VERIFY_SCRIPT), args.pseudo_manifest]).returncode
+    if leak_rc != 0:
+        return 1
     added = merge_manifests(args.train_manifest, args.pseudo_manifest)
     print(f"merged {len(added)} new pairs into {args.train_manifest}")
-    leak_rc = subprocess.run([sys.executable, str(VERIFY_SCRIPT), args.train_manifest]).returncode
-    return 1 if leak_rc != 0 else 0
+    return 0
 
 
 if __name__ == "__main__":
