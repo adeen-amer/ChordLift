@@ -43,3 +43,29 @@ def test_filter_low_confidence_segments_drops_below_threshold():
     ]
     kept = filter_low_confidence_segments(segs, frame_conf, sr=1000, hop=100, threshold=0.5)
     assert kept == [segs[0]]
+
+
+def test_write_lab_round_trips_through_read_lab(tmp_path):
+    from dataset import read_lab
+    from pseudo_label import write_lab
+
+    segs = [
+        {"start_time": 0.0, "end_time": 1.5, "chord": "C:maj"},
+        {"start_time": 1.5, "end_time": 3.0, "chord": "G:maj"},
+    ]
+    path = tmp_path / "out.lab"
+    write_lab(str(path), segs)
+    assert read_lab(str(path)) == [(0.0, 1.5, "C:maj"), (1.5, 3.0, "G:maj")]
+
+
+def test_retained_coverage_fraction():
+    from pseudo_label import retained_coverage
+
+    segs = [{"start_time": 0.0, "end_time": 3.0}, {"start_time": 5.0, "end_time": 6.0}]
+    assert retained_coverage(segs, track_duration=10.0) == pytest.approx(0.4)
+
+
+def test_retained_coverage_zero_duration_is_zero():
+    from pseudo_label import retained_coverage
+
+    assert retained_coverage([], track_duration=0.0) == 0.0

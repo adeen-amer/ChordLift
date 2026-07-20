@@ -23,6 +23,8 @@ commit's file stays free of unused imports.
 """
 from __future__ import annotations
 
+from pathlib import Path
+
 import numpy as np
 
 
@@ -67,3 +69,17 @@ def filter_low_confidence_segments(
         s for s in segments
         if segment_mean_confidence(s, frame_conf, sr, hop) >= threshold
     ]
+
+
+# ---- .lab writing + coverage -------------------------------------------
+
+def write_lab(path: str, segments: list[dict]) -> None:
+    lines = [f"{s['start_time']}\t{s['end_time']}\t{s['chord']}\n" for s in segments]
+    Path(path).write_text("".join(lines))
+
+
+def retained_coverage(segments: list[dict], track_duration: float) -> float:
+    if track_duration <= 0:
+        return 0.0
+    covered = sum(s["end_time"] - s["start_time"] for s in segments)
+    return covered / track_duration
