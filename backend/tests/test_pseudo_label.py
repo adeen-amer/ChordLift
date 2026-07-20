@@ -81,6 +81,46 @@ def test_retained_coverage_zero_duration_is_zero():
     assert retained_coverage([], track_duration=0.0) == 0.0
 
 
+def test_track_download_url():
+    from pseudo_label import _track_download_url
+
+    assert (
+        _track_download_url("some/path/track.mp3")
+        == "https://files.freemusicarchive.org/some/path/track.mp3"
+    )
+
+
+def test_select_random_track_ids_filters_duration_and_is_deterministic(tmp_path):
+    from pseudo_label import select_random_track_ids
+
+    csv_path = tmp_path / "pool.csv"
+    csv_path.write_text(
+        "track_id,duration_sec\n"
+        "1,30\n"
+        "2,120\n"
+        "3,200\n"
+        "4,180\n"
+    )
+
+    ids = select_random_track_ids(str(csv_path), n=2, min_duration_sec=60.0, seed=42)
+
+    assert len(ids) == 2
+    assert 1 not in ids  # below min_duration_sec
+    assert set(ids) <= {2, 3, 4}
+    assert select_random_track_ids(str(csv_path), n=2, min_duration_sec=60.0, seed=42) == ids
+
+
+def test_select_random_track_ids_caps_at_pool_size(tmp_path):
+    from pseudo_label import select_random_track_ids
+
+    csv_path = tmp_path / "pool.csv"
+    csv_path.write_text("track_id,duration_sec\n1,120\n2,180\n")
+
+    ids = select_random_track_ids(str(csv_path), n=10, min_duration_sec=60.0, seed=0)
+
+    assert set(ids) == {1, 2}
+
+
 def test_label_track_threshold_zero_keeps_most_of_track(tmp_path):
     import soundfile as sf
 

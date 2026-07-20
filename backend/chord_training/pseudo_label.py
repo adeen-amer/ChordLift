@@ -23,13 +23,93 @@ commit's file stays free of unused imports.
 """
 from __future__ import annotations
 
+import csv
+import os
+import random
 import sys
 from pathlib import Path
 
 import numpy as np
+import requests
 
 HERE = Path(__file__).resolve().parent  # backend/chord_training
 BACKEND = HERE.parent  # backend/
+
+FMA_API_BASE = "https://freemusicarchive.org/api/get/"
+FMA_FILES_BASE = "https://files.freemusicarchive.org/"
+
+
+# ---- FMA client and track sampling ------------------------------------
+
+def _track_download_url(track_file: str) -> str:
+    return FMA_FILES_BASE + track_file
+
+
+class FreeMusicArchive:
+    """Minimal client for the FMA metadata API -- only the two calls this
+    pipeline needs, adapted from mdeff/fma's utils.py (MIT-licensed)."""
+
+    def __init__(self, api_key: str):
+        self.api_key = api_key
+
+    def get_track(self, track_id: int) -> dict:
+        r = requests.get(
+            f"{FMA_API_BASE}tracks.json",
+            params={"track_id": track_id, "api_key": self.api_key},
+            timeout=30,
+        )
+        r.raise_for_status()
+        payload = r.json()
+        if payload.get("errors"):
+            raise RuntimeError(f"FMA API error for track {track_id}: {payload['errors']}")
+        return payload["dataset"][0]
+
+    def download_track(self, track_file: str, dest_path: str) -> None:
+        r = requests.get(_track_download_url(track_file), stream=True, timeout=60)
+        r.raise_for_status()
+        with open(dest_path, "wb") as f:
+            for chunk in r.iter_content(chunk_size=1 << 16):
+                f.write(chunk)
+
+
+def select_random_track_ids(
+    pool_csv_path: str, n: int, min_duration_sec: float, seed: int,
+) -> list[int]:
+    """Deterministic (given seed) random sample of track ids from a flat
+    track_id,duration_sec CSV (Task 0 Step 4 derives this from the official
+    FMA tracks.csv), filtered to tracks at least min_duration_sec long."""
+    candidates = []
+    with open(pool_csv_path, newline="") as f:
+        for row in csv.DictReader(f):
+            if float(row["duration_sec"]) >= min_duration_sec:
+                candidates.append(int(row["track_id"]))
+    rng = random.Random(seed)
+    rng.shuffle(candidates)
+    return candidates[:n]
+
+
+def fetch_fma_sample(
+    pool_csv_path: str, api_key: str, dest_dir: str, n: int, min_duration_sec: float, seed: int,
+) -> list[str]:
+    """Download a random FMA sample. Tracks that fail (API error, download
+    error) are skipped and reported to stderr, same convention
+    dataset.py:build_storages uses for unencodable pairs."""
+    Path(dest_dir).mkdir(parents=True, exist_ok=True)
+    track_ids = select_random_track_ids(pool_csv_path, n, min_duration_sec, seed)
+    client = FreeMusicArchive(api_key)
+    fetched = []
+    for track_id in track_ids:
+        dest = os.path.join(dest_dir, f"fma-{track_id}.mp3")
+        if os.path.exists(dest):
+            fetched.append(dest)
+            continue
+        try:
+            meta = client.get_track(track_id)
+            client.download_track(meta["track_file"], dest)
+            fetched.append(dest)
+        except Exception as exc:
+            print(f"skipping fma track {track_id}: {exc}", file=sys.stderr)
+    return fetched
 
 
 # ---- confidence filtering ---------------------------------------------
