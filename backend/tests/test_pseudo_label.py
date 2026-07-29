@@ -98,6 +98,78 @@ def test_label_track_threshold_zero_keeps_most_of_track(tmp_path):
     assert lab.exists()
 
 
+def test_ia_download_url():
+    from pseudo_label import _ia_download_url
+
+    assert (
+        _ia_download_url("001-7976", "Salsif_Bromen_-_01_-_001.mp3")
+        == "https://archive.org/download/001-7976/Salsif_Bromen_-_01_-_001.mp3"
+    )
+
+
+@pytest.mark.parametrize(
+    "raw,expected",
+    [
+        ("1728.35", 1728.35),  # seconds, the common shape
+        ("05:32", 332.0),  # mm:ss, what IA returns for some derivatives
+        ("1:02:03", 3723.0),  # hh:mm:ss
+        (None, None),  # field absent
+        ("", None),
+        ("garbage", None),
+    ],
+)
+def test_parse_ia_length_handles_every_shape_ia_returns(raw, expected):
+    from pseudo_label import _parse_ia_length
+
+    assert _parse_ia_length(raw) == expected
+
+
+def test_select_audio_file_picks_longest_original_mp3():
+    from pseudo_label import select_audio_file
+
+    files = [
+        {"name": "cover.jpg", "format": "JPEG", "source": "original"},
+        {"name": "short.mp3", "format": "VBR MP3", "source": "original", "length": "40"},
+        {"name": "long.mp3", "format": "VBR MP3", "source": "original", "length": "300"},
+        {"name": "long.ogg", "format": "Ogg Vorbis", "source": "derivative", "length": "300"},
+    ]
+    picked = select_audio_file(files, min_duration_sec=60.0)
+    assert picked is not None
+    assert picked["name"] == "long.mp3"
+    assert picked["duration_sec"] == pytest.approx(300.0)
+
+
+def test_select_audio_file_returns_none_when_all_too_short():
+    from pseudo_label import select_audio_file
+
+    files = [{"name": "a.mp3", "format": "VBR MP3", "source": "original", "length": "30"}]
+    assert select_audio_file(files, min_duration_sec=60.0) is None
+
+
+def test_select_audio_file_skips_files_with_unusable_length():
+    from pseudo_label import select_audio_file
+
+    files = [
+        {"name": "nolen.mp3", "format": "VBR MP3", "source": "original"},
+        {"name": "ok.mp3", "format": "VBR MP3", "source": "original", "length": "120"},
+    ]
+    picked = select_audio_file(files, min_duration_sec=60.0)
+    assert picked["name"] == "ok.mp3"
+
+
+def test_select_random_identifiers_is_deterministic_and_caps_at_pool_size(tmp_path):
+    from pseudo_label import select_random_identifiers
+
+    pool = tmp_path / "pool.txt"
+    pool.write_text("a\nb\nc\nd\n")
+
+    ids = select_random_identifiers(str(pool), n=2, seed=42)
+    assert len(ids) == 2
+    assert set(ids) <= {"a", "b", "c", "d"}
+    assert select_random_identifiers(str(pool), n=2, seed=42) == ids
+    assert set(select_random_identifiers(str(pool), n=99, seed=0)) == {"a", "b", "c", "d"}
+
+
 def test_label_track_impossible_threshold_returns_none(tmp_path):
     import soundfile as sf
 
