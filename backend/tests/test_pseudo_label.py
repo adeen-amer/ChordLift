@@ -139,6 +139,19 @@ def test_select_audio_file_picks_longest_original_mp3():
     assert picked["duration_sec"] == pytest.approx(300.0)
 
 
+def test_select_audio_file_rejects_long_form_radio_shows():
+    """The archive.org FMA collection carries hour-long drones and live WFMU
+    radio shows; max_duration_sec keeps the sample song-like."""
+    from pseudo_label import select_audio_file
+
+    files = [
+        {"name": "hour.mp3", "format": "VBR MP3", "source": "original", "length": "3600"},
+        {"name": "song.mp3", "format": "VBR MP3", "source": "original", "length": "240"},
+    ]
+    picked = select_audio_file(files, min_duration_sec=60.0, max_duration_sec=600.0)
+    assert picked["name"] == "song.mp3"
+
+
 def test_select_audio_file_returns_none_when_all_too_short():
     from pseudo_label import select_audio_file
 

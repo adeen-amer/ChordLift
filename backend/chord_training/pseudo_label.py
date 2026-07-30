@@ -70,20 +70,27 @@ def _parse_ia_length(raw: str | None) -> float | None:
     return seconds
 
 
-def select_audio_file(files: list[dict], min_duration_sec: float) -> dict | None:
+def select_audio_file(
+    files: list[dict], min_duration_sec: float, max_duration_sec: float = float("inf"),
+) -> dict | None:
     """Pick the longest usable audio file from an IA item's file list.
 
     Adds a `duration_sec` key to the returned dict (parsed from `length`) so
     the caller doesn't re-parse. Prefers `source == "original"`: IA items
     typically carry a low-bitrate derivative alongside the original upload,
     and the derivative is the worse training input at identical duration.
+
+    max_duration_sec is not cosmetic: a random sample of this collection
+    surfaces hour-long drones and live WFMU radio shows (talk + music), which
+    the teacher happily labels with 30s-long single-chord segments -- high
+    confidence, useless as song-like harmonic training data.
     """
     candidates = []
     for f in files:
         if not f.get("name", "").lower().endswith(IA_AUDIO_EXTS):
             continue
         duration = _parse_ia_length(f.get("length"))
-        if duration is None or duration < min_duration_sec:
+        if duration is None or not (min_duration_sec <= duration <= max_duration_sec):
             continue
         candidates.append({**f, "duration_sec": duration})
     if not candidates:
@@ -159,6 +166,7 @@ def select_random_identifiers(pool_path: str, n: int, seed: int) -> list[str]:
 
 def fetch_fma_sample(
     pool_path: str, dest_dir: str, n: int, min_duration_sec: float, seed: int,
+    max_duration_sec: float = float("inf"),
 ) -> list[str]:
     """Download a random full-length FMA sample from archive.org.
 
@@ -175,10 +183,12 @@ def fetch_fma_sample(
         if len(fetched) >= n:
             break
         try:
-            picked = select_audio_file(ia.get_files(identifier), min_duration_sec)
+            picked = select_audio_file(
+                ia.get_files(identifier), min_duration_sec, max_duration_sec,
+            )
             if picked is None:
-                print(f"skipping {identifier}: no audio >= {min_duration_sec}s",
-                      file=sys.stderr)
+                print(f"skipping {identifier}: no audio in "
+                      f"[{min_duration_sec}s, {max_duration_sec}s]", file=sys.stderr)
                 continue
             ext = os.path.splitext(picked["name"])[1].lower()
             dest = os.path.join(dest_dir, f"fma-{identifier}{ext}")
@@ -310,6 +320,10 @@ def main() -> int:
     ap.add_argument("--n", type=int, default=200, help="fetch stage: sample size")
     ap.add_argument("--min-duration", type=float, default=60.0,
                     help="fetch stage: minimum track duration in seconds")
+    ap.add_argument("--max-duration", type=float, default=600.0,
+                    help="fetch stage: maximum track duration in seconds. Caps the "
+                         "hour-long drones and live radio shows this collection is "
+                         "full of; raise it if you want long-form material.")
     ap.add_argument("--seed", type=int, default=0, help="fetch stage: sampling seed")
     ap.add_argument("--confidence-threshold", type=float, default=0.6,
                     help="label stage: minimum segment confidence to keep. 0.6 measured, "
@@ -328,7 +342,7 @@ def main() -> int:
         pool = build_identifier_pool(args.pool, force=args.refresh_pool)
         print(f"pool: {len(pool)} archive.org ids ({args.pool})")
         fetched = fetch_fma_sample(args.pool, args.data_dir, args.n,
-                                   args.min_duration, args.seed)
+                                   args.min_duration, args.seed, args.max_duration)
         print(f"fetched: {len(fetched)}/{args.n}")
         return 0
 

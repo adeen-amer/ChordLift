@@ -8,6 +8,40 @@
 
 **Tech Stack:** Python 3.11, `requests` (FMA API — already installed transitively, `pip` shows `requests==2.34.2` in `backend/.venv`), `librosa`/`numpy` (already required), `pytest`.
 
+## Rescope, 2026-07-30 (executed: Tasks 1-6 implemented on branch `pseudo-label-kd`)
+
+**Task 0 is obsolete and Task 4's interfaces changed.** FMA's metadata API is
+retired — every documented endpoint 404s, including `/api/agreement`, the page
+Task 0 Step 1 sends you to request a key from. There is no key to obtain, so
+`FreeMusicArchive` as specified would have been dead code.
+
+Substituted, after verifying end-to-end: archive.org's
+`collection:freemusicarchive` (16,794 items, full-length audio, public
+endpoints, no API key). Consequences:
+
+- **Task 0 (all 4 steps): dropped.** No key request, no 342MB
+  `fma_metadata.zip`, no `fma_pool.csv` multi-index parsing. The id pool is
+  scraped once into a cached ~500KB text file (`build_identifier_pool`).
+- **Task 4 interfaces:** `_track_download_url`/`FreeMusicArchive`/
+  `select_random_track_ids` → `_ia_download_url`/`_parse_ia_length`/
+  `select_audio_file`/`InternetArchive`/`build_identifier_pool`/
+  `select_random_identifiers`. Same pure-vs-network split, same seeded
+  determinism, more unit tests (IA's `length` field is seconds on originals
+  but `mm:ss` on some derivatives, so parsing is tested against both).
+- **Task 5 `--confidence-threshold` default is 0.6, not 0.7.** Measured, not
+  guessed: on real tracks the teacher's mean triad posterior is ≈0.635, and
+  0.7 retained only 0.43/0.37 coverage — below `--min-coverage 0.5`, so both
+  smoke-tested tracks were discarded outright. See `PSEUDO_LABEL_RUNBOOK.md`
+  for the full threshold/coverage table.
+- **Added `--max-duration` (default 600s), not in the spec.** A random sample
+  of this collection surfaces hour-long drones and live WFMU radio shows; the
+  teacher labels them confidently with 30s single-chord segments, so no
+  downstream confidence filter catches them. Verified the cap changes the
+  sample at a fixed seed.
+
+Tasks 1-3 and 6 were executed as written. Everything below is the original
+plan, left unedited as the record of what was approved.
+
 ## Global Constraints
 
 - No changes to `chord_training/dataset.py` or `chord_training/finetune.py` — spec requires the confidence filter to live entirely in the new script (design doc, "Design" section).
