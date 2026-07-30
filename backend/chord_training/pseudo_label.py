@@ -387,9 +387,17 @@ def main() -> int:
         with open(args.pseudo_manifest, "w") as manifest:
             for audio_path in audio_files:
                 lab_path = audio_path.with_suffix(".lab")
-                coverage = label_track(str(audio_path), str(lab_path),
-                                       args.confidence_threshold, args.min_coverage,
-                                       args.max_held_fraction)
+                try:
+                    coverage = label_track(str(audio_path), str(lab_path),
+                                           args.confidence_threshold, args.min_coverage,
+                                           args.max_held_fraction)
+                except Exception as exc:
+                    # A single undecodable download (librosa falls back to
+                    # audioread, which raises NoBackendError without ffmpeg)
+                    # must not kill a 350-track run -- same skip-and-report
+                    # convention fetch_fma_sample uses.
+                    print(f"skipping {audio_path.name}: {exc!r}", file=sys.stderr)
+                    continue
                 if coverage is None:
                     print(f"skipping {audio_path.name}: below --min-coverage "
                           f"{args.min_coverage} or above --max-held-fraction "

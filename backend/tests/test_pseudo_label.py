@@ -262,6 +262,28 @@ def test_cli_label_stage_writes_manifest(tmp_path):
     assert Path(lab_path).exists()
 
 
+def test_cli_label_stage_survives_an_undecodable_file(tmp_path):
+    """One unreadable mp3 must not kill a 350-track run: librosa falls back to
+    audioread, which raises NoBackendError when ffmpeg is absent."""
+    import subprocess
+    import sys as _sys
+
+    audio_dir = tmp_path / "audio"
+    audio_dir.mkdir()
+    (audio_dir / "fma-broken.mp3").write_text("not actually an mp3")
+
+    manifest_path = tmp_path / "pseudo_manifest.txt"
+    r = subprocess.run(
+        [_sys.executable, str(BACKEND / "chord_training" / "pseudo_label.py"),
+         "--stage", "label", "--data-dir", str(audio_dir),
+         "--pseudo-manifest", str(manifest_path)],
+        capture_output=True, text=True, cwd=BACKEND,
+    )
+    assert r.returncode == 0, r.stderr
+    assert "labeled: 0/1" in r.stdout
+    assert "fma-broken.mp3" in r.stderr
+
+
 def test_cli_manifest_stage_merges_and_passes_leakage_check(tmp_path):
     import subprocess
     import sys as _sys
