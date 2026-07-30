@@ -46,6 +46,10 @@ IA_COLLECTION = "freemusicarchive"
 # AUDIO_EXTS in build_manifest.py is what --stage label globs for, so only
 # download extensions that stage can actually pick up.
 IA_AUDIO_EXTS = (".mp3", ".wav")
+# A chord held longer than this is a drone, not a progression. 30s is ~10x the
+# measured median segment (2.7s) on a real 153-track sample -- comfortably past
+# any real slow-harmony passage.
+HELD_SEGMENT_SEC = 30.0
 
 
 # ---- Internet Archive FMA collection ------------------------------------
@@ -250,6 +254,25 @@ def write_lab(path: str, segments: list[dict]) -> None:
     Path(path).write_text("".join(lines))
 
 
+def held_fraction(segments: list[dict], held_segment_sec: float = HELD_SEGMENT_SEC) -> float:
+    """Share of labeled time sitting in single held chords.
+
+    A drone or ambient piece gets labeled with one chord for minutes at a
+    time, at high confidence -- it passes the confidence filter and the
+    coverage gate while teaching the model that harmony never moves. Measured
+    on a real 153-track sample: median segment 2.7s (song-like), but 36.6% of
+    labeled time in >30s segments and a third of tracks drone-dominated.
+    """
+    total = sum(s["end_time"] - s["start_time"] for s in segments)
+    if total <= 0:
+        return 0.0
+    held = sum(
+        d for d in (s["end_time"] - s["start_time"] for s in segments)
+        if d > held_segment_sec
+    )
+    return held / total
+
+
 def retained_coverage(segments: list[dict], track_duration: float) -> float:
     if track_duration <= 0:
         return 0.0
@@ -261,13 +284,16 @@ def retained_coverage(segments: list[dict], track_duration: float) -> float:
 
 def label_track(
     audio_path: str, lab_out_path: str, threshold: float, min_coverage: float = 0.5,
+    max_held_fraction: float = 1.0,
 ) -> float | None:
     """Pseudo-label one track with the production chordia ensemble.
 
     Returns retained-coverage fraction and writes lab_out_path on success;
     returns None (writes nothing) if confidence-filtering leaves less than
-    min_coverage of the track's duration covered -- same skip-and-report
-    convention dataset.py:build_storages uses for unencodable pairs.
+    min_coverage of the track's duration covered, or if more than
+    max_held_fraction of the labeled time sits in single held chords -- same
+    skip-and-report convention dataset.py:build_storages uses for unencodable
+    pairs.
     """
     import librosa
 
@@ -282,7 +308,7 @@ def label_track(
     frame_conf = frame_confidences(probs)
     kept = filter_low_confidence_segments(segments, frame_conf, sr, HOP, threshold)
     coverage = retained_coverage(kept, duration)
-    if coverage < min_coverage:
+    if coverage < min_coverage or held_fraction(kept) > max_held_fraction:
         return None
     write_lab(lab_out_path, kept)
     return coverage
@@ -333,6 +359,13 @@ def main() -> int:
                          "from the coverage stats this stage prints.")
     ap.add_argument("--min-coverage", type=float, default=0.5,
                     help="label stage: minimum retained-duration fraction to keep a track")
+    ap.add_argument("--max-held-fraction", type=float, default=0.5,
+                    help=f"label stage: drop a track if more than this share of its "
+                         f"labeled time sits in single chords held over "
+                         f"{HELD_SEGMENT_SEC:.0f}s. Ambient/drone material passes the "
+                         f"confidence and coverage gates while teaching the model that "
+                         f"harmony never moves; a third of a real 153-track sample was "
+                         f"drone-dominated. Set to 1.0 to disable.")
     ap.add_argument("--pseudo-manifest", default=str(DATA_DIR / "pseudo_manifest.txt"),
                     help="label stage output / manifest stage input")
     ap.add_argument("--train-manifest", help="manifest stage: train_manifest.txt to append into")
@@ -355,10 +388,12 @@ def main() -> int:
             for audio_path in audio_files:
                 lab_path = audio_path.with_suffix(".lab")
                 coverage = label_track(str(audio_path), str(lab_path),
-                                       args.confidence_threshold, args.min_coverage)
+                                       args.confidence_threshold, args.min_coverage,
+                                       args.max_held_fraction)
                 if coverage is None:
-                    print(f"skipping {audio_path.name}: retained coverage below "
-                          f"{args.min_coverage}", file=sys.stderr)
+                    print(f"skipping {audio_path.name}: below --min-coverage "
+                          f"{args.min_coverage} or above --max-held-fraction "
+                          f"{args.max_held_fraction}", file=sys.stderr)
                     continue
                 manifest.write(f"{audio_path}\t{lab_path}\n")
                 coverages.append(coverage)

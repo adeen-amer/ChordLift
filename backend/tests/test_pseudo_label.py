@@ -81,6 +81,29 @@ def test_retained_coverage_zero_duration_is_zero():
     assert retained_coverage([], track_duration=0.0) == 0.0
 
 
+def test_held_fraction_measures_share_of_labeled_time_in_long_segments():
+    from pseudo_label import held_fraction
+
+    segs = [
+        {"start_time": 0.0, "end_time": 60.0, "chord": "C:maj"},  # held
+        {"start_time": 60.0, "end_time": 80.0, "chord": "G:maj"},  # not held
+    ]
+    assert held_fraction(segs, held_segment_sec=30.0) == pytest.approx(0.75)
+
+
+def test_held_fraction_of_song_like_labels_is_zero():
+    from pseudo_label import held_fraction
+
+    segs = [{"start_time": float(i), "end_time": i + 1.0, "chord": "C:maj"} for i in range(20)]
+    assert held_fraction(segs, held_segment_sec=30.0) == 0.0
+
+
+def test_held_fraction_empty_is_zero():
+    from pseudo_label import held_fraction
+
+    assert held_fraction([], held_segment_sec=30.0) == 0.0
+
+
 def test_label_track_threshold_zero_keeps_most_of_track(tmp_path):
     import soundfile as sf
 
