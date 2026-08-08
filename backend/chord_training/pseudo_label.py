@@ -416,10 +416,15 @@ def main() -> int:
     if not args.train_manifest:
         print("--train-manifest is required for the manifest stage", file=sys.stderr)
         return 1
+    # Gate on the candidate pseudo pairs BEFORE touching train_manifest: once
+    # merge_manifests appends there is no clean rollback (a re-run just skips
+    # already-present lines), so leaked rows must never land there at all.
+    leak_rc = subprocess.run([sys.executable, str(VERIFY_SCRIPT), args.pseudo_manifest]).returncode
+    if leak_rc != 0:
+        return 1
     added = merge_manifests(args.train_manifest, args.pseudo_manifest)
     print(f"merged {len(added)} new pairs into {args.train_manifest}")
-    leak_rc = subprocess.run([sys.executable, str(VERIFY_SCRIPT), args.train_manifest]).returncode
-    return 1 if leak_rc != 0 else 0
+    return 0
 
 
 if __name__ == "__main__":

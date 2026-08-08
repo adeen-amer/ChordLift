@@ -304,3 +304,25 @@ def test_cli_manifest_stage_merges_and_passes_leakage_check(tmp_path):
     assert r.returncode == 0, r.stderr
     assert "fma-1.wav" in train.read_text()
     assert "PASS" in r.stdout or "OK" in r.stdout
+
+
+def test_cli_manifest_stage_rejects_leak_without_touching_train_manifest(tmp_path):
+    """The gate runs before the append: a leaked row must not land in
+    train_manifest, because merge_manifests has no rollback."""
+    import subprocess
+    import sys as _sys
+
+    train = tmp_path / "train_manifest.txt"
+    train.write_text("clean.wav\tclean.lab\n")
+    pseudo = tmp_path / "pseudo_manifest.txt"
+    # "another-one-bites-the-dust" is a real gold_holdout_v2.json track_id.
+    pseudo.write_text("another-one-bites-the-dust.mp3\tanother-one-bites-the-dust.lab\n")
+
+    r = subprocess.run(
+        [_sys.executable, str(BACKEND / "chord_training" / "pseudo_label.py"),
+         "--stage", "manifest", "--train-manifest", str(train),
+         "--pseudo-manifest", str(pseudo)],
+        capture_output=True, text=True, cwd=BACKEND,
+    )
+    assert r.returncode == 1, r.stdout
+    assert train.read_text() == "clean.wav\tclean.lab\n"
