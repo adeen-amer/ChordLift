@@ -17,6 +17,8 @@ from downloader import (
 from analyzer import analyze_audio, is_cache_valid, ANALYZER_VERSION
 from chord_engine import CHORD_ENGINE, log_chord_engine_status
 from ml_env import summarize_ml_readiness
+from beat_tracking import beat_engine_readiness
+from spotify_metadata import spotify_readiness
 from safe_paths import InvalidSourceIdError, resolve_cache_json, resolve_download_mp3, validate_source_id
 from analysis_runtime import run_analysis_deduped
 from model_cache import preload_ml_models
@@ -103,6 +105,10 @@ async def health():
         "chord_engine": CHORD_ENGINE,
         "ml_ready": ml["ml_deps_ok"] if CHORD_ENGINE == "ml" else None,
         "ml_setup_hint": ml.get("setup_hint"),
+        # Both paths degrade silently at runtime (librosa heuristic / unverified
+        # YT Music match), so surface which one is actually serving.
+        "beat_engine": beat_engine_readiness(),
+        "spotify": spotify_readiness(),
     }
 
 MAX_UPLOAD_BYTES = 50 * 1024 * 1024

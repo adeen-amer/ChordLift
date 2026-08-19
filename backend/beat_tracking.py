@@ -155,3 +155,60 @@ def track_beats_auto(
     return track_beats(
         stems.chord_signal, stems.bass, sr, hop_length=hop_length, beats_per_bar=beats_per_bar,
     )
+
+
+
+def _module_available(name: str) -> bool:
+    from importlib.util import find_spec
+
+    try:
+        return find_spec(name) is not None
+    except Exception:
+        return False
+
+
+def beat_engine_readiness() -> dict:
+    """Status dict for logging and /api/health.
+
+    track_beats_auto swallows every import/runtime failure and drops to the
+    librosa heuristic. That is the right runtime behaviour, but it leaves an
+    operator unable to tell whether the model-based engine is actually serving
+    -- the bar markers look identical either way.
+
+    madmom gates *both* model paths, not just its own: beat_transformer.infer
+    imports madmom's DBN processors for post-processing, so no madmom means no
+    transformer either, however importable the module is. The checkpoint is not
+    checked here -- model_cache downloads it on first use.
+
+    Import-check only: no audio is processed and no network call is made.
+    """
+    madmom_ok = _module_available("madmom")
+    transformer_ok = _module_available("beat_transformer.infer") and madmom_ok
+
+    if BEAT_ENGINE == "librosa":
+        effective = "librosa"
+    elif BEAT_ENGINE == "madmom":
+        effective = "madmom" if madmom_ok else "unavailable"
+    elif BEAT_ENGINE == "transformer":
+        effective = "transformer" if transformer_ok else "unavailable"
+    elif transformer_ok:
+        # "auto" only reaches the transformer for real Demucs stems; on HPSS
+        # pseudo-stems it starts at madmom however available this is.
+        effective = "transformer-or-madmom"
+    elif madmom_ok:
+        effective = "madmom"
+    else:
+        effective = "librosa"
+
+    degraded = BEAT_ENGINE != "librosa" and effective in ("librosa", "unavailable")
+    return {
+        "engine_requested": BEAT_ENGINE,
+        "madmom_available": madmom_ok,
+        "transformer_available": transformer_ok,
+        "effective_engine": effective,
+        "setup_hint": (
+            "No model-based beat engine is installed; downbeats and bar markers are "
+            "coming from the librosa heuristic. Install madmom (see requirements-ml.txt) "
+            "-- it gates the Beat-Transformer path too."
+        ) if degraded else None,
+    }
