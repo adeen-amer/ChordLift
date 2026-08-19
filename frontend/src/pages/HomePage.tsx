@@ -369,6 +369,7 @@ function HomePage() {
             chordEngine={data.chord_engine}
             loadState={audioLoadState}
             downbeatTimes={data.beats?.downbeat_times}
+            spotifyMatch={data.spotify_match}
           />
 
           <div className="presentation-row">

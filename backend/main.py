@@ -12,6 +12,7 @@ from downloader import (
     extract_source_id,
     extract_youtube_id,
     fetch_track_metadata,
+    read_match_verdict,
     save_uploaded_file,
 )
 from analyzer import analyze_audio, is_cache_valid, ANALYZER_VERSION
@@ -68,6 +69,15 @@ def _client_error_message(exc: Exception) -> str:
 def _enrich_analysis(data: dict, url: str) -> dict:
     if not data.get("song"):
         data["song"] = fetch_track_metadata(url)
+    # Both the fresh and the cached path come through here, so the match
+    # verdict rides along either way. Nothing else tells a user that the audio
+    # spotdl matched may not be the track they asked for.
+    try:
+        verdict = read_match_verdict(extract_source_id(url))
+    except Exception:
+        verdict = None
+    if verdict:
+        data["spotify_match"] = verdict
     yt_id = extract_youtube_id(url)
     if yt_id:
         song = dict(data.get("song") or {})

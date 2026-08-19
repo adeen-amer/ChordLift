@@ -1,6 +1,6 @@
 import { useState, useEffect, type RefObject } from 'react';
-import { Play, Pause, Disc3, Music2, Guitar, Minus, Plus, Repeat, X } from 'lucide-react';
-import type { CapoInfo, KeyInfo, SongInfo, AudioLoadState } from '../types';
+import { Play, Pause, Disc3, Music2, Guitar, Minus, Plus, Repeat, X, AlertTriangle } from 'lucide-react';
+import type { CapoInfo, KeyInfo, SongInfo, AudioLoadState, SpotifyMatch } from '../types';
 import {
   DEFAULT_SPEED,
   formatSpeed,
@@ -21,6 +21,7 @@ interface AudioPlayerProps {
   chordEngine?: string;
   loadState?: AudioLoadState;
   downbeatTimes?: number[];
+  spotifyMatch?: SpotifyMatch;
 }
 
 export const AudioPlayer = ({
@@ -33,6 +34,7 @@ export const AudioPlayer = ({
   chordEngine,
   loadState = 'idle',
   downbeatTimes,
+  spotifyMatch,
 }: AudioPlayerProps) => {
   const [isPlaying, setIsPlaying] = useState(false);
   const [progress, setProgress] = useState(0);
@@ -198,6 +200,14 @@ export const AudioPlayer = ({
             <p className="analysis-meta">{metaParts.join(' · ')}</p>
           )}
           {playHint && <p className="analysis-meta">{playHint}</p>}
+          {spotifyMatch?.spotify_duration_status === 'unknown' && (
+            <p className="match-warning" role="status">
+              <AlertTriangle size={13} aria-hidden="true" />
+              <span>
+                Couldn't verify this is the right recording — chords may not match.
+              </span>
+            </p>
+          )}
         </div>
 
         <button
