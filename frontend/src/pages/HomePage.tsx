@@ -448,7 +448,11 @@ function HomePage() {
       {!data && !isAnalyzing && !error && (
         <div style={{ textAlign: 'center', color: 'var(--text-muted)', marginTop: '40px', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '16px' }}>
           <Music size={64} opacity={0.2} />
-          <p>Paste a YouTube, Spotify, or SoundCloud link — or upload an audio file — to extract chords and solos.</p>
+          <p>
+            {UPLOAD_ONLY
+              ? 'Upload an audio file to extract chords and solos.'
+              : 'Paste a YouTube, Spotify, or SoundCloud link — or upload an audio file — to extract chords and solos.'}
+          </p>
         </div>
       )}
       </>
