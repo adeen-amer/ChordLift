@@ -346,6 +346,75 @@ body {
   pointer-events: none;
 }
 
+/* Practice controls: playback speed + A/B section loop */
+.loop-region {
+  position: absolute;
+  top: 0;
+  height: 100%;
+  background: rgba(255, 255, 255, 0.28);
+  pointer-events: none;
+}
+
+.practice-bar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 16px;
+  margin-top: 10px;
+}
+
+.practice-group {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.practice-icon {
+  color: rgba(255, 255, 255, 0.4);
+}
+
+.practice-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 28px;
+  height: 28px;
+  padding: 0 8px;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  border-radius: 6px;
+  background: rgba(255, 255, 255, 0.05);
+  color: var(--text-primary, #fff);
+  font-size: 12px;
+  cursor: pointer;
+}
+
+.practice-btn:hover:not(:disabled) {
+  background: rgba(255, 255, 255, 0.12);
+}
+
+.practice-btn:disabled {
+  opacity: 0.35;
+  cursor: default;
+}
+
+.practice-btn.is-set {
+  border-color: var(--accent-primary);
+  color: var(--accent-primary);
+}
+
+.practice-btn-wide {
+  min-width: 44px;
+  font-variant-numeric: tabular-nums;
+}
+
+.practice-value {
+  min-width: 40px;
+  text-align: center;
+  font-size: 12px;
+  font-variant-numeric: tabular-nums;
+  color: rgba(255, 255, 255, 0.75);
+}
+
 /* Chord Sequence */
 .playback-main {
   display: grid;

@@ -1,6 +1,14 @@
-import { useState, useEffect, type RefObject } from 'react';
-import { Play, Pause, Disc3, Music2, Guitar } from 'lucide-react';
+import { useState, useEffect, useRef, type RefObject } from 'react';
+import { Play, Pause, Disc3, Music2, Guitar, Minus, Plus, Repeat, X } from 'lucide-react';
 import type { CapoInfo, KeyInfo, SongInfo, AudioLoadState } from '../types';
+import {
+  DEFAULT_SPEED,
+  formatSpeed,
+  loopSeekTarget,
+  normalizeLoop,
+  stepSpeed,
+  SPEED_STEPS,
+} from '../utils/practice';
 
 interface AudioPlayerProps {
   audioRef: RefObject<HTMLAudioElement | null>;
@@ -26,6 +34,11 @@ export const AudioPlayer = ({
   const [isPlaying, setIsPlaying] = useState(false);
   const [progress, setProgress] = useState(0);
   const [duration, setDuration] = useState(0);
+  const [speed, setSpeed] = useState<number>(DEFAULT_SPEED);
+  const [loopA, setLoopA] = useState<number | null>(null);
+  const [loopB, setLoopB] = useState<number | null>(null);
+
+  const loop = normalizeLoop(loopA, loopB, duration);
 
   const title = song?.title?.trim() || 'Unknown track';
   const artist = song?.artist?.trim();
@@ -70,6 +83,40 @@ export const AudioPlayer = ({
       audio.removeEventListener('play', handlePlay);
     };
   }, [audioRef, src]);
+
+  useEffect(() => {
+    setLoopA(null);
+    setLoopB(null);
+    setSpeed(DEFAULT_SPEED);
+  }, [src]);
+
+  useEffect(() => {
+    const audio = audioRef.current;
+    if (!audio) return;
+    audio.playbackRate = speed;
+    // Without this a slowed-down track is also pitched down, which makes it
+    // useless for playing along to.
+    audio.preservesPitch = true;
+  }, [audioRef, speed, src, loadState]);
+
+  // rAF rather than the `timeupdate` event: that fires roughly 4x/sec, which
+  // overshoots an audible fraction of a second past the loop point. Only runs
+  // while a loop is actually active and playing.
+  const loopRef = useRef(loop);
+  loopRef.current = loop;
+  useEffect(() => {
+    const audio = audioRef.current;
+    if (!audio || !loop || !isPlaying) return;
+
+    let frame = 0;
+    const tick = () => {
+      const target = loopSeekTarget(audio.currentTime, loopRef.current);
+      if (target !== null) audio.currentTime = target;
+      frame = requestAnimationFrame(tick);
+    };
+    frame = requestAnimationFrame(tick);
+    return () => cancelAnimationFrame(frame);
+  }, [audioRef, isPlaying, loop?.start, loop?.end]);
 
   const togglePlay = async () => {
     if (!audioRef.current || !canPlay) return;
@@ -156,12 +203,81 @@ export const AudioPlayer = ({
       <div className="progress-container">
         <span className="time">{formatTime(progress)}</span>
         <div className="progress-bar" onClick={handleSeek}>
+          {loop && duration > 0 && (
+            <div
+              className="loop-region"
+              style={{
+                left: `${(loop.start / duration) * 100}%`,
+                width: `${((loop.end - loop.start) / duration) * 100}%`,
+              }}
+              aria-hidden="true"
+            />
+          )}
           <div
             className="progress-fill"
             style={{ width: `${duration ? (progress / duration) * 100 : 0}%` }}
           />
         </div>
         <span className="time">{formatTime(duration)}</span>
+      </div>
+
+      <div className="practice-bar">
+        <div className="practice-group" role="group" aria-label="Playback speed">
+          <button
+            className="practice-btn"
+            onClick={() => setSpeed((s) => stepSpeed(s, -1))}
+            disabled={!canPlay || speed === SPEED_STEPS[0]}
+            aria-label="Slower"
+          >
+            <Minus size={14} />
+          </button>
+          <span className="practice-value" aria-live="polite">
+            {formatSpeed(speed)}
+          </span>
+          <button
+            className="practice-btn"
+            onClick={() => setSpeed((s) => stepSpeed(s, 1))}
+            disabled={!canPlay || speed === SPEED_STEPS[SPEED_STEPS.length - 1]}
+            aria-label="Faster"
+          >
+            <Plus size={14} />
+          </button>
+        </div>
+
+        <div className="practice-group" role="group" aria-label="Loop section">
+          <Repeat size={14} className="practice-icon" aria-hidden="true" />
+          <button
+            className={`practice-btn practice-btn-wide${loopA !== null ? ' is-set' : ''}`}
+            onClick={() => setLoopA(progress)}
+            disabled={!canPlay}
+            aria-label={
+              loopA === null ? 'Set loop start at playhead' : `Loop start ${formatTime(loopA)}`
+            }
+          >
+            A{loopA !== null && ` ${formatTime(loopA)}`}
+          </button>
+          <button
+            className={`practice-btn practice-btn-wide${loopB !== null ? ' is-set' : ''}`}
+            onClick={() => setLoopB(progress)}
+            disabled={!canPlay}
+            aria-label={
+              loopB === null ? 'Set loop end at playhead' : `Loop end ${formatTime(loopB)}`
+            }
+          >
+            B{loopB !== null && ` ${formatTime(loopB)}`}
+          </button>
+          <button
+            className="practice-btn"
+            onClick={() => {
+              setLoopA(null);
+              setLoopB(null);
+            }}
+            disabled={loopA === null && loopB === null}
+            aria-label="Clear loop"
+          >
+            <X size={14} />
+          </button>
+        </div>
       </div>
     </div>
   );
