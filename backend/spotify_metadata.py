@@ -152,3 +152,25 @@ def verify_audio_matches_spotify(url: str, audio_duration_sec: float, *, toleran
         "spotify_delta_sec": round(delta, 3),
         "spotify_duration_status": status,
     }
+
+
+def spotify_readiness() -> dict[str, Any]:
+    """Status dict for logging and /api/health.
+
+    Credentials-only check -- deliberately makes no network call, so /api/health
+    stays fast. Without SPOTIFY_CLIENT_ID/SECRET the Spotify path still works,
+    but duration verification degrades to _duration_via_oembed's YT Music
+    search, which is close to circular: spotdl also resolves audio via YT
+    Music, so a wrong match can agree with itself. "api" is the only mode that
+    verifies a download against Spotify's own duration_ms.
+    """
+    configured = _spotify_credentials() is not None
+    return {
+        "credentials_configured": configured,
+        "duration_verification": "api" if configured else "ytmusic-fallback",
+        "setup_hint": None if configured else (
+            "Set SPOTIFY_CLIENT_ID/SPOTIFY_CLIENT_SECRET (see .env.example) to verify "
+            "downloaded audio against Spotify's official duration; without them a "
+            "mismatched YT Music match can pass unnoticed."
+        ),
+    }

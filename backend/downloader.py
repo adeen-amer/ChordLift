@@ -346,8 +346,13 @@ SPOTIFY_ID_SEARCH = {
 }
 
 
-def _download_spotify_via_spotdl(url: str, expected_path: str) -> None:
-    """YT-Music metadata-matched download + Spotify duration verification."""
+def _download_spotify_via_spotdl(url: str, expected_path: str) -> dict:
+    """YT-Music metadata-matched download + Spotify duration verification.
+
+    Returns the verify_audio_matches_spotify verdict so callers can persist
+    it. A "unknown" verdict means nothing checked that the audio spotdl found
+    is the track that was asked for -- the user needs to be told.
+    """
     import shutil
     import subprocess
     import sys
@@ -380,8 +385,32 @@ def _download_spotify_via_spotdl(url: str, expected_path: str) -> None:
                 f"Spotify duration verified: {duration:.1f}s "
                 f"(official {check.get('spotify_duration_sec')}s)"
             )
+        return {**check, "audio_duration_sec": round(duration, 3)}
     finally:
         shutil.rmtree(tmp, ignore_errors=True)
+
+
+def _match_path(source_id: str) -> str:
+    return os.path.join(DOWNLOAD_DIR, f"{source_id}.match.json")
+
+
+def write_match_verdict(source_id: str, verdict: dict) -> None:
+    """Persist alongside the mp3 so a cache hit reports the same verdict the
+    original download did -- download_audio returns early for cached files and
+    would otherwise lose it."""
+    try:
+        with open(_match_path(source_id), "w", encoding="utf-8") as handle:
+            json.dump(verdict, handle)
+    except OSError as exc:
+        logger.warning("could not persist match verdict for %s: %s", source_id, exc)
+
+
+def read_match_verdict(source_id: str) -> dict | None:
+    try:
+        with open(_match_path(source_id), "r", encoding="utf-8") as handle:
+            return json.load(handle)
+    except (OSError, ValueError):
+        return None
 
 
 def _resolve_spotify_to_youtube_search(url: str) -> str:
@@ -531,14 +560,16 @@ async def download_audio(url: str) -> dict:
         mp3_path = os.path.join(DOWNLOAD_DIR, f"{source_id}.mp3")
         if not os.path.exists(mp3_path):
             raise FileNotFoundError("Uploaded audio file not found. Please upload again.")
-        return {"video_id": source_id, "audio_path": mp3_path, "source": "upload"}
+        return {"video_id": source_id, "audio_path": mp3_path, "source": "upload",
+                "spotify_match": None}
 
     source_id = extract_source_id(url)
     output_template = os.path.join(DOWNLOAD_DIR, f"{source_id}.%(ext)s")
     expected_path = os.path.join(DOWNLOAD_DIR, f"{source_id}.mp3")
 
     if os.path.exists(expected_path):
-        return {"video_id": source_id, "audio_path": expected_path, "source": "cache"}
+        return {"video_id": source_id, "audio_path": expected_path, "source": "cache",
+                "spotify_match": read_match_verdict(source_id)}
 
     def _download():
         spotify_id = extract_spotify_id(url)
@@ -547,7 +578,8 @@ async def download_audio(url: str) -> dict:
         if spotify_id and not yt_id:
             try:
                 logger.info(f"Spotify link → spotdl YT-Music match: {url}")
-                _download_spotify_via_spotdl(url, expected_path)
+                verdict = _download_spotify_via_spotdl(url, expected_path)
+                write_match_verdict(source_id, verdict)
                 return
             except Exception as spotdl_err:
                 logger.info(f"spotdl failed ({spotdl_err}); falling back to ytsearch")
@@ -575,7 +607,8 @@ async def download_audio(url: str) -> dict:
     await asyncio.to_thread(_download)
 
     if os.path.exists(expected_path):
-        return {"video_id": source_id, "audio_path": expected_path, "source": "download"}
+        return {"video_id": source_id, "audio_path": expected_path, "source": "download",
+                "spotify_match": read_match_verdict(source_id)}
 
     raise RuntimeError("Audio file was not created. Ensure ffmpeg is installed.")
 

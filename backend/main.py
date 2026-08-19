@@ -1,5 +1,5 @@
-from fastapi import FastAPI, HTTPException, UploadFile, File
-from fastapi.responses import FileResponse, StreamingResponse
+from fastapi import FastAPI, HTTPException, UploadFile, File, Request
+from fastapi.responses import FileResponse, Response, StreamingResponse
 from fastapi.middleware.cors import CORSMiddleware
 import os
 import json
@@ -12,11 +12,15 @@ from downloader import (
     extract_source_id,
     extract_youtube_id,
     fetch_track_metadata,
+    read_match_verdict,
     save_uploaded_file,
 )
 from analyzer import analyze_audio, is_cache_valid, ANALYZER_VERSION
 from chord_engine import CHORD_ENGINE, log_chord_engine_status
 from ml_env import summarize_ml_readiness
+from beat_tracking import beat_engine_readiness
+from spotify_metadata import spotify_readiness
+from range_requests import UnsatisfiableRangeError, iter_file_range, parse_byte_range
 from safe_paths import InvalidSourceIdError, resolve_cache_json, resolve_download_mp3, validate_source_id
 from analysis_runtime import run_analysis_deduped
 from model_cache import preload_ml_models
@@ -65,6 +69,15 @@ def _client_error_message(exc: Exception) -> str:
 def _enrich_analysis(data: dict, url: str) -> dict:
     if not data.get("song"):
         data["song"] = fetch_track_metadata(url)
+    # Both the fresh and the cached path come through here, so the match
+    # verdict rides along either way. Nothing else tells a user that the audio
+    # spotdl matched may not be the track they asked for.
+    try:
+        verdict = read_match_verdict(extract_source_id(url))
+    except Exception:
+        verdict = None
+    if verdict:
+        data["spotify_match"] = verdict
     yt_id = extract_youtube_id(url)
     if yt_id:
         song = dict(data.get("song") or {})
@@ -103,6 +116,10 @@ async def health():
         "chord_engine": CHORD_ENGINE,
         "ml_ready": ml["ml_deps_ok"] if CHORD_ENGINE == "ml" else None,
         "ml_setup_hint": ml.get("setup_hint"),
+        # Both paths degrade silently at runtime (librosa heuristic / unverified
+        # YT Music match), so surface which one is actually serving.
+        "beat_engine": beat_engine_readiness(),
+        "spotify": spotify_readiness(),
     }
 
 MAX_UPLOAD_BYTES = 50 * 1024 * 1024
@@ -238,15 +255,44 @@ async def progress_endpoint(video_id: str, url: str, force_reanalyze: bool = Fal
     )
 
 @app.get("/api/audio/{video_id}")
-async def get_audio(video_id: str):
+async def get_audio(video_id: str, request: Request):
     try:
         audio_path = resolve_download_mp3(video_id)
     except InvalidSourceIdError as exc:
         raise HTTPException(status_code=400, detail="Invalid track id.") from exc
 
-    if audio_path.is_file():
-        return FileResponse(audio_path, media_type="audio/mpeg")
-    raise HTTPException(status_code=404, detail="Audio file not found")
+    if not audio_path.is_file():
+        raise HTTPException(status_code=404, detail="Audio file not found")
+
+    file_size = audio_path.stat().st_size
+
+    # Without byte-range support the browser reports the stream as unseekable
+    # (`audio.seekable` empty), so clicking the progress bar and the A/B
+    # practice loop both silently do nothing.
+    try:
+        byte_range = parse_byte_range(request.headers.get("range"), file_size)
+    except UnsatisfiableRangeError:
+        return Response(
+            status_code=416,
+            headers={"Content-Range": f"bytes */{file_size}", "Accept-Ranges": "bytes"},
+        )
+
+    if byte_range is None:
+        return FileResponse(
+            audio_path, media_type="audio/mpeg", headers={"Accept-Ranges": "bytes"},
+        )
+
+    start, end = byte_range
+    return StreamingResponse(
+        iter_file_range(audio_path, start, end),
+        status_code=206,
+        media_type="audio/mpeg",
+        headers={
+            "Accept-Ranges": "bytes",
+            "Content-Range": f"bytes {start}-{end}/{file_size}",
+            "Content-Length": str(end - start + 1),
+        },
+    )
 
 if __name__ == "__main__":
     import uvicorn

@@ -1,6 +1,16 @@
 import { useState, useEffect, type RefObject } from 'react';
-import { Play, Pause, Disc3, Music2, Guitar } from 'lucide-react';
-import type { CapoInfo, KeyInfo, SongInfo, AudioLoadState } from '../types';
+import { Play, Pause, Disc3, Music2, Guitar, Minus, Plus, Repeat, X, AlertTriangle } from 'lucide-react';
+import type { CapoInfo, KeyInfo, SongInfo, AudioLoadState, SpotifyMatch } from '../types';
+import {
+  canSeek,
+  DEFAULT_SPEED,
+  formatSpeed,
+  loopSeekTarget,
+  normalizeLoop,
+  snapToDownbeat,
+  stepSpeed,
+  SPEED_STEPS,
+} from '../utils/practice';
 
 interface AudioPlayerProps {
   audioRef: RefObject<HTMLAudioElement | null>;
@@ -11,6 +21,8 @@ interface AudioPlayerProps {
   analyzerVersion?: string;
   chordEngine?: string;
   loadState?: AudioLoadState;
+  downbeatTimes?: number[];
+  spotifyMatch?: SpotifyMatch;
 }
 
 export const AudioPlayer = ({
@@ -22,10 +34,18 @@ export const AudioPlayer = ({
   analyzerVersion,
   chordEngine,
   loadState = 'idle',
+  downbeatTimes,
+  spotifyMatch,
 }: AudioPlayerProps) => {
   const [isPlaying, setIsPlaying] = useState(false);
   const [progress, setProgress] = useState(0);
   const [duration, setDuration] = useState(0);
+  const [speed, setSpeed] = useState<number>(DEFAULT_SPEED);
+  const [loopA, setLoopA] = useState<number | null>(null);
+  const [loopB, setLoopB] = useState<number | null>(null);
+  const [seekable, setSeekable] = useState(true);
+
+  const loop = normalizeLoop(loopA, loopB, duration);
 
   const title = song?.title?.trim() || 'Unknown track';
   const artist = song?.artist?.trim();
@@ -50,6 +70,7 @@ export const AudioPlayer = ({
 
     const updateDuration = () => {
       setDuration(audio.duration);
+      setSeekable(canSeek(audio.seekable.length ? audio.seekable.end(audio.seekable.length - 1) : null));
     };
 
     const handleEnded = () => setIsPlaying(false);
@@ -58,6 +79,7 @@ export const AudioPlayer = ({
 
     audio.addEventListener('timeupdate', updateProgress);
     audio.addEventListener('loadedmetadata', updateDuration);
+    audio.addEventListener('progress', updateDuration);
     audio.addEventListener('ended', handleEnded);
     audio.addEventListener('pause', handlePause);
     audio.addEventListener('play', handlePlay);
@@ -65,11 +87,53 @@ export const AudioPlayer = ({
     return () => {
       audio.removeEventListener('timeupdate', updateProgress);
       audio.removeEventListener('loadedmetadata', updateDuration);
+      audio.removeEventListener('progress', updateDuration);
       audio.removeEventListener('ended', handleEnded);
       audio.removeEventListener('pause', handlePause);
       audio.removeEventListener('play', handlePlay);
     };
   }, [audioRef, src]);
+
+  useEffect(() => {
+    const audio = audioRef.current;
+    if (!audio) return;
+    audio.playbackRate = speed;
+    // Without this a slowed-down track is also pitched down, which makes it
+    // useless for playing along to.
+    audio.preservesPitch = true;
+  }, [audioRef, speed, src, loadState]);
+
+  // Two clocks on purpose. rAF is precise (~60Hz) but browsers stop it
+  // entirely in a hidden/non-compositing tab, while audio keeps playing -- so
+  // on its own the loop silently breaks the moment you switch tabs. The
+  // `timeupdate` event is coarse (~4Hz, so it can overshoot a fraction of a
+  // second) but keeps firing when hidden. Running both means the loop is tight
+  // in the foreground and still holds in the background.
+  const loopStart = loop?.start ?? null;
+  const loopEnd = loop?.end ?? null;
+  useEffect(() => {
+    const audio = audioRef.current;
+    if (!audio || loopStart === null || loopEnd === null || !isPlaying) return;
+
+    const range = { start: loopStart, end: loopEnd };
+    const enforce = () => {
+      const target = loopSeekTarget(audio.currentTime, range);
+      if (target !== null) audio.currentTime = target;
+    };
+
+    let frame = 0;
+    const tick = () => {
+      enforce();
+      frame = requestAnimationFrame(tick);
+    };
+    frame = requestAnimationFrame(tick);
+    audio.addEventListener('timeupdate', enforce);
+
+    return () => {
+      cancelAnimationFrame(frame);
+      audio.removeEventListener('timeupdate', enforce);
+    };
+  }, [audioRef, isPlaying, loopStart, loopEnd]);
 
   const togglePlay = async () => {
     if (!audioRef.current || !canPlay) return;
@@ -141,6 +205,14 @@ export const AudioPlayer = ({
             <p className="analysis-meta">{metaParts.join(' · ')}</p>
           )}
           {playHint && <p className="analysis-meta">{playHint}</p>}
+          {spotifyMatch?.spotify_duration_status === 'unknown' && (
+            <p className="match-warning" role="status">
+              <AlertTriangle size={13} aria-hidden="true" />
+              <span>
+                Couldn't verify this is the right recording — chords may not match.
+              </span>
+            </p>
+          )}
         </div>
 
         <button
@@ -156,12 +228,88 @@ export const AudioPlayer = ({
       <div className="progress-container">
         <span className="time">{formatTime(progress)}</span>
         <div className="progress-bar" onClick={handleSeek}>
+          {loop && duration > 0 && (
+            <div
+              className="loop-region"
+              style={{
+                left: `${(loop.start / duration) * 100}%`,
+                width: `${((loop.end - loop.start) / duration) * 100}%`,
+              }}
+              aria-hidden="true"
+            />
+          )}
           <div
             className="progress-fill"
             style={{ width: `${duration ? (progress / duration) * 100 : 0}%` }}
           />
         </div>
         <span className="time">{formatTime(duration)}</span>
+      </div>
+
+      <div className="practice-bar">
+        <div className="practice-group" role="group" aria-label="Playback speed">
+          <button
+            className="practice-btn"
+            onClick={() => setSpeed((s) => stepSpeed(s, -1))}
+            disabled={!canPlay || speed === SPEED_STEPS[0]}
+            aria-label="Slower"
+          >
+            <Minus size={14} />
+          </button>
+          <span className="practice-value" aria-live="polite">
+            {formatSpeed(speed)}
+          </span>
+          <button
+            className="practice-btn"
+            onClick={() => setSpeed((s) => stepSpeed(s, 1))}
+            disabled={!canPlay || speed === SPEED_STEPS[SPEED_STEPS.length - 1]}
+            aria-label="Faster"
+          >
+            <Plus size={14} />
+          </button>
+        </div>
+
+        <div className="practice-group" role="group" aria-label="Loop section">
+          <Repeat size={14} className="practice-icon" aria-hidden="true" />
+          <button
+            className={`practice-btn practice-btn-wide${loopA !== null ? ' is-set' : ''}`}
+            onClick={() => setLoopA(snapToDownbeat(progress, downbeatTimes))}
+            disabled={!canPlay || !seekable}
+            aria-label={
+              loopA === null ? 'Set loop start at playhead' : `Loop start ${formatTime(loopA)}`
+            }
+          >
+            A{loopA !== null && ` ${formatTime(loopA)}`}
+          </button>
+          <button
+            className={`practice-btn practice-btn-wide${loopB !== null ? ' is-set' : ''}`}
+            onClick={() => setLoopB(snapToDownbeat(progress, downbeatTimes))}
+            disabled={!canPlay || !seekable}
+            aria-label={
+              loopB === null ? 'Set loop end at playhead' : `Loop end ${formatTime(loopB)}`
+            }
+          >
+            B{loopB !== null && ` ${formatTime(loopB)}`}
+          </button>
+          <button
+            className="practice-btn"
+            onClick={() => {
+              setLoopA(null);
+              setLoopB(null);
+            }}
+            disabled={loopA === null && loopB === null}
+            aria-label="Clear loop"
+          >
+            <X size={14} />
+          </button>
+          {!seekable ? (
+            <span className="practice-note">looping needs a seekable source</span>
+          ) : (
+            downbeatTimes && downbeatTimes.length > 0 && (
+              <span className="practice-note">snaps to bars</span>
+            )
+          )}
+        </div>
       </div>
     </div>
   );

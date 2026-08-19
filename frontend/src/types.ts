@@ -67,8 +67,19 @@ export interface KeyInfo {
   display: string;
 }
 
+export interface SpotifyMatch {
+  spotify_track_id: string | null;
+  spotify_duration_sec: number | null;
+  spotify_delta_sec: number | null;
+  /** "pass" verified against Spotify's own duration; "unknown" means nothing
+   *  checked that this audio is the requested track; "skip" not a Spotify link. */
+  spotify_duration_status: 'pass' | 'unknown' | 'skip' | 'fail';
+  audio_duration_sec?: number;
+}
+
 export interface AnalysisData {
   video_id: string;
+  spotify_match?: SpotifyMatch;
   timeline: ChordEvent[];
   model_timeline?: ChordEvent[];
   beats?: BeatGridInfo;
