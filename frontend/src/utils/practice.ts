@@ -67,3 +67,29 @@ export function stepSpeed(current: number, direction: 1 | -1): number {
 export function formatSpeed(rate: number): string {
   return `${Number.isInteger(rate) ? rate : rate.toFixed(2).replace(/0$/, '')}x`;
 }
+
+/**
+ * Snap a loop point to the nearest bar line.
+ *
+ * A practice loop that starts three quarters of a beat into a bar is almost
+ * never what you meant, and lining it up by hand on a progress bar is
+ * hopeless. Returns `t` unchanged when there is no downbeat data, so callers
+ * degrade to free positioning rather than breaking.
+ */
+export function snapToDownbeat(t: number, downbeatTimes: number[] | undefined): number {
+  if (!downbeatTimes || downbeatTimes.length === 0) return t;
+
+  let best = downbeatTimes[0];
+  let bestDistance = Math.abs(t - best);
+  for (const candidate of downbeatTimes) {
+    const distance = Math.abs(t - candidate);
+    // Strict `<` keeps the earlier downbeat on an exact tie, so a point
+    // exactly between two bars snaps backwards -- consistent with how a
+    // musician counts into a bar rather than out of it.
+    if (distance < bestDistance) {
+      best = candidate;
+      bestDistance = distance;
+    }
+  }
+  return best;
+}

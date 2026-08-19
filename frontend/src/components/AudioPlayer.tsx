@@ -6,6 +6,7 @@ import {
   formatSpeed,
   loopSeekTarget,
   normalizeLoop,
+  snapToDownbeat,
   stepSpeed,
   SPEED_STEPS,
 } from '../utils/practice';
@@ -19,6 +20,7 @@ interface AudioPlayerProps {
   analyzerVersion?: string;
   chordEngine?: string;
   loadState?: AudioLoadState;
+  downbeatTimes?: number[];
 }
 
 export const AudioPlayer = ({
@@ -30,6 +32,7 @@ export const AudioPlayer = ({
   analyzerVersion,
   chordEngine,
   loadState = 'idle',
+  downbeatTimes,
 }: AudioPlayerProps) => {
   const [isPlaying, setIsPlaying] = useState(false);
   const [progress, setProgress] = useState(0);
@@ -260,7 +263,7 @@ export const AudioPlayer = ({
           <Repeat size={14} className="practice-icon" aria-hidden="true" />
           <button
             className={`practice-btn practice-btn-wide${loopA !== null ? ' is-set' : ''}`}
-            onClick={() => setLoopA(progress)}
+            onClick={() => setLoopA(snapToDownbeat(progress, downbeatTimes))}
             disabled={!canPlay}
             aria-label={
               loopA === null ? 'Set loop start at playhead' : `Loop start ${formatTime(loopA)}`
@@ -270,7 +273,7 @@ export const AudioPlayer = ({
           </button>
           <button
             className={`practice-btn practice-btn-wide${loopB !== null ? ' is-set' : ''}`}
-            onClick={() => setLoopB(progress)}
+            onClick={() => setLoopB(snapToDownbeat(progress, downbeatTimes))}
             disabled={!canPlay}
             aria-label={
               loopB === null ? 'Set loop end at playhead' : `Loop end ${formatTime(loopB)}`
@@ -289,6 +292,9 @@ export const AudioPlayer = ({
           >
             <X size={14} />
           </button>
+          {downbeatTimes && downbeatTimes.length > 0 && (
+            <span className="practice-note">snaps to bars</span>
+          )}
         </div>
       </div>
     </div>

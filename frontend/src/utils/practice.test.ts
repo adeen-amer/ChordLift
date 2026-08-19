@@ -6,6 +6,7 @@ import {
   formatSpeed,
   loopSeekTarget,
   normalizeLoop,
+  snapToDownbeat,
   stepSpeed,
 } from './practice';
 
@@ -90,5 +91,33 @@ describe('formatSpeed', () => {
     expect(formatSpeed(1)).toBe('1x');
     expect(formatSpeed(0.5)).toBe('0.5x');
     expect(formatSpeed(0.65)).toBe('0.65x');
+  });
+});
+
+describe('snapToDownbeat', () => {
+  const downbeats = [0, 2, 4, 6, 8];
+
+  it('snaps to the nearest bar line', () => {
+    expect(snapToDownbeat(2.1, downbeats)).toBe(2);
+    expect(snapToDownbeat(3.9, downbeats)).toBe(4);
+    expect(snapToDownbeat(5.4, downbeats)).toBe(6);
+  });
+
+  it('keeps an exact bar line unchanged', () => {
+    expect(snapToDownbeat(4, downbeats)).toBe(4);
+  });
+
+  it('snaps backwards on an exact tie', () => {
+    expect(snapToDownbeat(3, downbeats)).toBe(2);
+  });
+
+  it('clamps to the first and last bar outside the grid', () => {
+    expect(snapToDownbeat(-5, downbeats)).toBe(0);
+    expect(snapToDownbeat(100, downbeats)).toBe(8);
+  });
+
+  it('leaves the point alone without downbeat data', () => {
+    expect(snapToDownbeat(3.7, [])).toBe(3.7);
+    expect(snapToDownbeat(3.7, undefined)).toBe(3.7);
   });
 });

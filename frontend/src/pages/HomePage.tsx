@@ -368,6 +368,7 @@ function HomePage() {
             analyzerVersion={data.analyzer_version}
             chordEngine={data.chord_engine}
             loadState={audioLoadState}
+            downbeatTimes={data.beats?.downbeat_times}
           />
 
           <div className="presentation-row">
