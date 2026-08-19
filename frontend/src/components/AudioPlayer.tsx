@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef, type RefObject } from 'react';
+import { useState, useEffect, type RefObject } from 'react';
 import { Play, Pause, Disc3, Music2, Guitar, Minus, Plus, Repeat, X } from 'lucide-react';
 import type { CapoInfo, KeyInfo, SongInfo, AudioLoadState } from '../types';
 import {
@@ -88,12 +88,6 @@ export const AudioPlayer = ({
   }, [audioRef, src]);
 
   useEffect(() => {
-    setLoopA(null);
-    setLoopB(null);
-    setSpeed(DEFAULT_SPEED);
-  }, [src]);
-
-  useEffect(() => {
     const audio = audioRef.current;
     if (!audio) return;
     audio.playbackRate = speed;
@@ -108,14 +102,15 @@ export const AudioPlayer = ({
   // `timeupdate` event is coarse (~4Hz, so it can overshoot a fraction of a
   // second) but keeps firing when hidden. Running both means the loop is tight
   // in the foreground and still holds in the background.
-  const loopRef = useRef(loop);
-  loopRef.current = loop;
+  const loopStart = loop?.start ?? null;
+  const loopEnd = loop?.end ?? null;
   useEffect(() => {
     const audio = audioRef.current;
-    if (!audio || !loop || !isPlaying) return;
+    if (!audio || loopStart === null || loopEnd === null || !isPlaying) return;
 
+    const range = { start: loopStart, end: loopEnd };
     const enforce = () => {
-      const target = loopSeekTarget(audio.currentTime, loopRef.current);
+      const target = loopSeekTarget(audio.currentTime, range);
       if (target !== null) audio.currentTime = target;
     };
 
@@ -131,7 +126,7 @@ export const AudioPlayer = ({
       cancelAnimationFrame(frame);
       audio.removeEventListener('timeupdate', enforce);
     };
-  }, [audioRef, isPlaying, loop?.start, loop?.end]);
+  }, [audioRef, isPlaying, loopStart, loopEnd]);
 
   const togglePlay = async () => {
     if (!audioRef.current || !canPlay) return;
