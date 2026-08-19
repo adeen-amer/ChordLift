@@ -37,6 +37,9 @@ INVIDIOUS_INSTANCES = [
 
 YOUTUBE_ID_RE = re.compile(r"^[a-zA-Z0-9_-]{11}$")
 LOCAL_URL_PREFIX = "chordlift://local/"
+# Past this, treat spotdl as hung and fall back to ytsearch rather than
+# holding the request open. Generous enough for a slow-but-working fetch.
+SPOTDL_TIMEOUT_SEC = float(os.getenv("SPOTDL_TIMEOUT_SEC", "180"))
 
 logger = logging.getLogger(__name__)
 
@@ -364,9 +367,23 @@ def _download_spotify_via_spotdl(url: str, expected_path: str) -> dict:
 
     tmp = tempfile.mkdtemp(prefix="spotdl_")
     try:
+        # --lyrics drops azlyrics from the provider fallback chain: its
+        # requests.Session.get() calls carry no timeout, so an unreachable
+        # azlyrics.com hangs the download forever. chord_training's
+        # _spotdl_auth_args already worked this out; the serving path never
+        # got the same treatment and inherited the hang. We want audio, not
+        # embedded lyrics, so skip the provider outright.
+        #
+        # The subprocess timeout is the backstop for every other way spotdl
+        # can stall on network I/O: without it a stuck download holds the SSE
+        # progress stream (and its deduped download slot) open indefinitely
+        # instead of failing over to the ytsearch path below. Observed: 11.7
+        # minutes elapsed for 7.3s of CPU before this landed.
         subprocess.run(
-            [sys.executable, "-m", "spotdl", "download", url, "--output", tmp, "--format", "mp3"],
+            [sys.executable, "-m", "spotdl", "download", url, "--output", tmp,
+             "--format", "mp3", "--lyrics", "genius", "musixmatch"],
             check=True,
+            timeout=SPOTDL_TIMEOUT_SEC,
         )
         mp3s = [f for f in os.listdir(tmp) if f.endswith(".mp3")]
         if not mp3s:
