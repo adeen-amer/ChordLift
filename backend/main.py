@@ -22,7 +22,7 @@ from beat_tracking import beat_engine_readiness
 from spotify_metadata import spotify_readiness
 from range_requests import UnsatisfiableRangeError, iter_file_range, parse_byte_range
 from safe_paths import InvalidSourceIdError, resolve_cache_json, resolve_download_mp3, validate_source_id
-from analysis_runtime import run_analysis_deduped
+from analysis_runtime import run_analysis_deduped, run_download_deduped
 from model_cache import preload_ml_models
 
 logger = logging.getLogger(__name__)
@@ -196,7 +196,9 @@ async def progress_endpoint(video_id: str, url: str, force_reanalyze: bool = Fal
         try:
             yield f"data: {json.dumps({'stage': 'Downloading...'})}\n\n"
 
-            download_info = await download_audio(url)
+            download_info = await run_download_deduped(
+                source_id, lambda: download_audio(url),
+            )
             audio_path = download_info["audio_path"]
             canonical_id = download_info["video_id"]
             song_metadata = await asyncio.to_thread(fetch_track_metadata, url)
