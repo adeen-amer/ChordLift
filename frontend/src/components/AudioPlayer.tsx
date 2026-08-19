@@ -99,23 +99,35 @@ export const AudioPlayer = ({
     audio.preservesPitch = true;
   }, [audioRef, speed, src, loadState]);
 
-  // rAF rather than the `timeupdate` event: that fires roughly 4x/sec, which
-  // overshoots an audible fraction of a second past the loop point. Only runs
-  // while a loop is actually active and playing.
+  // Two clocks on purpose. rAF is precise (~60Hz) but browsers stop it
+  // entirely in a hidden/non-compositing tab, while audio keeps playing -- so
+  // on its own the loop silently breaks the moment you switch tabs. The
+  // `timeupdate` event is coarse (~4Hz, so it can overshoot a fraction of a
+  // second) but keeps firing when hidden. Running both means the loop is tight
+  // in the foreground and still holds in the background.
   const loopRef = useRef(loop);
   loopRef.current = loop;
   useEffect(() => {
     const audio = audioRef.current;
     if (!audio || !loop || !isPlaying) return;
 
-    let frame = 0;
-    const tick = () => {
+    const enforce = () => {
       const target = loopSeekTarget(audio.currentTime, loopRef.current);
       if (target !== null) audio.currentTime = target;
+    };
+
+    let frame = 0;
+    const tick = () => {
+      enforce();
       frame = requestAnimationFrame(tick);
     };
     frame = requestAnimationFrame(tick);
-    return () => cancelAnimationFrame(frame);
+    audio.addEventListener('timeupdate', enforce);
+
+    return () => {
+      cancelAnimationFrame(frame);
+      audio.removeEventListener('timeupdate', enforce);
+    };
   }, [audioRef, isPlaying, loop?.start, loop?.end]);
 
   const togglePlay = async () => {
