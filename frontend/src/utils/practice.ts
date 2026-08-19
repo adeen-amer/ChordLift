@@ -93,3 +93,19 @@ export function snapToDownbeat(t: number, downbeatTimes: number[] | undefined): 
   }
   return best;
 }
+
+/**
+ * Whether the audio element can actually seek.
+ *
+ * A backend that answers every request with 200 and the whole body (no
+ * `Accept-Ranges`) leaves the browser with an empty `seekable` range, and
+ * every seek is silently ignored. The loop is built entirely out of seeks, so
+ * it has to feature-detect this rather than assume the server supports ranges
+ * -- otherwise a frontend deployed ahead of its backend shows controls that
+ * quietly do nothing.
+ *
+ * Takes the end of the last seekable range (or null when there are none).
+ */
+export function canSeek(seekableEnd: number | null): boolean {
+  return seekableEnd !== null && Number.isFinite(seekableEnd) && seekableEnd > 0;
+}

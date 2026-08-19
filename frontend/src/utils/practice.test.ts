@@ -1,5 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import {
+  canSeek,
   DEFAULT_SPEED,
   MIN_LOOP_SEC,
   SPEED_STEPS,
@@ -119,5 +120,23 @@ describe('snapToDownbeat', () => {
   it('leaves the point alone without downbeat data', () => {
     expect(snapToDownbeat(3.7, [])).toBe(3.7);
     expect(snapToDownbeat(3.7, undefined)).toBe(3.7);
+  });
+});
+
+describe('canSeek', () => {
+  it('is true for a normal seekable range', () => {
+    expect(canSeek(332.12)).toBe(true);
+  });
+
+  it('is false when the server does not support byte ranges', () => {
+    // Browser reports seekable as [0, 0] -- what ChordLift's own backend did
+    // before the Range fix.
+    expect(canSeek(0)).toBe(false);
+    expect(canSeek(null)).toBe(false);
+  });
+
+  it('is false for a non-finite end', () => {
+    expect(canSeek(NaN)).toBe(false);
+    expect(canSeek(Infinity)).toBe(false);
   });
 });

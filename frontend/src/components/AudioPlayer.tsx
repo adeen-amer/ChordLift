@@ -2,6 +2,7 @@ import { useState, useEffect, type RefObject } from 'react';
 import { Play, Pause, Disc3, Music2, Guitar, Minus, Plus, Repeat, X, AlertTriangle } from 'lucide-react';
 import type { CapoInfo, KeyInfo, SongInfo, AudioLoadState, SpotifyMatch } from '../types';
 import {
+  canSeek,
   DEFAULT_SPEED,
   formatSpeed,
   loopSeekTarget,
@@ -42,6 +43,7 @@ export const AudioPlayer = ({
   const [speed, setSpeed] = useState<number>(DEFAULT_SPEED);
   const [loopA, setLoopA] = useState<number | null>(null);
   const [loopB, setLoopB] = useState<number | null>(null);
+  const [seekable, setSeekable] = useState(true);
 
   const loop = normalizeLoop(loopA, loopB, duration);
 
@@ -68,6 +70,7 @@ export const AudioPlayer = ({
 
     const updateDuration = () => {
       setDuration(audio.duration);
+      setSeekable(canSeek(audio.seekable.length ? audio.seekable.end(audio.seekable.length - 1) : null));
     };
 
     const handleEnded = () => setIsPlaying(false);
@@ -76,6 +79,7 @@ export const AudioPlayer = ({
 
     audio.addEventListener('timeupdate', updateProgress);
     audio.addEventListener('loadedmetadata', updateDuration);
+    audio.addEventListener('progress', updateDuration);
     audio.addEventListener('ended', handleEnded);
     audio.addEventListener('pause', handlePause);
     audio.addEventListener('play', handlePlay);
@@ -83,6 +87,7 @@ export const AudioPlayer = ({
     return () => {
       audio.removeEventListener('timeupdate', updateProgress);
       audio.removeEventListener('loadedmetadata', updateDuration);
+      audio.removeEventListener('progress', updateDuration);
       audio.removeEventListener('ended', handleEnded);
       audio.removeEventListener('pause', handlePause);
       audio.removeEventListener('play', handlePlay);
@@ -269,7 +274,7 @@ export const AudioPlayer = ({
           <button
             className={`practice-btn practice-btn-wide${loopA !== null ? ' is-set' : ''}`}
             onClick={() => setLoopA(snapToDownbeat(progress, downbeatTimes))}
-            disabled={!canPlay}
+            disabled={!canPlay || !seekable}
             aria-label={
               loopA === null ? 'Set loop start at playhead' : `Loop start ${formatTime(loopA)}`
             }
@@ -279,7 +284,7 @@ export const AudioPlayer = ({
           <button
             className={`practice-btn practice-btn-wide${loopB !== null ? ' is-set' : ''}`}
             onClick={() => setLoopB(snapToDownbeat(progress, downbeatTimes))}
-            disabled={!canPlay}
+            disabled={!canPlay || !seekable}
             aria-label={
               loopB === null ? 'Set loop end at playhead' : `Loop end ${formatTime(loopB)}`
             }
@@ -297,8 +302,12 @@ export const AudioPlayer = ({
           >
             <X size={14} />
           </button>
-          {downbeatTimes && downbeatTimes.length > 0 && (
-            <span className="practice-note">snaps to bars</span>
+          {!seekable ? (
+            <span className="practice-note">looping needs a seekable source</span>
+          ) : (
+            downbeatTimes && downbeatTimes.length > 0 && (
+              <span className="practice-note">snaps to bars</span>
+            )
           )}
         </div>
       </div>
